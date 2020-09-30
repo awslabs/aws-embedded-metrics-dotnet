@@ -51,7 +51,7 @@ namespace Amazon.CloudWatch.EMF.Config
             catch (Exception e) 
             {
                 return Environments.Unknown;
-            }*/
-        }
+            }
+        }*/
     }
 }
