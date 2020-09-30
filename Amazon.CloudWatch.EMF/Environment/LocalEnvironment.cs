@@ -9,7 +9,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         private ISink _sink = null;
         private Configuration _config;
 
-        LocalEnvironment(Configuration config)
+        public LocalEnvironment(Configuration config)
         {
             _config = config;
         }

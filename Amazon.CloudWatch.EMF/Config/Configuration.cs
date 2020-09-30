@@ -15,7 +15,7 @@ namespace Amazon.CloudWatch.EMF.Config
             AgentEndPoint = agentEndPoint;
             EnvironmentOverride = environmentOverride;
         }
-        
+
         /// <summary>
         /// Gets name of the service to use in the default dimensions
         /// </summary>

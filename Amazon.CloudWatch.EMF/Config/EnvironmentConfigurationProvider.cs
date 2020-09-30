@@ -1,11 +1,11 @@
-using System;
-using System.Dynamic;
-
 namespace Amazon.CloudWatch.EMF.Config
 {
     using System;
     using Amazon.CloudWatch.EMF.Environment;
 
+    /// <summary>
+    /// Loads configuration from environment variables.
+    /// </summary>
     public class EnvironmentConfigurationProvider
     {
         private static Configuration _config;
@@ -14,27 +14,20 @@ namespace Amazon.CloudWatch.EMF.Config
         {
             get
             {
-                if (_config == null)
-                {
-                    _config =
-                        new Configuration(
-                            GetEnvVar(ConfigurationKeys.SERVICE_NAME),
-                            GetEnvVar(ConfigurationKeys.SERVICE_TYPE),
-                            GetEnvVar(ConfigurationKeys.LOG_GROUP_NAME),
-                            GetEnvVar(ConfigurationKeys.LOG_STREAM_NAME),
-                            GetEnvVar(ConfigurationKeys.AGENT_ENDPOINT),
-                            GetEnvironmentOverride());
-                }
-                return _config;
+                return _config ??= new Configuration(
+                    GetEnvVar(ConfigurationKeys.SERVICE_NAME),
+                    GetEnvVar(ConfigurationKeys.SERVICE_TYPE),
+                    GetEnvVar(ConfigurationKeys.LOG_GROUP_NAME),
+                    GetEnvVar(ConfigurationKeys.LOG_STREAM_NAME),
+                    GetEnvVar(ConfigurationKeys.AGENT_ENDPOINT),
+                    GetEnvironmentOverride());
             }
         }
 
-        private static string GetEnvVar(String key)
+        private static string GetEnvVar(string key)
         {
-            //string name = string.join("", ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
-            
-            //return GetEnv(name);
-            return string.Empty;
+            string name = string.Join("", ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
+            return GetEnv(name);
         }
 
         private static string GetEnv(string name)
@@ -44,7 +37,21 @@ namespace Amazon.CloudWatch.EMF.Config
 
         private static Environments GetEnvironmentOverride()
         {
-            return new Environments();
+            string environmentName = GetEnvVar(ConfigurationKeys.ENVIRONMENT_OVERRIDE);
+            if (string.IsNullOrEmpty(environmentName)) 
+            {
+                return Environments.Unknown;
+            }
+
+            try
+            {
+                //Get the enum for environmentName
+                return (Environments)Enum.Parse(typeof(Environments), environmentName);
+            } 
+            catch (Exception e) 
+            {
+                return Environments.Unknown;
+            }
         }
     }
 }

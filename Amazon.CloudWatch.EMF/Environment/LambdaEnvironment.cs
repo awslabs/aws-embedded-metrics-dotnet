@@ -13,7 +13,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         private const string LAMBDA_CFN_NAME = "AWS::Lambda::Function";
 
         private ISink _sink = null;
-        
+
         // TODO: support probing asynchronously
         public bool Probe()
         {
@@ -41,8 +41,10 @@ namespace Amazon.CloudWatch.EMF.Environment
             AddProperty(context, "logStreamId", GetEnv(LAMBDA_LOG_STREAM));
 
             var traceId = GetSampledTrace();
-            if(!string.IsNullOrEmpty(traceId))
+            if (!string.IsNullOrEmpty(traceId))
+            {
                 AddProperty(context, "traceId", traceId);
+            }
         }
 
         public ISink Sink
