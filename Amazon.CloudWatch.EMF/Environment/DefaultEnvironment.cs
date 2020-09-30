@@ -1,26 +1,18 @@
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
+using Amazon.CloudWatch.EMF.Config;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
-    public class DefaultEnvironment : IEnvironment
+    public class DefaultEnvironment : AgentBasedEnvironment
     {
-        public string Name => throw new System.NotImplementedException();
-
-        public string Type => throw new System.NotImplementedException();
-
-        public string LogGroupName => throw new System.NotImplementedException();
-
-        public ISink Sink => throw new System.NotImplementedException();
-
-        public void ConfigureContext(MetricsContext context)
+        public new bool Probe()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
-        public bool Probe()
+        public new void ConfigureContext(MetricsContext context)
         {
-            throw new System.NotImplementedException();
         }
     }
 }
