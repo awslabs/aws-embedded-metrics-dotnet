@@ -8,14 +8,14 @@ namespace Amazon.CloudWatch.EMF.Model
     public class MetaData
     {
         [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; set; }
+        private DateTime Timestamp { get; set; }
 
         [JsonProperty("cloudWatchMetrics")]
-        public List<MetricDirective> CloudWatchMetrics { get; set; }
+        private List<MetricDirective> CloudWatchMetrics { get; set; }
 
         private Dictionary<string, Object> CustomFields;
 
-        public MetaData() {
+        MetaData() {
             CloudWatchMetrics = new List<MetricDirective>();
             Timestamp = DateTime.Now;
             CustomFields = new Dictionary<string, Object>();
