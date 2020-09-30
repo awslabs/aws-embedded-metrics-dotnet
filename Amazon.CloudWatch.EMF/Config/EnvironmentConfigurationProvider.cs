@@ -10,7 +10,7 @@ namespace Amazon.CloudWatch.EMF.Config
     {
         private static Configuration _config;
 
-        /*public static Configuration Config
+        public static Configuration Config
         {
             get
             {
@@ -23,15 +23,18 @@ namespace Amazon.CloudWatch.EMF.Config
                     GetEnvironmentOverride());
             }
         }
+
         private static string GetEnvVar(string key)
         {
             string name = string.Join("", ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
             return GetEnv(name);
         }
+
         private static string GetEnv(string name)
         {
             return Environment.GetEnvironmentVariable(name);
         }
+
         private static Environments GetEnvironmentOverride()
         {
             string environmentName = GetEnvVar(ConfigurationKeys.ENVIRONMENT_OVERRIDE);
@@ -39,6 +42,7 @@ namespace Amazon.CloudWatch.EMF.Config
             {
                 return Environments.Unknown;
             }
+
             try
             {
                 //Get the enum for environmentName
@@ -48,6 +52,6 @@ namespace Amazon.CloudWatch.EMF.Config
             {
                 return Environments.Unknown;
             }
-        }*/
+        }
     }
 }
