@@ -19,7 +19,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         private bool ShouldUseDefaultDimension;
 
-        MetricDirective() {
+        public MetricDirective() {
             Namespace = "aws-embedded-metrics";
             Metrics = new Dictionary<String, MetricDefinition>();
             Dimensions = new List<DimensionSet>();
