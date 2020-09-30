@@ -12,9 +12,9 @@ namespace Amazon.CloudWatch.EMF.Model
         private string Namespace { get; set; }
 
         [JsonIgnore]
-        private Dictionary<String, MetricDefinition> Metrics { get; set; }
+        internal Dictionary<String, MetricDefinition> Metrics { get; set; }
 
-        private List<DimensionSet> Dimensions{ get; set; }
+        internal List<DimensionSet> Dimensions{ get; set; }
 
         private DimensionSet DefaultDimensions { get; set; }
 
