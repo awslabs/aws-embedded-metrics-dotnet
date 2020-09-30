@@ -7,13 +7,13 @@ namespace Amazon.CloudWatch.EMF.Model
     public class MetricDefinition
     {
         [JsonProperty("name")]
-        private string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("unit")]
         private Unit Unit { get; set; }
 
         [JsonIgnore]
-        private List<Double> Values { get; set; }
+        public List<Double> Values { get; set; }
 
         MetricDefinition(string name) : this(name, Unit.NONE,new List<double>()) { }
 

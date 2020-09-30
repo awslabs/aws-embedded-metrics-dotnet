@@ -11,15 +11,15 @@ namespace Amazon.CloudWatch.EMF.Model
         private string Namespace { get; set; }
 
         [JsonIgnore]
-        private Dictionary<String, MetricDefinition> Metrics { get; set; }
+        internal Dictionary<String, MetricDefinition> Metrics { get; set; }
 
-        protected List<DimensionSet> Dimensions{ get; }
+        internal List<DimensionSet> Dimensions{ get; }
 
         protected DimensionSet DefaultDimensions { get; set; }
 
         private bool ShouldUseDefaultDimension;
 
-        MetricDirective() {
+        public MetricDirective() {
             Namespace = "aws-embedded-metrics";
             Metrics = new Dictionary<String, MetricDefinition>();
             Dimensions = new List<DimensionSet>();
