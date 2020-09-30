@@ -1,6 +1,8 @@
 /Amazon.CloudWatch.EMF/bin/
 /Amazon.CloudWatch.EMF/obj/
+/Amazon.CloudWatch.EMF/.DS_Store
 /Amazon.CloudWatch.EMF.Tests/obj/
 /Amazon.CloudWatch.EMF.Tests/obj/
-/.DS_Store
+/Amazon.CloudWatch.EMF.Tests/.DS_Store
 /.idea/
+
