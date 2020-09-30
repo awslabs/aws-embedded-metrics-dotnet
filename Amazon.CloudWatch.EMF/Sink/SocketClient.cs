@@ -1,6 +1,7 @@
 namespace Amazon.CloudWatch.EMF.Sink
 {
-    public class SocketClient
+    public interface SocketClient
     {
+        void SendMessage(string message);
     }
 }

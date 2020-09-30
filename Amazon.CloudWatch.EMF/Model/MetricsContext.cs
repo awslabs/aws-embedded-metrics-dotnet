@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
@@ -46,6 +47,10 @@ namespace Amazon.CloudWatch.EMF.Model
 
         internal void SetNamespace(string metricsNamespace)
         {
+            throw new NotImplementedException();
+        }
+
+        public List<String> Serialize(){
             throw new NotImplementedException();
         }
     }
