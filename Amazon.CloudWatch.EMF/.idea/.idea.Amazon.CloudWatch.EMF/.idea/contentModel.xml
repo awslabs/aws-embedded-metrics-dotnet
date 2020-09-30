@@ -1,84 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/16.5.0/build/netcoreapp2.1" t="Include">
-      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
-    </e>
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" t="Include" />
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" t="Include" />
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
     <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.2/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.2/resharper-host/local/Transient/Rider/v202/SolutionCaches/_Amazon.CloudWatch.EMF.1445053151.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
-      <e p="Amazon.CloudWatch.EMF" t="IncludeRecursive">
-        <e p="Amazon.CloudWatch.EMF.csproj" t="IncludeRecursive" />
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="Config" t="Include">
-          <e p="Configuration.cs" t="Include" />
-          <e p="ConfigurationKeys.cs" t="Include" />
-          <e p="EnvironmentConfigurationProvider.cs" t="Include" />
-        </e>
-        <e p="Environment" t="Include">
-          <e p="AgentBasedEnvironment.cs" t="Include" />
-          <e p="DefaultEnvironment.cs" t="Include" />
-          <e p="EC2Environment.cs" t="Include" />
-          <e p="ECSEnvironment.cs" t="Include" />
-          <e p="EnvironmentProvider.cs" t="Include" />
-          <e p="Environments.cs" t="Include" />
-          <e p="IEnvironment.cs" t="Include" />
-          <e p="LambdaEnvironment.cs" t="Include" />
-          <e p="LocalEnvironment.cs" t="Include" />
-        </e>
-        <e p="Exception" t="Include">
-          <e p="EMFClientException.cs" t="Include" />
-        </e>
-        <e p="Logger" t="Include">
-          <e p="MetricsLogger.cs" t="Include" />
-        </e>
-        <e p="Model" t="Include">
-          <e p="DimensionSet.cs" t="Include" />
-          <e p="MetaData.cs" t="Include" />
-          <e p="MetricDefinition.cs" t="Include" />
-          <e p="MetricDirective.cs" t="Include" />
-          <e p="MetricsContext.cs" t="Include" />
-          <e p="RootNode.cs" t="Include" />
-          <e p="Unit.cs" t="Include" />
-        </e>
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netcoreapp3.1" t="Include">
-              <e p="Amazon.CloudWatch.EMF.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
-        </e>
-        <e p="Serializer" t="Include" />
-        <e p="Sink" t="Include">
-          <e p="AgentSink.cs" t="Include" />
-          <e p="ConsoleSink.cs" t="Include" />
-          <e p="ISink.cs" t="Include" />
-          <e p="Protocol.cs" t="Include" />
-          <e p="ScoketClientFactory.cs" t="Include" />
-          <e p="SocketClient.cs" t="Include" />
-        </e>
-        <e p="Util" t="Include">
-          <e p="IOUtils.cs" t="Include" />
-          <e p="StringUtils.cs" t="Include" />
-        </e>
-      </e>
       <e p="Amazon.CloudWatch.EMF.sln" t="IncludeFlat" />
-      <e p="Amazon.CloudWatch.EMF.Tests" t="IncludeRecursive">
-        <e p="Amazon.CloudWatch.EMF.Tests.csproj" t="IncludeRecursive" />
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netcoreapp3.1" t="Include">
-              <e p="Amazon.CloudWatch.EMF.Tests.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
-        </e>
-        <e p="UnitTest1.cs" t="Include" />
-      </e>
-      <e p="packages" t="ExcludeRecursive" />
     </e>
   </component>
 </project>

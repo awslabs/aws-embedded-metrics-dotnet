@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XjJ03cuZOubiFaBeYn0zfpXJEbYZQDcbfvKirtOg52di6AA9nioiiDpygy8rZOGKr2VwvvzjnVKRYjfuXz+4yw==",
+  "dgSpecHash": "F4mXmJkPX54temi07IrBWfZLO5b3ZwLPM8OL5fWSTWftVvLderlHsnVkQRDOe3kezDNJ5IauS4Bu2Oy018g8qg==",
   "success": true,
-  "projectFilePath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
+  "projectFilePath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
   "expectedPackageFiles": [
     "/Users/ntatikonda/.nuget/packages/coverlet.collector/1.2.0/coverlet.collector.1.2.0.nupkg.sha512",
     "/Users/ntatikonda/.nuget/packages/microsoft.codecoverage/16.5.0/microsoft.codecoverage.16.5.0.nupkg.sha512",

@@ -3510,11 +3510,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
+      "projectUniqueName": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
       "projectName": "Amazon.CloudWatch.EMF.Tests",
-      "projectPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
+      "projectPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
       "packagesPath": "/Users/ntatikonda/.nuget/packages/",
-      "outputPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.Tests/obj/",
+      "outputPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/ntatikonda/.nuget/NuGet/NuGet.Config"

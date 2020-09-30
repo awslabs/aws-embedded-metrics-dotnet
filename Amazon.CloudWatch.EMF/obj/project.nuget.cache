@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OOlzLyG3ayCcDWbpN/A/roYBVAuiEhnjEndifDaFTgUW5B9qzub4LkI2xJ7Jj5C0zyefoz71FtH+htsOVyOxfQ==",
+  "dgSpecHash": "eJIUkTIO9JI1bvw7dQr0oT02En7u4hclyIV4Pds5kvd0KQdFYcoYonMPE2xK8Ky8zlb6K4uhygrvWZbThRSsaQ==",
   "success": true,
-  "projectFilePath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj",
+  "projectFilePath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj",
   "expectedPackageFiles": [
     "/Users/ntatikonda/.nuget/packages/newtonsoft.json/12.0.3/newtonsoft.json.12.0.3.nupkg.sha512",
     "/Users/ntatikonda/.nuget/packages/stylecop.analyzers/1.1.118/stylecop.analyzers.1.1.118.nupkg.sha512"

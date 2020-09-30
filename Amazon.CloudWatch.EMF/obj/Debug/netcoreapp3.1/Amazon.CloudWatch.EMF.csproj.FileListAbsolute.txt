@@ -7,3 +7,12 @@
 /Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.csproj.CoreCompileInputs.cache
 /Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.dll
 /Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.pdb
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/bin/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.deps.json
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/bin/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.dll
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/bin/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.pdb
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.csprojAssemblyReference.cache
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.AssemblyInfoInputs.cache
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.AssemblyInfo.cs
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.csproj.CoreCompileInputs.cache
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.dll
+/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/obj/Debug/netcoreapp3.1/Amazon.CloudWatch.EMF.pdb

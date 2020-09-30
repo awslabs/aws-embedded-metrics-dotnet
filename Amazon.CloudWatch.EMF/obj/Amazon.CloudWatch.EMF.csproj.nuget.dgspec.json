@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj": {}
+    "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj": {}
   },
   "projects": {
-    "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj": {
+    "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj",
+        "projectUniqueName": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj",
         "projectName": "Amazon.CloudWatch.EMF",
-        "projectPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj",
+        "projectPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF.csproj",
         "packagesPath": "/Users/ntatikonda/.nuget/packages/",
-        "outputPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/Amazon.CloudWatch.EMF/obj/",
+        "outputPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/ntatikonda/.nuget/NuGet/NuGet.Config"
