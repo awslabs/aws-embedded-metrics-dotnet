@@ -1,6 +1,6 @@
 namespace Amazon.CloudWatch.EMF.Sink
 {
-    public class ConsoleSink
+    public class ConsoleSink : ISink
     {
     }
 }
