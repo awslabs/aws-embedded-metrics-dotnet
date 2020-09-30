@@ -1,10 +1,10 @@
 ﻿{
   "version": "1.0.0",
   "restore": {
-    "projectUniqueName": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
+    "projectUniqueName": "/Users/dkaushal1/Shared/development/source/git/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
     "projectName": "Amazon.CloudWatch.EMF.Tests",
-    "projectPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
-    "outputPath": "/Users/ntatikonda/repos/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/obj/",
+    "projectPath": "/Users/dkaushal1/Shared/development/source/git/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/Amazon.CloudWatch.EMF.Tests.csproj",
+    "outputPath": "/Users/dkaushal1/Shared/development/source/git/aws-embedded-metrics-dotnet/Amazon.CloudWatch.EMF.Tests/obj/",
     "projectStyle": "PackageReference",
     "originalTargetFrameworks": [
       "netcoreapp3.1"
@@ -59,7 +59,7 @@
           "privateAssets": "all"
         }
       },
-      "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.401/RuntimeIdentifierGraph.json"
+      "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
     }
   }
 }
