@@ -6,9 +6,10 @@ namespace Amazon.CloudWatch.EMF.Model
     public class RootNode
     {
         private MetaData aws;
-        private Dictionary<string, object> _properties;
+        private readonly Dictionary<string, object> _properties;
         public RootNode()
         {
+            _properties = new Dictionary<string, object>();
         }
 
         public void PutProperty(string key, object value)

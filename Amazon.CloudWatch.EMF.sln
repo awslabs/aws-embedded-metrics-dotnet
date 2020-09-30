@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF", "Am
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.Tests", "Amazon.CloudWatch.EMF.Tests\Amazon.CloudWatch.EMF.Tests.csproj", "{DE74081D-79B8-44CA-94F7-60142C9F9A84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CloudWatch.EMF.IntegrationTests", "Amazon.CloudWatch.EMF.IntegrationTests\Amazon.CloudWatch.EMF.IntegrationTests.csproj", "{BB012365-7A17-4BE1-93E4-399E3E3FF74F}"
+EndProject
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +24,10 @@ Global
 		{DE74081D-79B8-44CA-94F7-60142C9F9A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE74081D-79B8-44CA-94F7-60142C9F9A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE74081D-79B8-44CA-94F7-60142C9F9A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB012365-7A17-4BE1-93E4-399E3E3FF74F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB012365-7A17-4BE1-93E4-399E3E3FF74F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB012365-7A17-4BE1-93E4-399E3E3FF74F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB012365-7A17-4BE1-93E4-399E3E3FF74F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

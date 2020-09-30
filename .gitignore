@@ -4,6 +4,9 @@
 /Amazon.CloudWatch.EMF.Tests/obj/
 /Amazon.CloudWatch.EMF.Tests/obj/
 /Amazon.CloudWatch.EMF.Tests/.DS_Store
+/Amazon.CloudWatch.EMF.IntegrationTests/obj/
+/Amazon.CloudWatch.EMF.IntegrationTests/obj/
+/Amazon.CloudWatch.EMF.IntegrationTests/.DS_Store
 /.idea/
 /Amazon.CloudWatch.EMF.Tests/bin/
 .DS_Store
