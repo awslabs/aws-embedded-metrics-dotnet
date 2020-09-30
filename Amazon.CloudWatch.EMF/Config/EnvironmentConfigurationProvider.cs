@@ -10,7 +10,7 @@ namespace Amazon.CloudWatch.EMF.Config
     {
         private static Configuration _config;
 
-        public static Configuration Config
+        /*public static Configuration Config
         {
             get
             {
@@ -51,7 +51,7 @@ namespace Amazon.CloudWatch.EMF.Config
             catch (Exception e) 
             {
                 return Environments.Unknown;
-            }
+            }*/
         }
     }
 }
