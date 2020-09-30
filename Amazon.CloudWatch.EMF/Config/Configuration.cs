@@ -4,6 +4,18 @@ namespace Amazon.CloudWatch.EMF.Config
 {
     public class Configuration
     {
+        public Configuration(string serviceName, string serviceType, string logGroupName, string logStreamName,
+            string agentEndPoint, Environments environmentOverride)
+        {
+
+            ServiceName = serviceName;
+            ServiceType = serviceType;
+            LogGroupName = logGroupName;
+            LogStreamName = logStreamName;
+            AgentEndPoint = agentEndPoint;
+            EnvironmentOverride = environmentOverride;
+        }
+        
         /// <summary>
         /// Gets name of the service to use in the default dimensions
         /// </summary>
