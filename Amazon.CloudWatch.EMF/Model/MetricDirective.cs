@@ -8,7 +8,7 @@ namespace Amazon.CloudWatch.EMF.Model
 {
     public class MetricDirective
     {
-        [JsonProperty("namespace")]
+        [JsonProperty("Namespace")]
         internal string Namespace { get; set; }
 
         [JsonIgnore]
@@ -50,17 +50,29 @@ namespace Amazon.CloudWatch.EMF.Model
                 Metrics.Add(key, new MetricDefinition(key, unit, value));
             }
         }
+        
+        [JsonProperty("Metrics")]
+        List<MetricDefinition> AllMetrics => Metrics.Values.ToList();
 
-        // TODO: add [JsonProperty("metrics")], Originally Collection is returned in java code
         List<MetricDefinition> GetAllMetrics()
         {
             return Metrics.Values.ToList();
         }
 
+        [JsonProperty("Dimensions")]
+        List<string> AllDimensionKeys
+        {
+            get
+            {
+                var keys = new List<string>();
+                GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.DimensionKeys));
+                return keys;
+            }
+        }
         List<string> GetAllDimensionKeys()
         {
             var keys = new List<string>();
-            GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.getDimensionKeys()));
+            GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.DimensionKeys));
             return keys;
         }
 

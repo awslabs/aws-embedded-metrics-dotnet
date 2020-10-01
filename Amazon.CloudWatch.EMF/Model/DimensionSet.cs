@@ -192,20 +192,24 @@ namespace Amazon.CloudWatch.EMF.Model
             return mergedDimensionSet;
         }
 
-        /** @return all the dimension names in the dimension set. */
-        public List<string> getDimensionKeys() {
-            return dimensionRecords.Keys.ToList();
-        }
+        /// <summary>
+        /// Get all the dimension names in the dimension set.
+        /// </summary>
+        public List<string> DimensionKeys => dimensionRecords.Keys.ToList();
 
-        /**
-         * @param key the name of the dimension
-         * @return the dimension value associated with a dimension key.
-         */
-        public string getDimensionValue(String key) {
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key">Name of the dimension</param>
+        /// <returns>the dimension value associated with a dimension key</returns>
+        public string GetDimensionValue(String key) 
+        {
             return dimensionRecords[key];
         }
 
-        public class DimensionEntry {
+        public class DimensionEntry 
+        {
             public string Key { get; set; }
 
             public string Value { get; set; }
