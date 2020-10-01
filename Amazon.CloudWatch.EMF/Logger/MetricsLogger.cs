@@ -31,7 +31,11 @@ namespace Amazon.CloudWatch.EMF.Logger
         {
 
         }
+        public MetricsLogger(EnvironmentProvider environmentProvider)
+            : this(environmentProvider, new MetricsContext())
+        {
 
+        }
 
         public MetricsLogger(EnvironmentProvider environmentProvider, ILogger logger)
             : this(environmentProvider, new MetricsContext(), logger)
@@ -44,6 +48,12 @@ namespace Amazon.CloudWatch.EMF.Logger
             _environmentFuture = environmentProvider.ResolveEnvironment();
             this._environmentProvider = environmentProvider;
             this._logger = logger;
+        }
+        
+        public MetricsLogger(EnvironmentProvider environmentProvider, MetricsContext metricsContext) {
+            _context = metricsContext;
+            _environmentFuture = environmentProvider.ResolveEnvironment();
+            _environmentProvider = environmentProvider;
         }
 
         /// <summary>
