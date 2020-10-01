@@ -131,7 +131,7 @@ namespace Amazon.CloudWatch.EMF.Model
             _rootNode.PutProperty(name, value);
         }
 
-        public object getProperty(String name)
+        public object GetProperty(String name)
         {
             _rootNode.GetProperties().TryGetValue(name, out var value);
             return value;

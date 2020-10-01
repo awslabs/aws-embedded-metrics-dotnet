@@ -30,14 +30,15 @@ namespace Amazon.CloudWatch.EMF.Model
 
     public class RootNode
     {
-        private MetaData aws;
+        private MetaData _aws;
         private readonly Dictionary<string, object> _properties;
         public RootNode()
         {
             _properties = new Dictionary<string, object>();
+            _aws = new MetaData();
         }
 
-        internal MetaData AWS { get { return aws; } }
+        internal MetaData AWS { get { return _aws; } }
 
         public void PutProperty(string key, object value)
         {
@@ -58,7 +59,7 @@ namespace Amazon.CloudWatch.EMF.Model
             var targetMembers = new Dictionary<string, object>();
             CopyAll(_properties, targetMembers);
             CopyAll(GetDimensions(), targetMembers);
-            foreach (MetricDirective metricDirective in aws.CloudWatchMetrics)
+            foreach (MetricDirective metricDirective in _aws.CloudWatchMetrics)
             {
                 foreach (MetricDefinition metricDefinition in metricDirective.Metrics.Values)
                 {
@@ -77,7 +78,7 @@ namespace Amazon.CloudWatch.EMF.Model
         private Dictionary<string, string> GetDimensions()
         {
             var dimensions = new Dictionary<string, string>();
-            foreach (MetricDirective metricDirective in aws.CloudWatchMetrics)
+            foreach (MetricDirective metricDirective in _aws.CloudWatchMetrics)
             {
                 foreach (DimensionSet dimensionSet in metricDirective.Dimensions)
                 {
@@ -90,8 +91,8 @@ namespace Amazon.CloudWatch.EMF.Model
 
         internal Dictionary<string, MetricDefinition> Metrics
         {
-            get { return aws.CloudWatchMetrics[0].Metrics; }
-            set { aws.CloudWatchMetrics[0].Metrics = value; }
+            get { return _aws.CloudWatchMetrics[0].Metrics; }
+            set { _aws.CloudWatchMetrics[0].Metrics = value; }
         }
 
         private void CopyAll(Dictionary<string, object> sourceDictionary, Dictionary<string, object> targetDictionary)
@@ -111,7 +112,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(aws);
+            return JsonConvert.SerializeObject(_aws);
         }
     }
 }

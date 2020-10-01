@@ -1,14 +1,5 @@
-/Amazon.CloudWatch.EMF/bin/
-/Amazon.CloudWatch.EMF/obj/
-/Amazon.CloudWatch.EMF/.DS_Store
-/Amazon.CloudWatch.EMF.Tests/obj/
-/Amazon.CloudWatch.EMF.Tests/bin/
-/Amazon.CloudWatch.EMF.Tests/.DS_Store
-/Amazon.CloudWatch.EMF.IntegrationTests/obj/
-/Amazon.CloudWatch.EMF.IntegrationTests/bin/
-/Amazon.CloudWatch.EMF.IntegrationTests/.DS_Store
-/.idea/
-
+bin/
+obj/
 .DS_Store
+/.idea/
 /.vs/
-

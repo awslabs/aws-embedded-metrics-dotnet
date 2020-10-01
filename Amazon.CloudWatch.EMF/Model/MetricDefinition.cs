@@ -6,10 +6,10 @@ namespace Amazon.CloudWatch.EMF.Model
 {
     public class MetricDefinition
     {
-        [JsonProperty("name")]
+        [JsonProperty("Name")]
         public string Name { get; set; }
 
-        [JsonProperty("unit")]
+        [JsonProperty("Unit")]
         private Unit Unit { get; set; }
 
         [JsonIgnore]
