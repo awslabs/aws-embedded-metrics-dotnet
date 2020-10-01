@@ -11,9 +11,12 @@ namespace Amazon.CloudWatch.EMF.Model
         [JsonProperty("Namespace")]
         internal string Namespace { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("Metrics")]
         internal Dictionary<String, MetricDefinition> Metrics { get; set; }
 
+        //TODO: dimension set is a dictionary and then we have a LIST of DimensionSet
+        //      so List<Dictionary<string,string>>
+        //      why is there a list of dictionaries?  how is this serialized into the logs?
         internal List<DimensionSet> Dimensions { get; set; }
 
         internal DimensionSet DefaultDimensions { get; set; }

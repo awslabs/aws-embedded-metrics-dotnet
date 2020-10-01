@@ -13,11 +13,14 @@ namespace Amazon.CloudWatch.EMF.Serializer
             var rootNode = value as RootNode;
             writer.WriteStartObject();
             writer.WritePropertyName("_aws");
-            
+
+            writer.WriteStartObject();
             writer.WritePropertyName("TimeStamp");
             writer.WriteValue(rootNode.AWS.Timestamp);
             
             writer.WritePropertyName("CloudWatchMetrics");
+            writer.WriteStartObject();
+
             foreach (MetricDirective metricDirective in rootNode.AWS.CloudWatchMetrics)
             {
                 writer.WritePropertyName("NameSpace");
@@ -30,6 +33,8 @@ namespace Amazon.CloudWatch.EMF.Serializer
                 writer.WriteStartArray();
                 foreach (MetricDefinition metricDefinition in metricDirective.Metrics.Values)
                 {
+                    //TODO: support an array of objects here instead of array of strings which outputs JSON lke
+                    //  "{\"Name\":\"ProcessingLatency\",\"Unit\":2}"
                     writer.WriteValue(JsonConvert.SerializeObject(metricDefinition));
                 }
                 writer.WriteEndArray();

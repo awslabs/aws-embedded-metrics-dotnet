@@ -38,6 +38,7 @@ namespace Amazon.CloudWatch.EMF.Model
         public RootNode()
         {
             _properties = new Dictionary<string, object>();
+            _aws = new MetaData();
         }
 
         internal MetaData AWS => _aws;

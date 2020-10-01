@@ -62,6 +62,8 @@ namespace Amazon.CloudWatch.EMF.Logger
                 _logger.LogInformation(ex, "Failed to resolve environment. Fallback to default environment: ");
                 environment = _environmentProvider.DefaultEnvironment;
             }
+            //TODO: uncomment this line of code to test serialization results
+            //var result = _context.Serialize();
             var sink = environment.Sink;
             ConfigureContextForEnvironment(_context, environment);
             sink.Accept(_context);
