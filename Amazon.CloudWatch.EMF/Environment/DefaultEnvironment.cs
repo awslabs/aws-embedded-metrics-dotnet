@@ -6,6 +6,12 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public class DefaultEnvironment : AgentBasedEnvironment
     {
+        private Configuration _configuration;
+
+        internal DefaultEnvironment(Configuration configuration)
+        {
+            _configuration = configuration;
+        }
         public new bool Probe()
         {
             return true;

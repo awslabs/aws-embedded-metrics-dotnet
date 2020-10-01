@@ -44,9 +44,11 @@ namespace Amazon.CloudWatch.EMF.Config
 
         /// <summary>
         /// Environment override. This will short circuit auto-environment detection. Valid values
-        /// include: - Local: no decoration and sends over stdout - Lambda: decorates logs with Lambda
-        /// metadata and sends over stdout - Agent: no decoration and sends over TCP - EC2: decorates
-        /// logs with EC2 metadata and sends over TCP
+        /// include:
+        /// - Local: no decoration and sends over stdout
+        /// - Lambda: decorates logs with Lambdametadata and sends over stdout
+        /// - Agent: no decoration and sends over TCP
+        /// - EC2: decorates logs with EC2 metadata and sends over TCP
         /// </summary>
         public Environments EnvironmentOverride { get; private set; }
     }
