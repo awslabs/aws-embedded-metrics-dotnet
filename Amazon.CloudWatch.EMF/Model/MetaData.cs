@@ -22,25 +22,25 @@ namespace Amazon.CloudWatch.EMF.Model
             CustomFields = new Dictionary<string, Object>();
         }
 
-        MetricDirective CreateMetricDirective()
+        internal MetricDirective CreateMetricDirective()
         {
             MetricDirective newMetricDirective = new MetricDirective();
             CloudWatchMetrics.Add(newMetricDirective);
             return newMetricDirective;
         }
 
-        bool IsEmpty()
+        internal bool IsEmpty()
         {
             return !CloudWatchMetrics.Any()
                    || CloudWatchMetrics.TrueForAll(x => !x.HasNoMetrics());
         }
 
-        void PutCustomMetadata(string key, Object value)
+        internal void PutCustomMetadata(string key, Object value)
         {
             CustomFields.Add(key, value);
         }
 
-        Dictionary<string, Object> GetCustomMetadata()
+        internal Dictionary<string, Object> GetCustomMetadata()
         {
             return CustomFields;
         }

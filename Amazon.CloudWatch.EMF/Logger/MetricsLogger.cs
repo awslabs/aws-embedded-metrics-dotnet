@@ -1,10 +1,10 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amazon.CloudWatch.EMF.Logger
@@ -18,6 +18,9 @@ namespace Amazon.CloudWatch.EMF.Logger
         //TODO: considering switching to ILoggerFactory
         private ILogger _logger;
 
+        /// <summary>
+        /// Creates a Metrics logger with no logging
+        /// </summary>
         public MetricsLogger()
             : this(NullLogger.Instance)
         {
@@ -39,8 +42,8 @@ namespace Amazon.CloudWatch.EMF.Logger
         {
             _context = metricsContext;
             _environmentFuture = environmentProvider.ResolveEnvironment();
-            _environmentProvider = environmentProvider;
-            _logger = logger;
+            this._environmentProvider = environmentProvider;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -65,7 +68,6 @@ namespace Amazon.CloudWatch.EMF.Logger
             _context = _context.CreateCopyWithContext();
         }
 
-
         /// <summary>
         /// Sets a property on the published metrics.This is stored in the emitted log data and you are
         /// not charged for this data by CloudWatch Metrics.These values can be values that are useful
@@ -82,11 +84,10 @@ namespace Amazon.CloudWatch.EMF.Logger
 
         /// <summary>
         /// Adds a dimension.
-        /// This is generally a low cardinality key-value pair that is part of the
-        /// metric identity.CloudWatch treats each unique combination of dimensions as a separate
-        /// metric, even if the metrics have the same metric name
+        /// This is generally a low cardinality key-value pair that is part of the metric identity.
+        /// CloudWatch treats each unique combination of dimensions as a separate metric, even if the metrics have the same metric name
         /// </summary>
-        /// <param name="dimensions">the DimensionSet to add</param>
+        /// <param name="dimensions">the DimensionSet to append</param>
         /// <returns>the current logger</returns>
         /// <seealso cref="*https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Dimension"/>
         public MetricsLogger PutDimensions(DimensionSet dimensions)
@@ -156,21 +157,21 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// <returns>the current logger.</returns>
         public MetricsLogger SetNamespace(string logNamespace)
         {
-            _context.SetNamespace(logNamespace);
+            _context.Namespace = logNamespace;
             return this;
         }
 
         private void ConfigureContextForEnvironment(MetricsContext context, IEnvironment environment)
         {
-            if (context.HasDefaultDimensions())
+            if (context.HasDefaultDimensions)
             {
                 return;
             }
-            DimensionSet defaultDimension = new DimensionSet();
-            defaultDimension.AddDimension("LogGroup", environment.LogGroupName);
-            defaultDimension.AddDimension("ServiceName", environment.Name);
-            defaultDimension.AddDimension("ServiceType", environment.Type);
-            context.SetDefaultDimensions(defaultDimension);
+            DimensionSet defaultDimensions = new DimensionSet();
+            defaultDimensions.AddDimension("LogGroup", environment.LogGroupName);
+            defaultDimensions.AddDimension("ServiceName", environment.Name);
+            defaultDimensions.AddDimension("ServiceType", environment.Type);
+            context.DefaultDimensions = defaultDimensions;
             environment.ConfigureContext(context);
         }
     }
