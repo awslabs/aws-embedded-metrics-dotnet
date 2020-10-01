@@ -15,9 +15,9 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
         }
 
-        public AgentBasedEnvironment(Configuration config)
+        protected AgentBasedEnvironment(Configuration config)
         {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _config = config;
         }
 
         public string Name => !string.IsNullOrEmpty(_config.ServiceName) ? _config.ServiceName : Constants.UNKNOWN;
