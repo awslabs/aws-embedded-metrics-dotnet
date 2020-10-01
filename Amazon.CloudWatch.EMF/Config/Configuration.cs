@@ -1,4 +1,5 @@
 ﻿using Amazon.CloudWatch.EMF.Environment;
+using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Config
 {
@@ -19,18 +20,18 @@ namespace Amazon.CloudWatch.EMF.Config
         /// <summary>
         /// Gets name of the service to use in the default dimensions
         /// </summary>
-        public string ServiceName { get; private set; }
+        public string ServiceName { get; set; }
 
         /// <summary>
         /// Gets the type of the service to use in the default dimensions.
         /// </summary>
-        public string ServiceType { get; private set; }
+        public string ServiceType { get; set; }
 
         /// <summary>
         /// Gets the LogGroup name to use.
         /// This is only used for the Cloudwatch Agent in agent-based environment.
         /// </summary>
-        public string LogGroupName { get; private set; }
+        public string LogGroupName { get; set; }
 
         /// <summary>
         /// Gets the LogStream name to use. This will be ignored when using the Lambda scope.
@@ -40,7 +41,7 @@ namespace Amazon.CloudWatch.EMF.Config
         /// <summary>
         /// Gets the endpoint to use to connect to the CloudWatch Agent.
         /// </summary>
-        public string AgentEndPoint { get; private set; }
+        public string AgentEndPoint { get; set; }
 
         /// <summary>
         /// Environment override. This will short circuit auto-environment detection. Valid values
