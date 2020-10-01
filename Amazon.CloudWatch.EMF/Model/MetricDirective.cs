@@ -11,30 +11,26 @@ namespace Amazon.CloudWatch.EMF.Model
         [JsonProperty("Namespace")]
         internal string Namespace { get; set; }
 
-        [JsonProperty("Metrics")]
-        internal Dictionary<String, MetricDefinition> Metrics { get; set; }
+        internal Dictionary<string, MetricDefinition> Metrics { get; set; }
 
-        //TODO: dimension set is a dictionary and then we have a LIST of DimensionSet
-        //      so List<Dictionary<string,string>>
-        //      why is there a list of dictionaries?  how is this serialized into the logs?
-        internal List<DimensionSet> Dimensions { get; set; }
+        internal List<DimensionSet> CustomDimensionSets { get; private set; }
 
-        internal DimensionSet DefaultDimensions { get; set; }
+       internal DimensionSet DefaultDimensionSet { get; set; }
 
         private bool ShouldUseDefaultDimension;
 
         public MetricDirective()
         {
             Namespace = "aws-embedded-metrics";
-            Metrics = new Dictionary<String, MetricDefinition>();
-            Dimensions = new List<DimensionSet>();
-            DefaultDimensions = new DimensionSet();
+            Metrics = new Dictionary<string, MetricDefinition>();
+            CustomDimensionSets = new List<DimensionSet>();
+            DefaultDimensionSet = new DimensionSet();
             ShouldUseDefaultDimension = true;
         }
 
         void PutDimensionSet(DimensionSet dimensionSet)
         {
-            Dimensions.Add(dimensionSet);
+            CustomDimensionSets.Add(dimensionSet);
         }
 
         internal void PutMetric(String key, double value)
@@ -57,43 +53,35 @@ namespace Amazon.CloudWatch.EMF.Model
         [JsonProperty("Metrics")]
         List<MetricDefinition> AllMetrics => Metrics.Values.ToList();
 
-        List<MetricDefinition> GetAllMetrics()
-        {
-            return Metrics.Values.ToList();
-        }
-
         [JsonProperty("Dimensions")]
-        List<string> AllDimensionKeys
+        internal List<List<string>> AllDimensionKeys
         {
             get
             {
-                var keys = new List<string>();
-                GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.DimensionKeys));
+                var keys = new List<List<string>>();
+                GetAllDimensionSets().ForEach(s => keys.Add(s.DimensionKeys));
                 return keys;
             }
         }
-        List<string> GetAllDimensionKeys()
-        {
-            var keys = new List<string>();
-            GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.DimensionKeys));
-            return keys;
-        }
 
-        void SetDimensions(List<DimensionSet> dimensionSets)
+        /// <summary>
+        /// Overrides all existing dimensions, including suppressing any default dimensions.
+        /// </summary>
+        /// <param name="dimensionSets">the dimension sets to use in lieu of all existing custom and default dimensions</param>
+        internal void SetDimensions(List<DimensionSet> dimensionSets)
         {
             ShouldUseDefaultDimension = false;
-            Dimensions = dimensionSets;
+            CustomDimensionSets = dimensionSets;
         }
 
-        List<DimensionSet> GetAllDimensions()
+        internal List<DimensionSet> GetAllDimensionSets()
         {
             if (!ShouldUseDefaultDimension)
             {
-                return Dimensions;
+                return CustomDimensionSets;
             }
-
-            var dimensions = new List<DimensionSet>() { DefaultDimensions };
-            dimensions.AddRange(Dimensions);
+            var dimensions = new List<DimensionSet>() { DefaultDimensionSet };
+            dimensions.AddRange(CustomDimensionSets);
             return dimensions;
         }
 

@@ -1,28 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Amazon.CloudWatch.EMF.Model.DimensionSet">
-    <Position X="7.25" Y="4.5" Width="1.5" />
-    <NestedTypes>
-      <Class Name="Amazon.CloudWatch.EMF.Model.DimensionSet.DimensionEntry" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Model\DimensionSet.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-    </NestedTypes>
+    <Position X="12.5" Y="1.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAACAAAACAAAAAAAAAACAAAAAAAAACCAAAAgACBEA=</HashCode>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAIAAAAAAAAACAAAAgAEAAA=</HashCode>
       <FileName>Model\DimensionSet.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Amazon.CloudWatch.EMF.Model.MetaData">
-    <Position X="3" Y="1.75" Width="3.25" />
+    <Position X="3.5" Y="1.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAAAAAAAAAAAIACAAAABAAAAAAAAAACAAAAEAA=</HashCode>
       <FileName>Model\MetaData.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="CloudWatchMetrics" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Amazon.CloudWatch.EMF.Model.MetricDefinition">
-    <Position X="7.5" Y="2" Width="1.5" />
+    <Position X="7.5" Y="6" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAIQAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Model\MetricDefinition.cs</FileName>
@@ -32,23 +28,37 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Amazon.CloudWatch.EMF.Model.MetricDirective">
-    <Position X="12.75" Y="3.5" Width="3.25" />
+    <Position X="7.5" Y="1.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>ABkAAAAAAoAAAEAAAAIAAAIAAAkAJAAAAgAAAAAEAAA=</HashCode>
+      <HashCode>AAgBAAAAEIAAAEAAAAIAAAAAAAkAJAAAAgAAAAAEAAA=</HashCode>
       <FileName>Model\MetricDirective.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DefaultDimensions" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Metrics" />
+      <Property Name="CustomDimensionSets" />
+      <Property Name="AllMetrics" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Amazon.CloudWatch.EMF.Model.RootNode">
-    <Position X="3.25" Y="5.5" Width="1.5" />
+    <Position X="0.75" Y="1.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAEAAAAAQAgAAAgCAEBAAAAAAAAAAAAIA=</HashCode>
+      <HashCode>AACACAAAAAAAEAAAAAQAAAAAgCAEBAAAAAAAAAAAAIA=</HashCode>
       <FileName>Model\RootNode.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AWS" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Metrics" />
+    </ShowAsCollectionAssociation>
   </Class>
-  <Enum Name="Amazon.CloudWatch.EMF.Model.Unit" Collapsed="true">
-    <Position X="11" Y="2" Width="1.5" />
+  <Enum Name="Amazon.CloudWatch.EMF.Model.Unit">
+    <Position X="11.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAACAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAQA=</HashCode>
+      <HashCode>ASAADqAAGAEMAAEAAQAAAAHQAEIAAAAECAAIAQAABYA=</HashCode>
       <FileName>Model\Unit.cs</FileName>
     </TypeIdentifier>
   </Enum>
