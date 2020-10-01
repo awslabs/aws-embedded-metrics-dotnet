@@ -9,18 +9,19 @@ namespace Amazon.CloudWatch.EMF.Model
     public class MetricDirective
     {
         [JsonProperty("namespace")]
-        private string Namespace { get; set; }
+        internal string Namespace { get; set; }
 
         [JsonIgnore]
         internal Dictionary<String, MetricDefinition> Metrics { get; set; }
 
-        internal List<DimensionSet> Dimensions{ get; set; }
+        internal List<DimensionSet> Dimensions { get; set; }
 
-        private DimensionSet DefaultDimensions { get; set; }
+        internal DimensionSet DefaultDimensions { get; set; }
 
         private bool ShouldUseDefaultDimension;
 
-        public MetricDirective() {
+        public MetricDirective()
+        {
             Namespace = "aws-embedded-metrics";
             Metrics = new Dictionary<String, MetricDefinition>();
             Dimensions = new List<DimensionSet>();
@@ -28,15 +29,18 @@ namespace Amazon.CloudWatch.EMF.Model
             ShouldUseDefaultDimension = true;
         }
 
-        void PutDimensionSet(DimensionSet dimensionSet) {
+        void PutDimensionSet(DimensionSet dimensionSet)
+        {
             Dimensions.Add(dimensionSet);
         }
 
-        void PutMetric(String key, double value) {
+        internal void PutMetric(String key, double value)
+        {
             PutMetric(key, value, Unit.NONE);
         }
 
-        void PutMetric(String key, double value, Unit unit) {
+        internal void PutMetric(String key, double value, Unit unit)
+        {
             if (Metrics.ContainsKey(key))
             {
                 Metrics.GetValueOrDefault(key).AddValue(value);
@@ -53,32 +57,29 @@ namespace Amazon.CloudWatch.EMF.Model
             return Metrics.Values.ToList();
         }
 
-        List<HashSet<String>> GetAllDimensionKeys()
+        List<string> GetAllDimensionKeys()
         {
-            var keys = new List<HashSet<String>>();
-            //TODO: Fix this
-            //GetAllDimensions().ForEach(Dim => keys.Add(Dim.GetDimensionKeys()));
+            var keys = new List<string>();
+            GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.getDimensionKeys()));
             return keys;
         }
 
-        void SetDimensions(List<DimensionSet> dimensionSets) {
+        void SetDimensions(List<DimensionSet> dimensionSets)
+        {
             ShouldUseDefaultDimension = false;
             Dimensions = dimensionSets;
         }
 
-        List<DimensionSet> GetAllDimensions() 
+        List<DimensionSet> GetAllDimensions()
         {
-            if (!ShouldUseDefaultDimension) {
+            if (!ShouldUseDefaultDimension)
+            {
                 return Dimensions;
             }
 
-            if (!Dimensions.Any()) 
-            {
-                return new List<DimensionSet>(){DefaultDimensions};
-            }
-            //TODO: add these dimensions
-            //Dimensions.ForEach(dim => DefaultDimensions.AddDimension(dim));
-            return Dimensions;
+            var dimensions = new List<DimensionSet>() { DefaultDimensions };
+            dimensions.AddRange(Dimensions);
+            return dimensions;
         }
 
         public bool HasNoMetrics()

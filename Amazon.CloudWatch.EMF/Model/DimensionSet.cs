@@ -6,7 +6,7 @@ namespace Amazon.CloudWatch.EMF.Model
 {
     public class DimensionSet
     {
-        internal void AddDimension(string v, object p)
+        internal void AddDimension(string key, object value)
         {
             throw new NotImplementedException();
         }

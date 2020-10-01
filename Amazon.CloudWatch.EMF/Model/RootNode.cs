@@ -1,9 +1,33 @@
+using System;
 using System.Collections.Generic;
 using Amazon.CloudWatch.EMF.Model;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
+    /*
+    EXAMPLE OF DESIRED SERILIZATION OUTPUT:
+
+    {
+        "_aws": {
+            "Timestamp": 1559748430481
+            "CloudWatchMetrics": [ 
+                {
+                    "Namespace": "lambda-function-metrics",
+                    "Dimensions": [ [ "functionVersion" ] ],
+                    "Metrics": [
+                        {
+                            "Name": "Time",
+                            "Unit": "Milliseconds"
+                        }
+                    ]
+                }
+            ]
+        },
+        "time": 100,
+     }     
+     */
+
     public class RootNode
     {
         private MetaData aws;
@@ -13,9 +37,16 @@ namespace Amazon.CloudWatch.EMF.Model
             _properties = new Dictionary<string, object>();
         }
 
+        internal MetaData AWS { get { return aws; } }
+
         public void PutProperty(string key, object value)
         {
             _properties.Add(key, value);
+        }
+
+        public Dictionary<string, object> GetProperties()
+        {
+            return _properties;
         }
 
         /// <summary>
@@ -32,7 +63,7 @@ namespace Amazon.CloudWatch.EMF.Model
                 foreach (MetricDefinition metricDefinition in metricDirective.Metrics.Values)
                 {
                     List<double> values = metricDefinition.Values;
-                    targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object) values[0] : values);
+                    targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object)values[0] : values);
                 }
             }
             return targetMembers;
@@ -54,12 +85,13 @@ namespace Amazon.CloudWatch.EMF.Model
                     //CopyAll(dimensionSet.g);
                 }
             }
-                return dimensions;
+            return dimensions;
         }
-        
-        private Dictionary<string, MetricDefinition> Metrics()
+
+        internal Dictionary<string, MetricDefinition> Metrics
         {
-            return aws.CloudWatchMetrics[0].Metrics;
+            get { return aws.CloudWatchMetrics[0].Metrics; }
+            set { aws.CloudWatchMetrics[0].Metrics = value; }
         }
 
         private void CopyAll(Dictionary<string, object> sourceDictionary, Dictionary<string, object> targetDictionary)
