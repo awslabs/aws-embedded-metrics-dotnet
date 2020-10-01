@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Serializer;
 using Newtonsoft.Json;
@@ -29,18 +30,13 @@ namespace Amazon.CloudWatch.EMF.Model
      }     
      */
 
-    [JsonConverter(typeof(RootNodeSerializer))]
+    //[JsonConverter(typeof(RootNodeSerializer))]
     public class RootNode
     {
-        private MetaData _aws;
-        
-        private readonly Dictionary<string, object> _properties;
-        public RootNode()
-        {
-            _properties = new Dictionary<string, object>();
-        }
+        private readonly Dictionary<string, object> _properties = new Dictionary<string, object>();
 
-        internal MetaData AWS => _aws;
+        [JsonProperty("_aws")]
+        internal MetaData AWS { get; } = new MetaData();
 
         public void PutProperty(string key, object value)
         {
@@ -56,23 +52,34 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Return the target members that are referenced by metrics, dimensions and properties.
         /// </summary>
         /// <returns></returns>
-        private Dictionary<string, object> GetTargetMembers()
+        [JsonExtensionData]
+        private Dictionary<string, object> LogMessageProperties
         {
-            var targetMembers = new Dictionary<string, object>();
-            CopyAll(_properties, targetMembers);
-            CopyAll(GetDimensions(), targetMembers);
-            foreach (MetricDirective metricDirective in _aws.CloudWatchMetrics)
+            get
             {
-                foreach (MetricDefinition metricDefinition in metricDirective.Metrics.Values)
+                var targetMembers = new Dictionary<string, object>();
+                foreach (var property in _properties)
                 {
-                    List<double> values = metricDefinition.Values;
-                    targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object)values[0] : values);
+                    targetMembers.Add(property.Key, property.Value);
                 }
+                foreach (var dimension in GetDimensions())
+                {
+                    targetMembers.Add(dimension.Key, dimension.Value);
+                }
+                foreach (MetricDirective metricDirective in AWS.CloudWatchMetrics)
+                {
+                    foreach (MetricDefinition metricDefinition in metricDirective.Metrics.Values)
+                    {
+                        List<double> values = metricDefinition.Values;
+                        targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object)values[0] : values);
+                    }
+                }
+                //TODO: include metadata
+                return targetMembers;
             }
-            return targetMembers;
         }
 
-        
+
         /// <summary>
         /// Return a list of all dimensions that are referenced by each dimension set.
         /// </summary>
@@ -80,12 +87,12 @@ namespace Amazon.CloudWatch.EMF.Model
         private Dictionary<string, string> GetDimensions()
         {
             var dimensions = new Dictionary<string, string>();
-            foreach (MetricDirective metricDirective in _aws.CloudWatchMetrics)
+            foreach (MetricDirective metricDirective in AWS.CloudWatchMetrics)
             {
-                foreach (DimensionSet dimensionSet in metricDirective.Dimensions)
+                foreach (DimensionSet dimensionSet in metricDirective.CustomDimensionSets)
                 {
-                    //TODO
-                    //CopyAll(dimensionSet.g);
+                    //TODO: fix
+                    //dimensionSet.get
                 }
             }
             return dimensions;
@@ -93,8 +100,8 @@ namespace Amazon.CloudWatch.EMF.Model
 
         internal Dictionary<string, MetricDefinition> Metrics
         {
-            get { return _aws.CloudWatchMetrics[0].Metrics; }
-            set { _aws.CloudWatchMetrics[0].Metrics = value; }
+            get { return AWS.CloudWatchMetrics[0].Metrics; }
+            set { AWS.CloudWatchMetrics[0].Metrics = value; }
         }
 
         private void CopyAll(Dictionary<string, object> sourceDictionary, Dictionary<string, object> targetDictionary)

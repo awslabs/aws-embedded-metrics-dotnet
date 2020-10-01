@@ -7,16 +7,19 @@ namespace Amazon.CloudWatch.EMF.Model
 {
     public class MetaData
     {
+        [JsonProperty]
         internal DateTime Timestamp { get; set; }
+
+        [JsonProperty]
         internal List<MetricDirective> CloudWatchMetrics { get; set; }
 
-        private Dictionary<string, Object> CustomFields;
+        private Dictionary<string, object> CustomFields;
 
         public MetaData() 
         {
             CloudWatchMetrics = new List<MetricDirective>();
             Timestamp = DateTime.Now;
-            CustomFields = new Dictionary<string, Object>();
+            CustomFields = new Dictionary<string, object>();
         }
 
         internal MetricDirective CreateMetricDirective()
@@ -32,12 +35,12 @@ namespace Amazon.CloudWatch.EMF.Model
                    || CloudWatchMetrics.TrueForAll(x => !x.HasNoMetrics());
         }
 
-        internal void PutCustomMetadata(string key, Object value)
+        internal void PutCustomMetadata(string key, object value)
         {
             CustomFields.Add(key, value);
         }
 
-        internal Dictionary<string, Object> GetCustomMetadata()
+        internal Dictionary<string, object> GetCustomMetadata()
         {
             return CustomFields;
         }
