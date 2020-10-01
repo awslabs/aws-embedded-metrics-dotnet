@@ -1,41 +1,66 @@
+using System.ComponentModel;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace Amazon.CloudWatch.EMF.Model
 {
-    using System.ComponentModel; 
-    
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum Unit
     {
+        [Description("None")]
+        NONE,
         [Description("Seconds")]
         SECONDS,
-        [Description("Microseconds")] 
+        [Description("Microseconds")]
         MICROSECONDS,
-        [Description("Milliseconds")] 
+        [Description("Milliseconds")]
         MILLISECONDS,
-        [Description("Bytes")] 
+        [Description("Bytes")]
         BYTES,
-        [Description("None")] 
-        NONE
-    /*KILOBYTES = "Kilobytes",
-    MEGABYTES = "Megabytes",
-    GIGABYTES = "Gigabytes",
-    TERABYTES = "Terabytes",
-    BITS = "Bits",
-    KILOBITS = "Kilobits",
-    MEGABITS = "Megabits",
-    GIGABITS = "Gigabits",
-    TERABITS = "Terabits",
-    PERCENT = "Percent",
-    COUNT = "Count",
-    BYTES_PER_SECOND = "Bytes/Second",
-    KILOBYTES_PER_SECOND = "Kilobytes/Second",
-    MEGABYTES_PER_SECOND = "Megabytes/Second",
-    GIGABYTES_PER_SECOND = "Gigabytes/Second",
-    TERABYTES_PER_SECOND = "Terabytes/Second",
-    BITS_PER_SECOND = "Bits/Second",
-    KILOBITS_PER_SECOND = "Kilobits/Second",
-    MEGABITS_PER_SECOND = "Megabits/Second",
-    GIGABITS_PER_SECOND = "Gigabits/Second",
-    TERABITS_PER_SECOND = "Terabits/Second",
-    COUNT_PER_SECOND = "Count/Second",
-    NONE = "None"*/
+        [Description("Kilobytes")]
+        KILOBYTES,
+        [Description("Megabytes")]
+        MEGABYTES,
+        [Description("Gigabytes")]
+        GIGABYTES,
+        [Description("Terabytes")]
+        TERABYTES,
+        [Description("Bits")]
+        BITS,
+        [Description("Kilobits")]
+        KILOBITS,
+        [Description("Megabits")]
+        MEGABITS,
+        [Description("Gigabits")]
+        GIGABITS,
+        [Description("Terabits")]
+        TERABITS,
+        [Description("Percent")]
+        PERCENT,
+        [Description("Count")]
+        COUNT,
+        [Description("Bytes/Second")]
+        BYTES_PER_SECOND,
+        [Description("Kilobytes/Second")]
+        KILOBYTES_PER_SECOND,
+        [Description("Megabytes/Second")]
+        MEGABYTES_PER_SECOND,
+        [Description("Gigabytes/Second")]
+        GIGABYTES_PER_SECOND,
+        [Description("Terabytes/Second")]
+        TERABYTES_PER_SECOND,
+        [Description("Bits/Second")]
+        BITS_PER_SECOND,
+        [Description("Kilobits/Second")]
+        KILOBITS_PER_SECOND,
+        [Description("Megabits/Second")]
+        MEGABITS_PER_SECOND,
+        [Description("Gigabits/Second")]
+        GIGABITS_PER_SECOND,
+        [Description("Terabits/Second")]
+        TERABITS_PER_SECOND,
+        [Description("Count/Second")]
+        COUNT_PER_SECOND
     }
 }

@@ -2,15 +2,8 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Amazon.CloudWatch.EMF.Model.DimensionSet">
     <Position X="12.5" Y="1.5" Width="2.75" />
-    <NestedTypes>
-      <Class Name="Amazon.CloudWatch.EMF.Model.DimensionSet.DimensionEntry" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Model\DimensionSet.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAACAAAACAAAAAAAAAACAAAAAAAAACCAAAAgACBEA=</HashCode>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAIAAAAAAAAACAAAAgAEAAA=</HashCode>
       <FileName>Model\DimensionSet.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -37,22 +30,22 @@
   <Class Name="Amazon.CloudWatch.EMF.Model.MetricDirective">
     <Position X="7.5" Y="1.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>ABkAAAAAAoAAAEAAAAIAAAIAAAkAJAAAAgAAAAAEAAA=</HashCode>
+      <HashCode>AAgBAAAAEIAAAEAAAAIAAAAAAAkAJAAAAgAAAAAEAAA=</HashCode>
       <FileName>Model\MetricDirective.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="DefaultDimensions" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="AllMetrics" />
       <Property Name="Metrics" />
-      <Property Name="Dimensions" />
+      <Property Name="CustomDimensionSets" />
+      <Property Name="AllMetrics" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Amazon.CloudWatch.EMF.Model.RootNode">
     <Position X="0.75" Y="1.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAEAAAAAQAgAAAgCAEBAAAAAAAAAAAAIA=</HashCode>
+      <HashCode>AACACAAAAAAAEAAAAAQAAAAAgCAEBAAAAAAAAAAAAIA=</HashCode>
       <FileName>Model\RootNode.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -65,7 +58,7 @@
   <Enum Name="Amazon.CloudWatch.EMF.Model.Unit">
     <Position X="11.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAACAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAQA=</HashCode>
+      <HashCode>ASAADqAAGAEMAAEAAQAAAAHQAEIAAAAECAAIAQAABYA=</HashCode>
       <FileName>Model\Unit.cs</FileName>
     </TypeIdentifier>
   </Enum>

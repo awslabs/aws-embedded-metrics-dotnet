@@ -19,6 +19,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public MetricsContext(RootNode rootNode)
         {
+            if (rootNode == null) throw new ArgumentNullException(nameof(rootNode));
             _rootNode = rootNode;
             _metricDirective = rootNode.AWS.CreateMetricDirective();
         }
@@ -27,8 +28,13 @@ namespace Amazon.CloudWatch.EMF.Model
             string logNamespace,
             Dictionary<string, object> properties,
             List<DimensionSet> dimensionSets,
-            DimensionSet defaultDimensionSet)
+            DimensionSet defaultDimensionSet) : this()
         {
+            if (string.IsNullOrEmpty(logNamespace)) throw new ArgumentNullException(nameof(logNamespace));
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
+            if (dimensionSets == null) throw new ArgumentNullException(nameof(dimensionSets));
+            if (defaultDimensionSet == null) throw new ArgumentNullException(nameof(defaultDimensionSet));
+
             Namespace = logNamespace;
             DefaultDimensions = defaultDimensionSet;
             foreach (DimensionSet dimension in dimensionSets)
@@ -51,15 +57,13 @@ namespace Amazon.CloudWatch.EMF.Model
             return new MetricsContext(
                     _metricDirective.Namespace,
                     _rootNode.GetProperties(),
-                    _metricDirective.Dimensions,
-                    _metricDirective.DefaultDimensions);
+                    _metricDirective.CustomDimensionSets,
+                    _metricDirective.DefaultDimensionSet);
         }
 
-        /**
-         * Update the namespace with the parameter.
-         *
-         * @param namespace The new namespace
-         */
+        /// <summary>
+        /// Gets or sets the namespace for all metrics in this context.
+        /// </summary>
         public string Namespace
         {
             get { return _metricDirective.Namespace; }
@@ -67,72 +71,74 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Gets or Sets the default dimensions for all other dimensions that get added to the context. 
-        /// If no custom dimensions are specified, the metrics will be emitted with the defaults.
-        /// If custom dimensions are specified, they will be prepended with the default dimensions
+        /// Gets or Sets the default dimensions for the context. 
+        /// If no custom dimensions are specified, the metrics will be emitted with these defaults.
+        /// If custom dimensions are specified, they will be prepended with these default dimensions
         /// </summary>
         public DimensionSet DefaultDimensions
         {
-            get { return _metricDirective.DefaultDimensions; }
-            set { _metricDirective.DefaultDimensions = value; }
+            get { return _metricDirective.DefaultDimensionSet; }
+            set { _metricDirective.DefaultDimensionSet = value; }
         }
 
+        /// <summary>
+        /// Indicates whether default dimensions have alrady been set on this context.
+        /// </summary>
         public bool HasDefaultDimensions
         {
             get { return DefaultDimensions.DimensionKeys.Count > 0; }
         }
 
-        /**
-         * Add a metric measurement to the context. Multiple calls using the same key will be stored as
-         * an array of scalar values.
-         *
-         * <pre>{@code
-         * metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
-         * }</pre>
-         *
-         * @param key Name of the metric
-         * @param value Value of the metric
-         * @param unit The unit of the metric
-         */
+        /// <summary>
+        ///Add a metric measurement to the context.
+        ///Multiple calls using the same key will be stored as an array of scalar values.
+        /// </summary>
+        /// <example>
+        /// metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
+        /// </example>
+        /// <param name="key">the name of the metric</param>
+        /// <param name="value">the value of the metric</param>
+        /// <param name="unit">the units of the metric</param>
         public void PutMetric(String key, double value, Unit unit)
         {
             _metricDirective.PutMetric(key, value, unit);
         }
 
-        /**
-         * Add a metric measurement to the context without a unit Multiple calls using the same key will
-         * be stored as an array of scalar values.
-         *
-         * <pre>{@code
-         * metricContext.PutMetric("Count", 10)
-         * }</pre>
-         *
-         * @param key Name of the metric
-         * @param value Value of the metric
-         */
+        /// <summary>
+        /// Add a metric measurement to the context without a unit.
+        /// Multiple calls using the same key will be stored as an array of scalar values.
+        /// </summary>
+        /// <example>
+        /// metricContext.PutMetric("Count", 10)
+        /// </example>
+        /// <param name="key">the name of the metric</param>
+        /// <param name="value">the value of the metric</param>
         public void PutMetric(String key, double value)
         {
             PutMetric(key, value, Unit.NONE);
         }
 
-        /**
-         * Add a property to this log entry. Properties are additional values that can be associated
-         * with metrics. They will not show up in CloudWatch metrics, but they are searchable in
-         * CloudWatch Insights.
-         *
-         * <pre>{@code
-         * metricContext.PutProperty("Location", 'US')
-         * }</pre>
-         *
-         * @param name Name of the property
-         * @param value Value of the property
-         */
-        public void PutProperty(String name, Object value)
+        /// <summary>
+        /// Add a property to this log entry.
+        /// Properties are additional values that can be associated with metrics.
+        /// They will not show up in CloudWatch metrics, but they are searchable in CloudWatch Insights.
+        /// </summary>
+        /// <example>
+        /// metricContext.PutProperty("Location", 'US')
+        /// </example>
+        /// <param name="name">the name of the property</param>
+        /// <param name="value">the value of the property</param>
+        public void PutProperty(string name, object value)
         {
             _rootNode.PutProperty(name, value);
         }
 
-        public object GetProperty(String name)
+        /// <summary>
+        /// Gets the value of the property with the specified name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>the value of the property with the speicified name, or <c>null</c> if no property with that name has been set</returns>
+        public object GetProperty(string name)
         {
             _rootNode.GetProperties().TryGetValue(name, out var value);
             return value;
@@ -149,59 +155,59 @@ namespace Amazon.CloudWatch.EMF.Model
          */
         public void PutDimension(DimensionSet dimensionSet)
         {
-            _metricDirective.Dimensions.Add(dimensionSet);
+            _metricDirective.CustomDimensionSets.Add(dimensionSet);
         }
 
-        /**
-         * Add a dimension set with single dimension-value entry to the metric context.
-         *
-         * <pre>{@code
-         * metricContext.PutDimension("Dim", "Value" )
-         * }</pre>
-         *
-         * @param dimension the name of the dimension
-         * @param value the value associated with the dimension
-         */
+        /// <summary>
+        /// Adds a dimension set with single dimension-value entry to the metric context.
+        /// </summary>
+        /// <example>
+        /// metricContext.PutDimension("ExampleDimension", "ExampleValue")
+        /// </example>
+        /// <param name="dimension">the name of the new dimension</param>
+        /// <param name="value">the value of the new dimension</param>
         public void PutDimension(string dimension, string value)
         {
-            _metricDirective.Dimensions[0].AddDimension(dimension, value);
+            var dimensionSet = new DimensionSet();
+            dimensionSet.AddDimension(dimension, value);
+            _metricDirective.CustomDimensionSets.Add(dimensionSet);
         }
 
-        /** @return the list of dimensions that has been added, including default dimensions. */
-        public List<DimensionSet> GetDimensions()
+        /// <summary>
+        /// Gets all dimension sets that have been added, including default dimensions.
+        /// </summary>
+        /// <returns>the list of dimensions that has been added, including default dimensions</returns>
+        public List<DimensionSet> GetAllDimensionSets()
         {
-            return _metricDirective.Dimensions;
+            return _metricDirective.GetAllDimensionSets();
         }
 
-        /**
-         * Update the dimensions. This would override default dimensions
-         *
-         * @param dimensionSets the dimensionSets to be set
-         */
+        /// <summary>
+        /// Update the dimensions to the specified list; also overriding default dimensions
+        /// </summary>
+        /// <param name="dimensionSets">the dimensionSets to use instead of all existing dimensions and default dimensions.</param>
         public void SetDimensions(params DimensionSet[] dimensionSets)
         {
-            _metricDirective.Dimensions = dimensionSets.ToList();
+            _metricDirective.SetDimensions(dimensionSets.ToList());
         }
 
-        /**
-         * Add a key-value pair to the metadata
-         *
-         * @param key the name of the key
-         * @param value the value associated with the key
-         */
-        public void PutMetadata(String key, Object value)
+        /// <summary>
+        /// Adds the specified key-value pair to the metadata
+        /// </summary>
+        /// <param name="key">the name of the key</param>
+        /// <param name="value">the value to associate with the specified key</param>
+        public void PutMetadata(string key, object value)
         {
             _rootNode.AWS.PutCustomMetadata(key, value);
         }
 
-        /**
-         * Serialize the metrics in this context to strings. The EMF backend requires no more than 100
-         * metrics in one log event. If there're more than 100 metrics, we split the metrics into
-         * multiple log events.
-         *
-         * @return the serialized strings.
-         * @throws JsonProcessingException if there's any object that cannot be serialized
-         */
+
+        /// <summary>
+        /// Serializes the metrics in this context to strings.
+        /// The EMF backend requires no more than 100 metrics in one log event. 
+        /// If there're more than 100 metrics, we split the metrics into multiple log events (strings).
+        /// </summary>
+        /// <returns>the serialized strings</returns>
         public List<string> Serialize()
         {
             List<RootNode> nodes = new List<RootNode>();
