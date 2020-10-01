@@ -42,7 +42,8 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Creates a new MetricsContext with the same namespace, properties, and dimensions as this one but empty metrics-directive collection.
+        /// Creates a new MetricsContext with the same namespace, properties,
+        /// and dimensions as this one but empty metrics-directive collection.
         /// </summary>
         /// <returns></returns>
         public MetricsContext CreateCopyWithContext()
@@ -78,7 +79,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public bool HasDefaultDimensions
         {
-            get { return DefaultDimensions.getDimensionKeys().Count > 0; }
+            get { return DefaultDimensions.DimensionKeys.Count > 0; }
         }
 
         /**

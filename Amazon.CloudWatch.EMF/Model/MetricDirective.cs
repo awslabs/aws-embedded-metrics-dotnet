@@ -8,12 +8,15 @@ namespace Amazon.CloudWatch.EMF.Model
 {
     public class MetricDirective
     {
-        [JsonProperty("namespace")]
+        [JsonProperty("Namespace")]
         internal string Namespace { get; set; }
 
         [JsonProperty("Metrics")]
         internal Dictionary<String, MetricDefinition> Metrics { get; set; }
 
+        //TODO: dimension set is a dictionary and then we have a LIST of DimensionSet
+        //      so List<Dictionary<string,string>>
+        //      why is there a list of dictionaries?  how is this serialized into the logs?
         internal List<DimensionSet> Dimensions { get; set; }
 
         internal DimensionSet DefaultDimensions { get; set; }
@@ -50,17 +53,29 @@ namespace Amazon.CloudWatch.EMF.Model
                 Metrics.Add(key, new MetricDefinition(key, unit, value));
             }
         }
+        
+        [JsonProperty("Metrics")]
+        List<MetricDefinition> AllMetrics => Metrics.Values.ToList();
 
-        // TODO: add [JsonProperty("metrics")], Originally Collection is returned in java code
         List<MetricDefinition> GetAllMetrics()
         {
             return Metrics.Values.ToList();
         }
 
+        [JsonProperty("Dimensions")]
+        List<string> AllDimensionKeys
+        {
+            get
+            {
+                var keys = new List<string>();
+                GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.DimensionKeys));
+                return keys;
+            }
+        }
         List<string> GetAllDimensionKeys()
         {
             var keys = new List<string>();
-            GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.getDimensionKeys()));
+            GetAllDimensions().ForEach(Dim => keys.AddRange(Dim.DimensionKeys));
             return keys;
         }
 

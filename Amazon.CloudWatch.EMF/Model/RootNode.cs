@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Amazon.CloudWatch.EMF.Model;
+using Amazon.CloudWatch.EMF.Serializer;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Model
@@ -28,9 +29,11 @@ namespace Amazon.CloudWatch.EMF.Model
      }     
      */
 
+    [JsonConverter(typeof(RootNodeSerializer))]
     public class RootNode
     {
         private MetaData _aws;
+        
         private readonly Dictionary<string, object> _properties;
         public RootNode()
         {
@@ -38,7 +41,7 @@ namespace Amazon.CloudWatch.EMF.Model
             _aws = new MetaData();
         }
 
-        internal MetaData AWS { get { return _aws; } }
+        internal MetaData AWS => _aws;
 
         public void PutProperty(string key, object value)
         {
@@ -112,7 +115,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(_aws);
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

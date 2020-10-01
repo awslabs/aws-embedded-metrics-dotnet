@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Amazon.CloudWatch.EMF.Model.DimensionSet">
+    <Position X="7.25" Y="4.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Amazon.CloudWatch.EMF.Model.DimensionSet.DimensionEntry" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\DimensionSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAACAAAAAAAAAACAAAAAAAAACCAAAAgACBEA=</HashCode>
+      <FileName>Model\DimensionSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Amazon.CloudWatch.EMF.Model.MetaData">
+    <Position X="3" Y="1.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAIACAAAABAAAAAAAAAACAAAAEAA=</HashCode>
+      <FileName>Model\MetaData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Amazon.CloudWatch.EMF.Model.MetricDefinition">
+    <Position X="7.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIQAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Model\MetricDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Unit" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Amazon.CloudWatch.EMF.Model.MetricDirective">
+    <Position X="12.75" Y="3.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>ABkAAAAAAoAAAEAAAAIAAAIAAAkAJAAAAgAAAAAEAAA=</HashCode>
+      <FileName>Model\MetricDirective.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Amazon.CloudWatch.EMF.Model.RootNode">
+    <Position X="3.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAEAAAAAQAgAAAgCAEBAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\RootNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Amazon.CloudWatch.EMF.Model.Unit" Collapsed="true">
+    <Position X="11" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAACAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Model\Unit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
