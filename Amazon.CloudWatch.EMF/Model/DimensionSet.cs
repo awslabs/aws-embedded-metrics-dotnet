@@ -197,7 +197,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// </summary>
         public List<string> DimensionKeys => dimensionRecords.Keys.ToList();
 
-        
+
         /// <summary>
         /// 
         /// </summary>
