@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Amazon.CloudWatch.EMF.Model;
+using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
@@ -75,6 +76,10 @@ namespace Amazon.CloudWatch.EMF.Model
                 targetDictionary.Add(kvp.Key, kvp.Value);
             }
         }
-        
+
+        public string Serialize()
+        {
+            return JsonConvert.SerializeObject(aws);
+        }
     }
 }
