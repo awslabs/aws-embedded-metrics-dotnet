@@ -18,7 +18,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         //_lambdaEnvironment, ecsEnvironment, ec2Environment, _defaultEnvironment
         //private IEnvironment[] iEnvironments = {_lambdaEnvironment, _defaultEnvironment };
         
-        internal IEnvironment DefaultEnvironment { get; } = new DefaultEnvironment(_configuration);
+        internal IEnvironment DefaultEnvironment { get; } = new LambdaEnvironment();
         /// <summary>
         /// 
         /// </summary>
