@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -8,59 +9,59 @@ namespace Amazon.CloudWatch.EMF.Model
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Unit
     {
-        [Description("None")]
+        [EnumMember(Value = "None")]
         NONE,
-        [Description("Seconds")]
+        [EnumMember(Value = "Seconds")]
         SECONDS,
-        [Description("Microseconds")]
+        [EnumMember(Value = "Microseconds")]
         MICROSECONDS,
-        [Description("Milliseconds")]
+        [EnumMember(Value = "Milliseconds")]
         MILLISECONDS,
-        [Description("Bytes")]
+        [EnumMember(Value = "Bytes")]
         BYTES,
-        [Description("Kilobytes")]
+        [EnumMember(Value = "Kilobytes")]
         KILOBYTES,
-        [Description("Megabytes")]
+        [EnumMember(Value = "Megabytes")]
         MEGABYTES,
-        [Description("Gigabytes")]
+        [EnumMember(Value = "Gigabytes")]
         GIGABYTES,
-        [Description("Terabytes")]
+        [EnumMember(Value = "Terabytes")]
         TERABYTES,
-        [Description("Bits")]
+        [EnumMember(Value = "Bits")]
         BITS,
-        [Description("Kilobits")]
+        [EnumMember(Value = "Kilobits")]
         KILOBITS,
-        [Description("Megabits")]
+        [EnumMember(Value = "Megabits")]
         MEGABITS,
-        [Description("Gigabits")]
+        [EnumMember(Value = "Gigabits")]
         GIGABITS,
-        [Description("Terabits")]
+        [EnumMember(Value = "Terabits")]
         TERABITS,
-        [Description("Percent")]
+        [EnumMember(Value = "Percent")]
         PERCENT,
-        [Description("Count")]
+        [EnumMember(Value = "Count")]
         COUNT,
-        [Description("Bytes/Second")]
+        [EnumMember(Value = "Bytes/Second")]
         BYTES_PER_SECOND,
-        [Description("Kilobytes/Second")]
+        [EnumMember(Value = "Kilobytes/Second")]
         KILOBYTES_PER_SECOND,
-        [Description("Megabytes/Second")]
+        [EnumMember(Value = "Megabytes/Second")]
         MEGABYTES_PER_SECOND,
-        [Description("Gigabytes/Second")]
+        [EnumMember(Value = "Gigabytes/Second")]
         GIGABYTES_PER_SECOND,
-        [Description("Terabytes/Second")]
+        [EnumMember(Value = "Terabytes/Second")]
         TERABYTES_PER_SECOND,
-        [Description("Bits/Second")]
+        [EnumMember(Value = "Bits/Second")]
         BITS_PER_SECOND,
-        [Description("Kilobits/Second")]
+        [EnumMember(Value = "Kilobits/Second")]
         KILOBITS_PER_SECOND,
-        [Description("Megabits/Second")]
+        [EnumMember(Value = "Megabits/Second")]
         MEGABITS_PER_SECOND,
-        [Description("Gigabits/Second")]
+        [EnumMember(Value = "Gigabits/Second")]
         GIGABITS_PER_SECOND,
-        [Description("Terabits/Second")]
+        [EnumMember(Value = "Terabits/Second")]
         TERABITS_PER_SECOND,
-        [Description("Count/Second")]
+        [EnumMember(Value = "Count/Second")]
         COUNT_PER_SECOND
     }
 }

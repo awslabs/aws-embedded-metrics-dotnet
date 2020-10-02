@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
     public class MetaData
     {
         [JsonProperty]
+        [JsonConverter(typeof(UnixDateTimeConverter))]
         internal DateTime Timestamp { get; set; }
 
         [JsonProperty]
