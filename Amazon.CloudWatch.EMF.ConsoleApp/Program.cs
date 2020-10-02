@@ -14,8 +14,8 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
             dimensionSet.AddDimension("Service", "Aggregator");
             dimensionSet.AddDimension("Region", "us-west-2");
             logger.PutDimensions(dimensionSet);
-            logger.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);
-            logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
+            logger.PutMetric("ProcessingLatency", 101, Unit.KILOBYTES_PER_SECOND);
+            logger.PutMetric("ProcessingLatency", 100, Unit.GIGABYTES_PER_SECOND);
             logger.PutMetric("ProcessingLatency", 99, Unit.MILLISECONDS);
             logger.PutMetric("Count", 3, Unit.COUNT);
             logger.PutProperty("AccountId", "123456789");
