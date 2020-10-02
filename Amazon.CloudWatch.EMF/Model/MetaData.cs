@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.CloudWatch.EMF.Serializer;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
@@ -12,9 +12,8 @@ namespace Amazon.CloudWatch.EMF.Model
     /// </summary>
     public class MetaData
     {
-        //TODO: should be epic format (not timestamp)
         [JsonProperty]
-        [JsonConverter(typeof(UnixDateTimeConverter))]
+        [JsonConverter(typeof(UnixMillisecondDateTimeConverter))]
         internal DateTime Timestamp { get; set; }
 
         /// <summary>
