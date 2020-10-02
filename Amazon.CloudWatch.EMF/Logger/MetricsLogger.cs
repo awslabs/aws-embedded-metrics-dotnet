@@ -155,7 +155,6 @@ namespace Amazon.CloudWatch.EMF.Logger
 
         /// <summary>
         /// Add a custom key-value pair to the Metadata object.
-        /// This value will be emitted TODO: WHERE??
         /// </summary>
         /// <param name="key">the name of the key</param>
         /// <param name="value">the value associated with the key</param>
