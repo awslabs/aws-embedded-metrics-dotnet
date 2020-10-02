@@ -88,7 +88,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             Check.That(RetryUntilSucceed(BuildRequest(metricName), expectedSamples)).Equals(true);
         }
         
-        private GetMetricStatisticsRequest BuildRequest(String metricName) {
+        private GetMetricStatisticsRequest BuildRequest(String metricName) 
+        {
             var now = DateTime.Now;
             List<Dimension> dimensions = new List<Dimension>()
             {
@@ -117,7 +118,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             return res;
         }
         
-        private void LogMetric(String metricName) {
+        private void LogMetric(String metricName) 
+        {
             MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(), _logger);
             logger.PutDimensions(_dimensions);
             logger.PutMetric(metricName, 100, Unit.MILLISECONDS);
@@ -127,7 +129,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
         private bool RetryUntilSucceed(GetMetricStatisticsRequest request, int expected)
         {
             int attempts = 0;
-            while (!CheckMetricExistence(request, expected)) {
+            while (!CheckMetricExistence(request, expected)) 
+            {
                 attempts++;
                 Console.Out.Write(
                     "No metrics yet. Sleeping before trying again. Attempt #" + attempts);
@@ -142,7 +145,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             AmazonCloudWatchClient client = new AmazonCloudWatchClient();
             Task<GetMetricStatisticsResponse> response = client.GetMetricStatisticsAsync(request);
 
-            if (response == null) {
+            if (response == null) 
+            {
                 return false;
             }
 
@@ -160,7 +164,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             {
                 return Dns.GetHostName();
             } 
-            catch (System.Exception e) {
+            catch (System.Exception e)
+            {
                 return "UnknownHost";
             }
         }

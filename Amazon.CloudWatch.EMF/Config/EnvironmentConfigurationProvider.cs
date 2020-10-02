@@ -23,15 +23,9 @@ namespace Amazon.CloudWatch.EMF.Config
                     GetEnvVar(ConfigurationKeys.AGENT_ENDPOINT),
                     GetEnvironmentOverride());
             }
+            set => _config = value;
         }
-
-        private static string GetEnvVar(string key)
-        {
-            string name = string.Join("", ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
-            return EnvUtils.GetEnv(name);
-        }
-
-
+        
         private static Environments GetEnvironmentOverride()
         {
             string environmentName = GetEnvVar(ConfigurationKeys.ENVIRONMENT_OVERRIDE);
@@ -49,6 +43,12 @@ namespace Amazon.CloudWatch.EMF.Config
             {
                 return Environments.Unknown;
             }
+        }
+        
+        private static string GetEnvVar(string key)
+        {
+            string name = string.Join("", ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
+            return EnvUtils.GetEnv(name);
         }
     }
 }

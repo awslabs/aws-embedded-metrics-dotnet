@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Amazon.CloudWatch.EMF.Config;
+using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Logger;
 using Amazon.CloudWatch.EMF.Model;
 
@@ -9,6 +11,10 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
     {
         static void Main(string[] args)
         {
+            var configuration = new Configuration("Test Console App", "Console", "TestConsoleApp", "TestConsoleApp", "",
+                Environments.ECS);
+            EnvironmentConfigurationProvider.Config = configuration;
+
             var logger = new MetricsLogger();
             var dimensionSet = new DimensionSet();
             dimensionSet.AddDimension("Service", "Aggregator");
@@ -29,7 +35,6 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
             };
             logger.PutProperty("Payload", payLoad);
             logger.Flush();
-            Console.ReadLine();
         }
     }
 }

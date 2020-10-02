@@ -1,3 +1,4 @@
+using System;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
 using Amazon.CloudWatch.EMF.Config;
@@ -6,11 +7,8 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public class DefaultEnvironment : AgentBasedEnvironment
     {
-        private Configuration _configuration;
-
-        internal DefaultEnvironment(Configuration configuration)
+        internal DefaultEnvironment(Configuration configuration) : base(configuration)
         {
-            _configuration = configuration;
         }
         public new bool Probe()
         {

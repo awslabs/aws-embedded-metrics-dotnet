@@ -1,3 +1,4 @@
+using System;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
@@ -7,43 +8,55 @@ namespace Amazon.CloudWatch.EMF.Environment
     public abstract class AgentBasedEnvironment : IEnvironment
     {
         private ISink _sink;
-        private Configuration _config;
-
-        protected AgentBasedEnvironment()
+        protected Configuration _configuration;
+        
+        protected AgentBasedEnvironment(Configuration configuration)
         {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        protected AgentBasedEnvironment(Configuration config)
-        {
-            _config = config;
-        }
+        public string Name => !string.IsNullOrEmpty(_configuration.ServiceName) ? _configuration.ServiceName : Constants.UNKNOWN;
 
-        public string Name => !string.IsNullOrEmpty(_config.ServiceName) ? _config.ServiceName : Constants.UNKNOWN;
+        public string Type => !string.IsNullOrEmpty(_configuration.ServiceType) ? _configuration.ServiceType : Constants.UNKNOWN;
 
-        public string Type => !string.IsNullOrEmpty(_config.ServiceType) ? _config.ServiceType : Constants.UNKNOWN;
+        public string LogGroupName => !string.IsNullOrEmpty(_configuration.LogGroupName) ? _configuration.LogGroupName : Name + "_metrics";
 
-        public string LogGroupName => !string.IsNullOrEmpty(_config.LogGroupName) ? _config.LogGroupName : Name + "_metrics";
-
-        public string LogStreamName => !string.IsNullOrEmpty(_config.LogStreamName) ? _config.LogGroupName : "";
+        public string LogStreamName => !string.IsNullOrEmpty(_configuration.LogStreamName) ? _configuration.LogGroupName : "";
 
         public ISink Sink
         {
             get
             {
-                //TODO: Implement Agent Sink and update this
+                if (_sink == null) 
+                {
+                    Endpoint endpoint;
+                    if (string.IsNullOrEmpty(_configuration.AgentEndPoint))
+                    {
+                        //log.info("Endpoint is not defined. Using default: {}",
+                         //   Endpoint.DEFAULT_TCP_ENDPOINT);
+                        endpoint = Endpoint.DEFAULT_TCP_ENDPOINT;
+                    } 
+                    else 
+                    {
+                        endpoint = Endpoint.fromURL(_configuration.AgentEndPoint);
+                    }
+                    _sink = new AgentSink(LogGroupName,
+
+                            LogStreamName,
+                            endpoint,
+                            new SocketClientFactory());
+                }
                 return _sink;
             }
         }
 
         public bool Probe()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public void ConfigureContext(MetricsContext context)
         {
-            throw new System.NotImplementedException();
         }
-
     }
 }

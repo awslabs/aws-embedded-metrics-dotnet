@@ -1,9 +1,7 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Model;
-using Amazon.CloudWatch.EMF.Sink;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

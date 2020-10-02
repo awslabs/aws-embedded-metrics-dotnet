@@ -95,22 +95,6 @@ namespace Amazon.CloudWatch.EMF.Model
             }
             return dimensions;
         }
-
-        private void CopyAll(Dictionary<string, object> sourceDictionary, Dictionary<string, object> targetDictionary)
-        {
-            foreach (KeyValuePair<string, object> kvp in sourceDictionary)
-            {
-                targetDictionary.Add(kvp.Key, kvp.Value);
-            }
-        }
-        private void CopyAll(Dictionary<string, string> sourceDictionary, Dictionary<string, object> targetDictionary)
-        {
-            foreach (KeyValuePair<string, string> kvp in sourceDictionary)
-            {
-                targetDictionary.Add(kvp.Key, kvp.Value);
-            }
-        }
-
         public string Serialize()
         {
             return JsonConvert.SerializeObject(this);

@@ -1,6 +1,21 @@
-namespace Amazon.CloudWatch.EMF.Exception
+using System;
+
+namespace Amazon.CloudWatch.EMF
 {
-    public class EMFClientException
+    public class EMFClientException : Exception
     {
+        public EMFClientException()
+        {
+        }
+
+        public EMFClientException(string message)
+            : base(message)
+        {
+        }
+
+        public EMFClientException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
     }
 }
