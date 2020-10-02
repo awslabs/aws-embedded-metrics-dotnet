@@ -2,19 +2,15 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Globalization;
-
 namespace Amazon.CloudWatch.EMF.Serializer
 {
     internal class UnixMillisecondDateTimeConverter : DateTimeConverterBase
     {
         internal static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
-
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             long milliseconds;

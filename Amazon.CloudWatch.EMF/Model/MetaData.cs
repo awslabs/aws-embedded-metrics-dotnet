@@ -23,7 +23,7 @@ namespace Amazon.CloudWatch.EMF.Model
         [JsonProperty]
         internal IReadOnlyCollection<MetricDirective> CloudWatchMetrics { get; set; }
 
-        internal MetricDirective MetricDirective { get { return CloudWatchMetrics.First(); } }
+        internal MetricDirective MetricDirective => CloudWatchMetrics.First();
 
         internal Dictionary<string, object> CustomMetadata { get; set; } = new Dictionary<string, object>();
 

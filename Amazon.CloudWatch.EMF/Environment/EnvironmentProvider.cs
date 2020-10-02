@@ -37,8 +37,6 @@ namespace Amazon.CloudWatch.EMF.Environment
             
             return Task.FromResult(DefaultEnvironment);
         }
-
-
         
         private IEnvironment GetEnvironmentFromOverride()
         {

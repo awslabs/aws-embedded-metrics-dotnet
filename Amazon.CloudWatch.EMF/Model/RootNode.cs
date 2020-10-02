@@ -29,8 +29,6 @@ namespace Amazon.CloudWatch.EMF.Model
         "time": 100,
      }     
      */
-
-    //[JsonConverter(typeof(RootNodeSerializer))]
     public class RootNode
     {
         private readonly Dictionary<string, object> _properties = new Dictionary<string, object>();

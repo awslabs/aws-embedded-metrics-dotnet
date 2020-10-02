@@ -1,11 +1,9 @@
-using System;
+using Amazon.CloudWatch.EMF.Config;
+using Amazon.CloudWatch.EMF.Model;
+using Amazon.CloudWatch.EMF.Sink;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
-    using Amazon.CloudWatch.EMF.Config;
-    using Amazon.CloudWatch.EMF.Model;
-    using Amazon.CloudWatch.EMF.Sink;
-
     public abstract class AgentBasedEnvironment : IEnvironment
     {
         private ISink _sink;

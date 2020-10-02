@@ -20,7 +20,6 @@ namespace Amazon.CloudWatch.EMF.Model
         private List<MetricDefinition> _metrics;
 
         internal List<DimensionSet> CustomDimensionSets { get; private set; }
-
         internal DimensionSet DefaultDimensionSet { get; set; }
 
         private bool ShouldUseDefaultDimensionSet;

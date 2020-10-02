@@ -1,8 +1,10 @@
+using System;
+using Amazon.CloudWatch.EMF.Model;
+using Amazon.CloudWatch.EMF.Sink;
+using Amazon.CloudWatch.EMF.Utils;
+
 namespace Amazon.CloudWatch.EMF.Environment
 {
-    using System;
-    using Amazon.CloudWatch.EMF.Model;
-    using Amazon.CloudWatch.EMF.Sink;
     public class LambdaEnvironment : IEnvironment
     {
         private const string AWS_EXECUTION_ENV = "AWS_EXECUTION_ENV";
@@ -17,7 +19,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         // TODO: support probing asynchronously
         public bool Probe()
         {
-            string functionName = GetEnv(LAMBDA_FUNCTION_NAME);
+            string functionName = EnvUtils.GetEnv(LAMBDA_FUNCTION_NAME);
             return functionName != null;
         }
 
@@ -25,7 +27,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             get
             {
-                string functionName = GetEnv(LAMBDA_FUNCTION_NAME);
+                string functionName = EnvUtils.GetEnv(LAMBDA_FUNCTION_NAME);
                 return functionName != null ? functionName : "Unknown";
             }
         }
@@ -36,9 +38,9 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         public void ConfigureContext(MetricsContext context) 
         {
-            AddProperty(context, "executionEnvironment", GetEnv(AWS_EXECUTION_ENV));
-            AddProperty(context, "functionVersion", GetEnv(LAMBDA_FUNCTION_VERSION));
-            AddProperty(context, "logStreamId", GetEnv(LAMBDA_LOG_STREAM));
+            AddProperty(context, "executionEnvironment", EnvUtils.GetEnv(AWS_EXECUTION_ENV));
+            AddProperty(context, "functionVersion", EnvUtils.GetEnv(LAMBDA_FUNCTION_VERSION));
+            AddProperty(context, "logStreamId", EnvUtils.GetEnv(LAMBDA_LOG_STREAM));
 
             var traceId = GetSampledTrace();
             if (!string.IsNullOrEmpty(traceId))
@@ -66,18 +68,12 @@ namespace Amazon.CloudWatch.EMF.Environment
         //TODO: Java uses optional string, validate if this works as expected
         private string GetSampledTrace()
         {
-            string traceId = GetEnv(TRACE_ID);
+            string traceId = EnvUtils.GetEnv(TRACE_ID);
             if (traceId != null && traceId.Contains("Sampled=1", StringComparison.OrdinalIgnoreCase))
             {
                 return traceId;
             }
             return string.Empty;
-        }
-
-        //TODO: Java one calls SystemWrapper, revisit if thats needed for mocking
-        private string GetEnv(string name)
-        {
-            return Environment.GetEnvironmentVariable(name);
         }
     }
 }
