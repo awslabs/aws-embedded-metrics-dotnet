@@ -30,12 +30,9 @@
   <Class Name="Amazon.CloudWatch.EMF.Model.MetricDirective">
     <Position X="7.5" Y="1.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAgBAAAAEIAAAEAAAAIAAAAAAAkAJAAAAgAAAAAEAAA=</HashCode>
+      <HashCode>AAgBAAAAEIAABEAAAAIAAAAAAAkAJAAAAgAAAAAAAAA=</HashCode>
       <FileName>Model\MetricDirective.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="DefaultDimensions" />
-    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Metrics" />
       <Property Name="CustomDimensionSets" />

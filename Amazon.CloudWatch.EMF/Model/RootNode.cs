@@ -49,11 +49,11 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Return the target members that are referenced by metrics, dimensions and properties.
+        /// Emits the target members that are referenced by metrics, dimensions and properties.
         /// </summary>
         /// <returns></returns>
         [JsonExtensionData]
-        private Dictionary<string, object> LogMessageProperties
+        private Dictionary<string, object> CloudWatchLogMembers
         {
             get
             {
@@ -66,42 +66,36 @@ namespace Amazon.CloudWatch.EMF.Model
                 {
                     targetMembers.Add(dimension.Key, dimension.Value);
                 }
-                foreach (MetricDirective metricDirective in AWS.CloudWatchMetrics)
+                foreach(var data in AWS.CustomMetadata)
                 {
-                    foreach (MetricDefinition metricDefinition in metricDirective.Metrics.Values)
-                    {
-                        List<double> values = metricDefinition.Values;
-                        targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object)values[0] : values);
-                    }
+                    targetMembers.Add(data.Key, data.Value);
                 }
-                //TODO: include metadata
+                foreach (MetricDefinition metricDefinition in AWS.MetricDirective.Metrics)
+                {
+                    List<double> values = metricDefinition.Values;
+                    targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object)values[0] : values);
+                }
                 return targetMembers;
             }
         }
 
 
         /// <summary>
-        /// Return a list of all dimensions that are referenced by each dimension set.
+        /// Return a list of all dimensions from all dimension sets.
         /// </summary>
         /// <returns></returns>
         private Dictionary<string, string> GetDimensions()
         {
             var dimensions = new Dictionary<string, string>();
-            foreach (MetricDirective metricDirective in AWS.CloudWatchMetrics)
+            var dimensionSets = AWS.MetricDirective.GetAllDimensionSets();
+            foreach (DimensionSet dimensionSet in dimensionSets)
             {
-                foreach (DimensionSet dimensionSet in metricDirective.CustomDimensionSets)
+                foreach (var dimension in dimensionSet.Dimensions)
                 {
-                    //TODO: fix
-                    //dimensionSet.get
+                    dimensions.Add(dimension.Key, dimension.Value);
                 }
             }
             return dimensions;
-        }
-
-        internal Dictionary<string, MetricDefinition> Metrics
-        {
-            get { return AWS.CloudWatchMetrics[0].Metrics; }
-            set { AWS.CloudWatchMetrics[0].Metrics = value; }
         }
 
         private void CopyAll(Dictionary<string, object> sourceDictionary, Dictionary<string, object> targetDictionary)

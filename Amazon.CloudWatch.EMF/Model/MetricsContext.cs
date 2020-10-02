@@ -21,7 +21,7 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             if (rootNode == null) throw new ArgumentNullException(nameof(rootNode));
             _rootNode = rootNode;
-            _metricDirective = rootNode.AWS.CreateMetricDirective();
+            _metricDirective = rootNode.AWS.MetricDirective;
         }
 
         public MetricsContext(
@@ -198,7 +198,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="value">the value to associate with the specified key</param>
         public void PutMetadata(string key, object value)
         {
-            _rootNode.AWS.PutCustomMetadata(key, value);
+            _rootNode.AWS.CustomMetadata.Add(key, value);
         }
 
 
@@ -211,7 +211,7 @@ namespace Amazon.CloudWatch.EMF.Model
         public List<string> Serialize()
         {
             List<RootNode> nodes = new List<RootNode>();
-            if (_rootNode.Metrics.Count <= Constants.MAX_METRICS_PER_EVENT)
+            if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MAX_METRICS_PER_EVENT)
             {
                 nodes.Add(_rootNode);
             }
@@ -219,17 +219,11 @@ namespace Amazon.CloudWatch.EMF.Model
             {
                 //split the root nodes into multiple and serialize each
                 int count = 0;
-                while (count < _rootNode.Metrics.Count)
+                while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
                 {
-                    var metrics = _rootNode.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT).ToDictionary(m => m.Key, m => m.Value);
-                    var metadata = _rootNode.AWS.CloudWatchMetrics;
-                    var node = new RootNode()
-                    {
-                        Metrics = metrics,
-                        //TODO: copy properties and dimensions into rootnode
-                    };
-                    nodes.Add(node);
-                    count += Constants.MAX_METRICS_PER_EVENT;
+                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT);
+                    //TODO: split the notes into multiples and seralize each, copying metadata, properties, etc.
+                    throw new NotImplementedException();
                 }
             }
             var results = new List<string>();

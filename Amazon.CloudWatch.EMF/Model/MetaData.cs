@@ -6,45 +6,38 @@ using Newtonsoft.Json.Converters;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
+    /// <summary>
+    /// Represents the CloudWatch Metrics Metadata appended to the CloudWatch log 
+    /// and used by CloudWatch to parse metrics out of the log's properties.
+    /// </summary>
     public class MetaData
     {
+        //TODO: should be epic format (not timestamp)
         [JsonProperty]
         [JsonConverter(typeof(UnixDateTimeConverter))]
         internal DateTime Timestamp { get; set; }
 
+        /// <summary>
+        /// Represents the MetricDirective.
+        /// NOTE: serialization emits an Array, but only a single MetricDirective is supported by this library.
+        /// </summary>
         [JsonProperty]
-        internal List<MetricDirective> CloudWatchMetrics { get; set; }
+        internal IReadOnlyCollection<MetricDirective> CloudWatchMetrics { get; set; }
 
-        private Dictionary<string, object> CustomFields;
+        internal MetricDirective MetricDirective { get { return CloudWatchMetrics.First(); } }
 
-        public MetaData() 
+        internal Dictionary<string, object> CustomMetadata { get; set; } = new Dictionary<string, object>();
+
+        public MetaData()
         {
-            CloudWatchMetrics = new List<MetricDirective>();
+            CloudWatchMetrics = new List<MetricDirective>() { new MetricDirective() };
             Timestamp = DateTime.Now;
-            CustomFields = new Dictionary<string, object>();
-        }
-
-        internal MetricDirective CreateMetricDirective()
-        {
-            MetricDirective newMetricDirective = new MetricDirective();
-            CloudWatchMetrics.Add(newMetricDirective);
-            return newMetricDirective;
+            CustomMetadata = new Dictionary<string, object>();
         }
 
         internal bool IsEmpty()
         {
-            return !CloudWatchMetrics.Any()
-                   || CloudWatchMetrics.TrueForAll(x => !x.HasNoMetrics());
-        }
-
-        internal void PutCustomMetadata(string key, object value)
-        {
-            CustomFields.Add(key, value);
-        }
-
-        internal Dictionary<string, object> GetCustomMetadata()
-        {
-            return CustomFields;
+            return !MetricDirective.HasNoMetrics();
         }
     }
 }
