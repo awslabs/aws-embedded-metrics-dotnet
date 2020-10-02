@@ -72,15 +72,19 @@ namespace Amazon.CloudWatch.EMF.Logger
             IEnvironment environment;
             try
             {
+                _logger.LogDebug("Resolving the environment");
                 environment = _environmentFuture.Result;
+                _logger.LogDebug($"Resolved environment {environment.Name}");
             }
             catch (System.Exception ex)
             {
                 _logger.LogInformation(ex, "Failed to resolve environment. Fallback to default environment.");
                 environment = _environmentProvider.DefaultEnvironment;
+                _logger.LogDebug($"Resolved environment {environment.Name}");
             }
             //TODO: uncomment this line of code to test serialization results
-            var result = _context.Serialize();
+            //var result = _context.Serialize();
+            _logger.LogDebug($"Configuring context for environment  {environment.Name}");
             ConfigureContextForEnvironment(_context, environment);
             var sink = environment.Sink;
             if (sink == null)
@@ -91,7 +95,10 @@ namespace Amazon.CloudWatch.EMF.Logger
                 throw ex;
             }
             sink.Accept(_context);
+            _logger.LogInformation($"Creating new context after flushing logs...");
             _context = _context.CreateCopyWithContext();
+            _logger.LogInformation($"New context successfully created.");
+
         }
 
         /// <summary>
