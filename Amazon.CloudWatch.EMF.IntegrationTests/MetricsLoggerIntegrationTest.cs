@@ -23,6 +23,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
         private static readonly string _dimensionName = "Operation";
         private static readonly string _dimensionValue = "Integ-Test-Agent";
         private DimensionSet _dimensions = new DimensionSet(_dimensionName, _dimensionValue);
+        private Microsoft.Extensions.Logging.ILogger _logger;
 
         // TODO: Added constructor for now. @Before used
         public MetricsLoggerIntegrationTest ()
@@ -117,7 +118,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
         }
         
         private void LogMetric(String metricName) {
-            MetricsLogger logger = new MetricsLogger(new EnvironmentProvider());
+            MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(), _logger);
             logger.PutDimensions(_dimensions);
             logger.PutMetric(metricName, 100, Unit.MILLISECONDS);
             logger.Flush();
