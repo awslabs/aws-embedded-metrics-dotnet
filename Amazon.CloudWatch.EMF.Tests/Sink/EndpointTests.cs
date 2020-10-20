@@ -1,10 +1,4 @@
-using Amazon.CloudWatch.EMF.Config;
-using Amazon.CloudWatch.EMF.Serializer;
 using Amazon.CloudWatch.EMF.Sink;
-using AutoFixture;
-using AutoFixture.AutoNSubstitute;
-using Newtonsoft.Json;
-using NFluent;
 using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Sink

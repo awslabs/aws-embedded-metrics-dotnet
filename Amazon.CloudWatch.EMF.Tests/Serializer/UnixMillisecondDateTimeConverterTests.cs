@@ -1,11 +1,8 @@
 using System;
-using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Serializer;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using Newtonsoft.Json;
-using NFluent;
-using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Serializer
@@ -25,11 +22,11 @@ namespace Amazon.CloudWatch.EMF.Tests.Serializer
             var serializer = _fixture.Create<UnixMillisecondDateTimeConverter>();
             var obj = string.Empty;
 
-            // Act
+            //Act
+            Action act = () => serializer.WriteJson(null, obj, null);
 
-            // Assert
-            Check.ThatCode(() => serializer.WriteJson(null, obj, null))
-                .Throws<JsonSerializationException>();
+            //Assert
+            Assert.Throws<JsonSerializationException>(act);
         }
         
         [Fact]
@@ -39,11 +36,11 @@ namespace Amazon.CloudWatch.EMF.Tests.Serializer
             var serializer = _fixture.Create<UnixMillisecondDateTimeConverter>();
             var obj = new DateTime(1969, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            // Act
+            //Act
+            Action act = () => serializer.WriteJson(null, obj, null);
 
-            // Assert
-            Check.ThatCode(() => serializer.WriteJson(null, obj, null))
-                .Throws<JsonSerializationException>();
+            //Assert
+            Assert.Throws<JsonSerializationException>(act);
         }
         
         [Fact]
@@ -54,12 +51,11 @@ namespace Amazon.CloudWatch.EMF.Tests.Serializer
             var writer = _fixture.Create<JsonWriter>();
             var jsonSerializer = _fixture.Create<JsonSerializer>();
             var obj = DateTime.Now;
-            
-            // Act
 
-            // Assert
-            Check.ThatCode(() => serializer.WriteJson(writer, obj, jsonSerializer))
-                .DoesNotThrow();
+            //Act
+            serializer.WriteJson(writer, obj, jsonSerializer);
+
+            //Assert
         }
     }
 }

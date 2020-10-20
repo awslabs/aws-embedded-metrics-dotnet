@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace Amazon.CloudWatch.EMF.Sink
 {
     public class SocketClientFactory
