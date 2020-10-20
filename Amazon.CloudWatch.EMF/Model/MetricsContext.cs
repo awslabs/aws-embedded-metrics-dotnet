@@ -41,6 +41,7 @@ namespace Amazon.CloudWatch.EMF.Model
             {
                 PutDimension(dimension);
             }
+
             foreach (var property in properties)
             {
                 PutProperty(property.Key, property.Value);
@@ -71,7 +72,7 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Gets or Sets the default dimensions for the context. 
+        /// Gets or Sets the default dimensions for the context.
         /// If no custom dimensions are specified, the metrics will be emitted with these defaults.
         /// If custom dimensions are specified, they will be prepended with these default dimensions
         /// </summary>
@@ -201,10 +202,9 @@ namespace Amazon.CloudWatch.EMF.Model
             _rootNode.AWS.CustomMetadata.Add(key, value);
         }
 
-
         /// <summary>
         /// Serializes the metrics in this context to strings.
-        /// The EMF backend requires no more than 100 metrics in one log event. 
+        /// The EMF backend requires no more than 100 metrics in one log event.
         /// If there're more than 100 metrics, we split the metrics into multiple log events (strings).
         /// </summary>
         /// <returns>the serialized strings</returns>
@@ -217,20 +217,23 @@ namespace Amazon.CloudWatch.EMF.Model
             }
             else
             {
-                //split the root nodes into multiple and serialize each
+                // split the root nodes into multiple and serialize each
                 int count = 0;
                 while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
                 {
                     var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT);
-                    //TODO: split the notes into multiples and seralize each, copying metadata, properties, etc.
+
+                    // TODO: split the notes into multiples and seralize each, copying metadata, properties, etc.
                     throw new NotImplementedException();
                 }
             }
+
             var results = new List<string>();
             foreach (var node in nodes)
             {
                 results.Add(node.Serialize());
             }
+
             return results;
         }
     }
