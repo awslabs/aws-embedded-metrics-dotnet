@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Model;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// </summary>
         /// <param name="logger">the logger where this metrics logger should log its internal diagnostics info.</param>
         public MetricsLogger(ILogger logger)
-            : this(new EnvironmentProvider(), logger)
+            : this(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher()), logger)
         {
         }
 

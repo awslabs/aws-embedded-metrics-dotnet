@@ -26,13 +26,13 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
         private Microsoft.Extensions.Logging.ILogger _logger;
 
         // TODO: Added constructor for now. @Before used
-        public MetricsLoggerIntegrationTest ()
+        public MetricsLoggerIntegrationTest()
         {
             _config.ServiceName = _serviceName;
             _config.ServiceType = _serviceType;
             _config.LogGroupName = _logGroupName;
         }
-        
+
         [Fact(Timeout = 120_000)]
         public void TestSingleFlushOverTCP()
         {
@@ -44,8 +44,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
 
             Check.That(RetryUntilSucceed(BuildRequest(metricName), expectedSamples)).Equals(true);
         }
-        
-      
+
+
         [Fact(Timeout = 300_000)]
         public void TestMultipleFlushesOverTCP()
         {
@@ -60,7 +60,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
 
             Check.That(RetryUntilSucceed(BuildRequest(metricName), expectedSamples)).Equals(true);
         }
-        
+
         [Fact(Timeout = 120_000)]
         public void TestSingleFlushOverUDP()
         {
@@ -72,7 +72,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
 
             Check.That(RetryUntilSucceed(BuildRequest(metricName), expectedSamples)).Equals(true);
         }
-        
+
         [Fact(Timeout = 300_000)]
         public void TestMultipleFlushOverUDP()
         {
@@ -87,8 +87,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
 
             Check.That(RetryUntilSucceed(BuildRequest(metricName), expectedSamples)).Equals(true);
         }
-        
-        private GetMetricStatisticsRequest BuildRequest(String metricName) 
+
+        private GetMetricStatisticsRequest BuildRequest(String metricName)
         {
             var now = DateTime.Now;
             List<Dimension> dimensions = new List<Dimension>()
@@ -109,7 +109,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             metricRequest.Statistics.Add(Statistic.SampleCount);
             return metricRequest;
         }
-        
+
         private Dimension GetDimension(string name, string value)
         {
             var res = new Dimension();
@@ -117,35 +117,35 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             res.Value = value;
             return res;
         }
-        
-        private void LogMetric(String metricName) 
+
+        private void LogMetric(String metricName)
         {
-            MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(), _logger);
+            MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher()), _logger);
             logger.PutDimensions(_dimensions);
             logger.PutMetric(metricName, 100, Unit.MILLISECONDS);
             logger.Flush();
         }
-        
+
         private bool RetryUntilSucceed(GetMetricStatisticsRequest request, int expected)
         {
             int attempts = 0;
-            while (!CheckMetricExistence(request, expected)) 
+            while (!CheckMetricExistence(request, expected))
             {
                 attempts++;
                 Console.Out.Write(
                     "No metrics yet. Sleeping before trying again. Attempt #" + attempts);
-                    Thread.Sleep(2000);
-            } 
+                Thread.Sleep(2000);
+            }
             return true;
         }
-        
+
         // TODO: sampleCounts is calculated wrongly
         bool CheckMetricExistence(GetMetricStatisticsRequest request, double expectedSampleCount)
         {
             AmazonCloudWatchClient client = new AmazonCloudWatchClient();
             Task<GetMetricStatisticsResponse> response = client.GetMetricStatisticsAsync(request);
 
-            if (response == null) 
+            if (response == null)
             {
                 return false;
             }
@@ -158,12 +158,13 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             }
             return sampleCounts.Equals(expectedSampleCount);
         }
-        
-        private static string GetLocalHost() {
-            try 
+
+        private static string GetLocalHost()
+        {
+            try
             {
                 return Dns.GetHostName();
-            } 
+            }
             catch (System.Exception e)
             {
                 return "UnknownHost";

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
@@ -22,7 +23,10 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         public async void ResolveEnvironment_ReturnCachedEnv()
         {
             //Arrange
-            var environmentProvider = new EnvironmentProvider();
+            var configuration = _fixture.Create<IConfiguration>();
+            configuration.EnvironmentOverride.Returns(Environments.Local);
+            var resourceFetcher = _fixture.Create<IResourceFetcher>();
+            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
 
             //Act
             var environment = await environmentProvider.ResolveEnvironment();
