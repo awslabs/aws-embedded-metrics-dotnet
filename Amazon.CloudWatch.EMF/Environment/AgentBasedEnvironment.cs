@@ -7,7 +7,7 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public abstract class AgentBasedEnvironment : IEnvironment
     {
-        protected IConfiguration _configuration;
+        private IConfiguration _configuration;
         private ISink _sink;
 
         protected AgentBasedEnvironment(IConfiguration configuration)
