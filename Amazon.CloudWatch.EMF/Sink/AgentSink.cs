@@ -9,6 +9,7 @@ namespace Amazon.CloudWatch.EMF.Sink
          private string _logGroupName;
          private string _logStreamName;
          private ISocketClient _socketClient;
+
          public AgentSink(
              string logGroupName,
              string logStreamName,
@@ -19,31 +20,32 @@ namespace Amazon.CloudWatch.EMF.Sink
              _logStreamName = logStreamName;
              _socketClient = clientFactory.GetClient(endpoint);
          }
-    
-         public void Accept(MetricsContext metricsContext) 
+
+         public void Accept(MetricsContext metricsContext)
          {
-             if (!String.IsNullOrEmpty(_logGroupName)) 
+             if (!String.IsNullOrEmpty(_logGroupName))
              {
                  metricsContext.PutMetadata("LogGroupName", _logGroupName);
              }
-             
-             if (!String.IsNullOrEmpty(_logStreamName)) 
+
+             if (!String.IsNullOrEmpty(_logStreamName))
              {
                  metricsContext.PutMetadata("LogStreamName", _logStreamName);
              }
-             
-             try 
+
+             try
              {
                  foreach (string data in metricsContext.Serialize())
                  {
                      _socketClient.SendMessage(data);
                  }
-             } 
-             catch (Exception e) //JsonProcessingException
+             }
+
+             // JsonProcessingException
+             catch (Exception e)
              {
-                 //log.error("Failed to serialize the metrics with the exception: ", e);
+                 // log.error("Failed to serialize the metrics with the exception: ", e);
              }
          }
      }
-
 }

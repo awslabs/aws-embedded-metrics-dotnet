@@ -9,17 +9,20 @@ namespace Amazon.CloudWatch.EMF.Model
         [JsonProperty("Name")]
         public string Name { get; set; }
 
-        [JsonProperty("Unit")]
-        private Unit Unit { get; set; }
-
         [JsonIgnore]
         public List<double> Values { get; }
 
-        public MetricDefinition(string name) : this(name, Unit.NONE, new List<double>()) { }
+        public MetricDefinition(string name) : this(name, Unit.NONE, new List<double>())
+        {
+        }
 
-        public MetricDefinition(string name, double value) : this(name, Unit.NONE, new List<double>() { value }) { }
+        public MetricDefinition(string name, double value) : this(name, Unit.NONE, new List<double>() { value })
+        {
+        }
 
-        public MetricDefinition(string name, Unit unit, double value) : this(name, unit, new List<double>() { value }) { }
+        public MetricDefinition(string name, Unit unit, double value) : this(name, unit, new List<double>() { value })
+        {
+        }
 
         public MetricDefinition(string name, Unit unit, List<double> values)
         {
@@ -32,5 +35,8 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             Values.Add(value);
         }
+
+        [JsonProperty("Unit")]
+        private Unit Unit { get; set; }
     }
 }

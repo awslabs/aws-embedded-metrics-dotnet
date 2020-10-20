@@ -11,7 +11,7 @@ namespace Amazon.CloudWatch.EMF.Sink
 
         public int Port { get; private set; }
 
-        public Protocol CurrentProtocol {  get; private set; }
+        public Protocol CurrentProtocol { get; private set; }
 
         private Endpoint(string host, int port, Protocol protocol)
         {
@@ -20,7 +20,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             CurrentProtocol = protocol;
         }
 
-        public static Endpoint fromURL(string endpoint)
+        public static Endpoint FromURL(string endpoint)
         {
             Uri parsedUri = null;
 
@@ -30,7 +30,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             }
             catch (UriFormatException ex)
             {
-                //log.warn("Failed to parse the endpoint: {} ", endpoint);
+                // log.warn("Failed to parse the endpoint: {} ", endpoint);
                 return DEFAULT_TCP_ENDPOINT;
             }
 
@@ -46,7 +46,9 @@ namespace Amazon.CloudWatch.EMF.Sink
             {
                 protocol = GetProtocol(parsedUri.Scheme);
             }
-            catch (Exception e) //Catch IllegalArgumentException
+
+            // Catch IllegalArgumentException
+            catch (Exception e)
             {
                 /*log.warn(
                     "Unsupported protocol: {}. Would use default endpoint: {}",
@@ -64,7 +66,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             return CurrentProtocol.ToString().ToLower() + "://" + Host + ":" + Port;
         }
 
-        //TODO: fix this
+        // TODO: fix this
         private static Protocol GetProtocol(string value)
         {
             foreach (var protocol in Enum.GetValues(typeof(Protocol)))
@@ -74,6 +76,7 @@ namespace Amazon.CloudWatch.EMF.Sink
                     return Protocol.TCP;
                 }
             }
+
             return Protocol.TCP;
         }
     }

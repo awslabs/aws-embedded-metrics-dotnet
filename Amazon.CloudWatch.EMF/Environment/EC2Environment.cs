@@ -6,11 +6,11 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public class EC2Environment : AgentBasedEnvironment
     {
-        private EC2Metadata _ec2Metadata;
-        private ResourceFetcher _resourceFetcher;
-
         private const string INSTANCE_IDENTITY_URL = "http://169.254.169.254/latest/dynamic/instance-identity/document";
         private const string CFN_EC2_TYPE = "AWS::EC2::Instance";
+
+        private EC2Metadata _ec2Metadata;
+        private ResourceFetcher _resourceFetcher;
 
         public EC2Environment(Configuration configuration, ResourceFetcher resourceFetcher) : base(configuration)
         {
@@ -26,7 +26,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
             catch (Exception ex)
             {
-                //log.debug("Failed to construct url: " + INSTANCE_IDENTITY_URL);
+                // log.debug("Failed to construct url: " + INSTANCE_IDENTITY_URL);
                 return false;
             }
 
@@ -37,7 +37,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
             catch (EMFClientException ex)
             {
-                //log.debug("Failed to get response from: " + endpoint, ex);
+                // log.debug("Failed to get response from: " + endpoint, ex);
             }
 
             return false;
@@ -74,13 +74,17 @@ namespace Amazon.CloudWatch.EMF.Environment
         }
     }
 
-    //TODO: why is this class static in Java?
-    public class EC2Metadata 
+    // TODO: why is this class static in Java?
+    public class EC2Metadata
     {
         internal string ImageId { get; set; }
+
         internal string AvailabilityZone { get; set; }
+
         internal string PrivateIp { get; set; }
+
         internal string InstanceId { get; set; }
+
         internal string InstanceType { get; set; }
     }
 }

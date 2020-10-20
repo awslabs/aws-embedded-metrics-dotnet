@@ -14,12 +14,11 @@ namespace Amazon.CloudWatch.EMF.Environment
         /// <returns>True if it is running in this environment, otherwise, False</returns>
         bool Probe();
 
-
         /// <summary>
         /// Name of the environment. This will be used to set the ServiceName dimension.
         /// </summary>
         string Name { get; }
-        
+
         /// <summary>
         ///  Environment type. This will be used to set the ServiceType dimension.
         /// </summary>

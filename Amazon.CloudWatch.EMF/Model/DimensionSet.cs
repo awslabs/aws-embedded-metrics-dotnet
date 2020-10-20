@@ -45,6 +45,7 @@ namespace Amazon.CloudWatch.EMF.Model
             {
                 Dimensions.Add(dimension.Key, dimension.Value);
             }
+
             return this;
         }
 
