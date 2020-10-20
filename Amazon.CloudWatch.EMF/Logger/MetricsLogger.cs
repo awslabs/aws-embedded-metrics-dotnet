@@ -12,7 +12,7 @@ namespace Amazon.CloudWatch.EMF.Logger
     {
         private MetricsContext _context;
         private IEnvironment _environmentFuture;
-        private EnvironmentProvider _environmentProvider;
+        private IEnvironmentProvider _environmentProvider;
 
         // TODO: considering switching to ILoggerFactory
         private ILogger _logger;
@@ -34,12 +34,12 @@ namespace Amazon.CloudWatch.EMF.Logger
         {
         }
 
-        public MetricsLogger(EnvironmentProvider environmentProvider, ILogger logger)
+        public MetricsLogger(IEnvironmentProvider environmentProvider, ILogger logger)
             : this(environmentProvider, new MetricsContext(), logger)
         {
         }
 
-        public MetricsLogger(EnvironmentProvider environmentProvider, MetricsContext metricsContext, ILogger logger)
+        public MetricsLogger(IEnvironmentProvider environmentProvider, MetricsContext metricsContext, ILogger logger)
         {
             if (environmentProvider == null) throw new ArgumentNullException(nameof(environmentProvider));
             if (metricsContext == null) throw new ArgumentNullException(nameof(metricsContext));

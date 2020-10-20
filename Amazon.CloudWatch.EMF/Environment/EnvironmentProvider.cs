@@ -6,7 +6,7 @@ namespace Amazon.CloudWatch.EMF.Environment
     /// <summary>
     /// A provider that will detect the environment.
     /// </summary>
-    public class EnvironmentProvider
+    public class EnvironmentProvider : IEnvironmentProvider
     {
         private readonly IConfiguration _configuration;
         private readonly IResourceFetcher _resourceFetcher;
@@ -24,7 +24,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         ///  Find the current environment
         /// </summary>
         /// <returns></returns>
-        internal IEnvironment ResolveEnvironment()
+        public Task<IEnvironment> ResolveEnvironment()
         {
             if (_cachedEnvironment != null)
                 return _cachedEnvironment;
