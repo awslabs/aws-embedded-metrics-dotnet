@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Logger;
 using Amazon.CloudWatch.EMF.Model;
@@ -14,7 +15,7 @@ namespace Amazon.CloudWatch.EMF.Lambda
 {
     public class Function
     {
-        
+
         /// <summary>
         /// A simple function that takes a string and does a ToUpper
         /// </summary>
@@ -23,7 +24,7 @@ namespace Amazon.CloudWatch.EMF.Lambda
         /// <returns></returns>
         public string FunctionHandler(string input, ILambdaContext context)
         {
-            var envProvider = new EnvironmentProvider();
+            var envProvider = new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher());
             var logger = new MetricsLogger();
             var dimensionSet = new DimensionSet();
             dimensionSet.AddDimension("Service", "Aggregator");
