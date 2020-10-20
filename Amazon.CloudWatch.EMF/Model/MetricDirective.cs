@@ -12,21 +12,7 @@ namespace Amazon.CloudWatch.EMF.Model
     /// </summary>
     public class MetricDirective
     {
-        [JsonProperty("Namespace")]
-        internal string Namespace { get; set; }
-
-        [JsonProperty("Metrics")]
-        internal IReadOnlyList<MetricDefinition> Metrics
-        {
-            get { return _metrics; }
-        }
-
         private List<MetricDefinition> _metrics;
-
-        internal List<DimensionSet> CustomDimensionSets { get; private set; }
-
-        internal DimensionSet DefaultDimensionSet { get; set; }
-
         private bool _shouldUseDefaultDimensionSet;
 
         public MetricDirective()
@@ -42,6 +28,19 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             return !Metrics.Any();
         }
+
+        [JsonProperty("Namespace")]
+        internal string Namespace { get; set; }
+
+        [JsonProperty("Metrics")]
+        internal IReadOnlyList<MetricDefinition> Metrics
+        {
+            get { return _metrics; }
+        }
+
+        internal List<DimensionSet> CustomDimensionSets { get; private set; }
+
+        internal DimensionSet DefaultDimensionSet { get; set; }
 
         internal void PutMetric(string key, double value)
         {
