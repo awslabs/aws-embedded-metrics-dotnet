@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Amazon.CloudWatch.EMF.Environment
 {
     public interface IResourceFetcher

@@ -20,7 +20,7 @@ namespace Amazon.CloudWatch.EMF.Config
         /// <summary>
         /// Gets the LogStream name to use. This will be ignored when using the Lambda scope.
         /// </summary>
-        public string LogStreamName { get;}
+        public string LogStreamName { get; }
 
         /// <summary>
         /// Gets the endpoint to use to connect to the CloudWatch Agent.
