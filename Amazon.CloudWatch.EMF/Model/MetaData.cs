@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Amazon.CloudWatch.EMF.Model
 {
     /// <summary>
-    /// Represents the CloudWatch Metrics Metadata appended to the CloudWatch log 
+    /// Represents the CloudWatch Metrics Metadata appended to the CloudWatch log
     /// and used by CloudWatch to parse metrics out of the log's properties.
     /// </summary>
     public class MetaData

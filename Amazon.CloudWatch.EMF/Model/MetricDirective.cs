@@ -16,13 +16,18 @@ namespace Amazon.CloudWatch.EMF.Model
         internal string Namespace { get; set; }
 
         [JsonProperty("Metrics")]
-        internal IReadOnlyList<MetricDefinition> Metrics { get { return _metrics; } }
+        internal IReadOnlyList<MetricDefinition> Metrics
+        {
+            get { return _metrics; }
+        }
+
         private List<MetricDefinition> _metrics;
 
         internal List<DimensionSet> CustomDimensionSets { get; private set; }
+
         internal DimensionSet DefaultDimensionSet { get; set; }
 
-        private bool ShouldUseDefaultDimensionSet;
+        private bool _shouldUseDefaultDimensionSet;
 
         public MetricDirective()
         {
@@ -30,7 +35,12 @@ namespace Amazon.CloudWatch.EMF.Model
             _metrics = new List<MetricDefinition>();
             CustomDimensionSets = new List<DimensionSet>();
             DefaultDimensionSet = new DimensionSet();
-            ShouldUseDefaultDimensionSet = true;
+            _shouldUseDefaultDimensionSet = true;
+        }
+
+        public bool HasNoMetrics()
+        {
+            return !Metrics.Any();
         }
 
         internal void PutMetric(string key, double value)
@@ -40,7 +50,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         /// <summary>
         /// Appends the specified metric.
-        /// Adds the value an existing metric if one already exists with the specified key or 
+        /// Adds the value an existing metric if one already exists with the specified key or
         /// adds a new metric if one with the specified key does not already exist.
         /// </summary>
         /// <param name="key"></param>
@@ -76,24 +86,20 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="dimensionSets">the dimension sets to use in lieu of all existing custom and default dimensions</param>
         internal void SetDimensions(List<DimensionSet> dimensionSets)
         {
-            ShouldUseDefaultDimensionSet = false;
+            _shouldUseDefaultDimensionSet = false;
             CustomDimensionSets = dimensionSets;
         }
 
         internal List<DimensionSet> GetAllDimensionSets()
         {
-            if (!ShouldUseDefaultDimensionSet)
+            if (!_shouldUseDefaultDimensionSet)
             {
                 return CustomDimensionSets;
             }
+
             var dimensions = new List<DimensionSet>() { DefaultDimensionSet };
             dimensions.AddRange(CustomDimensionSets);
             return dimensions;
-        }
-
-        public bool HasNoMetrics()
-        {
-            return !Metrics.Any();
         }
     }
 }

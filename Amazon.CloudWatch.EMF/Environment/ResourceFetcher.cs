@@ -22,7 +22,6 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             try
             {
-
                 HttpWebRequest httpWebRequest = GetHttpWebRequest(endpoint, method);
 
                 var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -49,7 +48,8 @@ namespace Amazon.CloudWatch.EMF.Environment
                     + "again.");
                 throw new EMFClientException("Failed to connect to service endpoint: ", ioException);*/
             }
-            return "";
+
+            return string.Empty;
         }
 
         private void HandleErrorResponse(HttpWebResponse httpWebResponse)
@@ -71,13 +71,13 @@ namespace Amazon.CloudWatch.EMF.Environment
                         "Failed to get resource. Error code: %s, error message: %s ",
                         errorCode, responseMessage);
                 throw new EMFClientException(exceptionMessage);*/
-
             }
             catch (System.Exception exception)
             {
                 throw new EMFClientException("Unable to parse error stream: ", exception);
             }
         }
+
         private HttpWebRequest GetHttpWebRequest(Uri endpoint, string method)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.CreateHttp(endpoint);
@@ -86,6 +86,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             httpWebRequest.ReadWriteTimeout = 1000;
             return httpWebRequest;
         }
+
         private string GetResponse(HttpWebResponse response)
         {
             var inputStream = response.GetResponseStream();

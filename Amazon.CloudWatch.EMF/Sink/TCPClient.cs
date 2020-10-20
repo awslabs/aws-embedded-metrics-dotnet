@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace Amazon.CloudWatch.EMF.Sink
 {
-    public class TCPClient: ISocketClient
+    public class TCPClient : ISocketClient
     {
         private Endpoint _endpoint;
         private TcpClient _tcpClient;
@@ -13,6 +13,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             _endpoint = endpoint;
             _tcpClient = new TcpClient(endpoint.Host, endpoint.Port);
         }
+
         public void SendMessage(string message)
         {
             // Translate the passed message into ASCII and store it as a Byte array.
@@ -20,7 +21,7 @@ namespace Amazon.CloudWatch.EMF.Sink
 
             if (!_tcpClient.Connected)
                 _tcpClient.Connect(_endpoint.Host, _endpoint.Port);
-            
+
             // Get a client stream for reading and writing.
             NetworkStream stream = _tcpClient.GetStream();
 

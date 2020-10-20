@@ -13,7 +13,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         private Task<IEnvironment> _environmentFuture;
         private EnvironmentProvider _environmentProvider;
 
-        //TODO: considering switching to ILoggerFactory
+        // TODO: considering switching to ILoggerFactory
         private ILogger _logger;
 
         /// <summary>
@@ -49,8 +49,9 @@ namespace Amazon.CloudWatch.EMF.Logger
             this._environmentProvider = environmentProvider;
             this._logger = logger;
         }
-        
-        public MetricsLogger(EnvironmentProvider environmentProvider, MetricsContext metricsContext) {
+
+        public MetricsLogger(EnvironmentProvider environmentProvider, MetricsContext metricsContext)
+        {
             _context = metricsContext;
             _environmentFuture = environmentProvider.ResolveEnvironment();
             _environmentProvider = environmentProvider;
@@ -75,8 +76,9 @@ namespace Amazon.CloudWatch.EMF.Logger
                 environment = _environmentProvider.DefaultEnvironment;
                 _logger.LogDebug($"Resolved environment {environment.Name}");
             }
-            //TODO: uncomment this line of code to test serialization results
-            //var result = _context.Serialize();
+
+            // TODO: uncomment this line of code to test serialization results
+            // var result = _context.Serialize();
             _logger.LogDebug($"Configuring context for environment  {environment.Name}");
             ConfigureContextForEnvironment(_context, environment);
             var sink = environment.Sink;
@@ -87,11 +89,11 @@ namespace Amazon.CloudWatch.EMF.Logger
                 _logger.LogError(ex, message);
                 throw ex;
             }
+
             sink.Accept(_context);
             _logger.LogInformation($"Creating new context after flushing logs...");
             _context = _context.CreateCopyWithContext();
             _logger.LogInformation($"New context successfully created.");
-
         }
 
         /// <summary>
@@ -198,6 +200,7 @@ namespace Amazon.CloudWatch.EMF.Logger
             {
                 return;
             }
+
             DimensionSet defaultDimensions = new DimensionSet();
             defaultDimensions.AddDimension("LogGroup", environment.LogGroupName);
             defaultDimensions.AddDimension("ServiceName", environment.Name);

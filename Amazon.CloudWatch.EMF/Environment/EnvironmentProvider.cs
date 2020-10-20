@@ -10,12 +10,11 @@ namespace Amazon.CloudWatch.EMF.Environment
     /// </summary>
     public class EnvironmentProvider
     {
-        private static IEnvironment _cachedEnvironment;
         private static readonly IConfiguration _configuration = EnvironmentConfigurationProvider.Config;
+        private static IEnvironment _cachedEnvironment;
         private readonly IEnvironment _lambdaEnvironment = new LambdaEnvironment();
         private readonly IEnvironment _ec2Environment = new EC2Environment(_configuration, new ResourceFetcher());
         private readonly IEnvironment _ecsEnvironment = new ECSEnvironment(_configuration, new ResourceFetcher());
-
 
         private IEnvironment[] _allEnvironments;
 
@@ -84,6 +83,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                     environment = null;
                     break;
             }
+
             return environment;
         }
     }

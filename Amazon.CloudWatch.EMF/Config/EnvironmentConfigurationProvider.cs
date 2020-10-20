@@ -25,29 +25,29 @@ namespace Amazon.CloudWatch.EMF.Config
             }
             set => _config = value;
         }
-        
+
         private static Environments GetEnvironmentOverride()
         {
             string environmentName = GetEnvVar(ConfigurationKeys.ENVIRONMENT_OVERRIDE);
-            if (string.IsNullOrEmpty(environmentName)) 
+            if (string.IsNullOrEmpty(environmentName))
             {
                 return Environments.Unknown;
             }
 
             try
             {
-                //Get the enum for environmentName
+                // Get the enum for environmentName
                 return (Environments)Enum.Parse(typeof(Environments), environmentName);
-            } 
-            catch (System.Exception e) 
+            }
+            catch (System.Exception e)
             {
                 return Environments.Unknown;
             }
         }
-        
+
         private static string GetEnvVar(string key)
         {
-            string name = string.Join("", ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
+            string name = string.Join(string.Empty, ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
             return EnvUtils.GetEnv(name);
         }
     }

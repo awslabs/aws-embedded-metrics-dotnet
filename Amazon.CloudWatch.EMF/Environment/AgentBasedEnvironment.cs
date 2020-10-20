@@ -7,10 +7,10 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public abstract class AgentBasedEnvironment : IEnvironment
     {
-        private ISink _sink;
         protected IConfiguration _configuration;
+        private ISink _sink;
 
-        public AgentBasedEnvironment(IConfiguration configuration)
+        protected AgentBasedEnvironment(IConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
@@ -21,7 +21,7 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         public string LogGroupName => !string.IsNullOrEmpty(_configuration.LogGroupName) ? _configuration.LogGroupName : Name + "_metrics";
 
-        public string LogStreamName => !string.IsNullOrEmpty(_configuration.LogStreamName) ? _configuration.LogStreamName : "";
+        public string LogStreamName => !string.IsNullOrEmpty(_configuration.LogStreamName) ? _configuration.LogStreamName : string.Empty;
 
         public ISink Sink
         {
@@ -32,20 +32,22 @@ namespace Amazon.CloudWatch.EMF.Environment
                     Endpoint endpoint;
                     if (string.IsNullOrEmpty(_configuration.AgentEndPoint))
                     {
-                        //log.info("Endpoint is not defined. Using default: {}",
-                        //   Endpoint.DEFAULT_TCP_ENDPOINT);
+                        // log.info("Endpoint is not defined. Using default: {}",
+                        // Endpoint.DEFAULT_TCP_ENDPOINT);
                         endpoint = Endpoint.DEFAULT_TCP_ENDPOINT;
                     }
                     else
                     {
-                        endpoint = Endpoint.fromURL(_configuration.AgentEndPoint);
+                        endpoint = Endpoint.FromURL(_configuration.AgentEndPoint);
                     }
-                    _sink = new AgentSink(LogGroupName,
 
-                            LogStreamName,
-                            endpoint,
-                            new SocketClientFactory());
+                    _sink = new AgentSink(
+                        LogGroupName,
+                        LogStreamName,
+                        endpoint,
+                        new SocketClientFactory());
                 }
+
                 return _sink;
             }
         }

@@ -36,7 +36,7 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         public string LogGroupName => Name;
 
-        public void ConfigureContext(MetricsContext context) 
+        public void ConfigureContext(MetricsContext context)
         {
             AddProperty(context, "executionEnvironment", EnvUtils.GetEnv(AWS_EXECUTION_ENV));
             AddProperty(context, "functionVersion", EnvUtils.GetEnv(LAMBDA_FUNCTION_VERSION));
@@ -57,15 +57,15 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
 
-        private void AddProperty(MetricsContext context, string key, string value) 
+        private void AddProperty(MetricsContext context, string key, string value)
         {
-            if (value != null) 
+            if (value != null)
             {
-                //context.putProperty(key, value);
+                // context.putProperty(key, value);
             }
         }
-        
-        //TODO: Java uses optional string, validate if this works as expected
+
+        // TODO: Java uses optional string, validate if this works as expected
         private string GetSampledTrace()
         {
             string traceId = EnvUtils.GetEnv(TRACE_ID);
@@ -73,6 +73,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             {
                 return traceId;
             }
+
             return string.Empty;
         }
     }

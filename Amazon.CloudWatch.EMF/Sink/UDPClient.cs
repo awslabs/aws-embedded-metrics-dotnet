@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Amazon.CloudWatch.EMF.Sink
 {
-    public class UDPClient: ISocketClient
+    public class UDPClient : ISocketClient
     {
         private UdpClient _udpClient;
 
@@ -12,6 +12,7 @@ namespace Amazon.CloudWatch.EMF.Sink
         {
             _udpClient = new UdpClient(endpoint.Host, endpoint.Port);
         }
+
         public void SendMessage(string message)
         {
             Byte[] data = Encoding.ASCII.GetBytes(message);
@@ -19,7 +20,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             {
                 _udpClient.Send(data, data.Length);
             }
-            catch (Exception e )
+            catch (Exception e)
             {
             }
         }

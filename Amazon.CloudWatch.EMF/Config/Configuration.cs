@@ -1,13 +1,12 @@
 ﻿using Amazon.CloudWatch.EMF.Environment;
+using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Config
 {
     public class Configuration : IConfiguration
     {
-        public Configuration(string serviceName, string serviceType, string logGroupName, string logStreamName,
-            string agentEndPoint, Environments environmentOverride)
+        public Configuration(string serviceName, string serviceType, string logGroupName, string logStreamName, string agentEndPoint, Environments environmentOverride)
         {
-
             ServiceName = serviceName;
             ServiceType = serviceType;
             LogGroupName = logGroupName;

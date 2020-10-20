@@ -10,6 +10,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         internal DefaultEnvironment(IConfiguration configuration) : base(configuration)
         {
         }
+
         public new bool Probe()
         {
             return true;

@@ -13,7 +13,7 @@ namespace Amazon.CloudWatch.EMF.Model
     {
         "_aws": {
             "Timestamp": 1559748430481
-            "CloudWatchMetrics": [ 
+            "CloudWatchMetrics": [
                 {
                     "Namespace": "lambda-function-metrics",
                     "Dimensions": [ [ "functionVersion" ] ],
@@ -27,7 +27,7 @@ namespace Amazon.CloudWatch.EMF.Model
             ]
         },
         "time": 100,
-     }     
+     }
      */
     public class RootNode
     {
@@ -60,23 +60,31 @@ namespace Amazon.CloudWatch.EMF.Model
                 {
                     targetMembers.Add(property.Key, property.Value);
                 }
+
                 foreach (var dimension in GetDimensions())
                 {
                     targetMembers.Add(dimension.Key, dimension.Value);
                 }
-                foreach(var data in AWS.CustomMetadata)
+
+                foreach (var data in AWS.CustomMetadata)
                 {
                     targetMembers.Add(data.Key, data.Value);
                 }
+
                 foreach (MetricDefinition metricDefinition in AWS.MetricDirective.Metrics)
                 {
                     List<double> values = metricDefinition.Values;
                     targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object)values[0] : values);
                 }
+
                 return targetMembers;
             }
         }
 
+        public string Serialize()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
 
         /// <summary>
         /// Return a list of all dimensions from all dimension sets.
@@ -93,11 +101,8 @@ namespace Amazon.CloudWatch.EMF.Model
                     dimensions.Add(dimension.Key, dimension.Value);
                 }
             }
+
             return dimensions;
-        }
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
         }
     }
 }

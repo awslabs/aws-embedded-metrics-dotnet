@@ -13,6 +13,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             _config = config;
         }
+
         public bool Probe()
         {
             return false;
@@ -21,10 +22,10 @@ namespace Amazon.CloudWatch.EMF.Environment
         public string Name => !string.IsNullOrEmpty(_config.ServiceName) ? _config.ServiceName : Constants.UNKNOWN;
 
         public string Type => !string.IsNullOrEmpty(_config.ServiceType) ? _config.ServiceType : Constants.UNKNOWN;
-        
+
         public string LogGroupName => !string.IsNullOrEmpty(_config.LogGroupName) ? _config.LogGroupName : Name + "_metrics";
 
-        public void ConfigureContext(MetricsContext context) 
+        public void ConfigureContext(MetricsContext context)
         {
         }
 
