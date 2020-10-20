@@ -9,6 +9,14 @@
     &lt;TestId&gt;xUnit::BB012365-7A17-4BE1-93E4-399E3E3FF74F::.NETCoreApp,Version=v3.1::Amazon.CloudWatch.EMF.IntegrationTests.MetricsLoggerIntegrationTest.TestSingleFlushOverTCP&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ab9f146e_002D4150_002D4aa0_002D9397_002D8e4de06693b7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="PutProperty #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::DE74081D-79B8-44CA-94F7-60142C9F9A84::.NETCoreApp,Version=v3.1::Amazon.CloudWatch.EMF.Tests.Model.RootNodeTests.PutProperty_SavesKeyValue&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::DE74081D-79B8-44CA-94F7-60142C9F9A84::.NETCoreApp,Version=v3.1::Amazon.CloudWatch.EMF.Tests.Model.RootNodeTests.Serialize_ReturnsExpectedValues&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::DE74081D-79B8-44CA-94F7-60142C9F9A84::.NETCoreApp,Version=v3.1::Amazon.CloudWatch.EMF.Tests.Logger.MetricsLoggerTests.PutProperty&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::DE74081D-79B8-44CA-94F7-60142C9F9A84::.NETCoreApp,Version=v3.1::Amazon.CloudWatch.EMF.Tests.Logger.MetricsLoggerTests.PutDimension&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d3ddc8b1_002Dd763_002D4782_002Da049_002D282df9811c0b/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="False" ContinuousTestingMode="0" FrameworkVersion="{x:Null}" IsLocked="False" Name="TestSingleFlushOverTCP #3" PlatformMonoPreference="{x:Null}" PlatformType="{x:Null}" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::BB012365-7A17-4BE1-93E4-399E3E3FF74F::.NETCoreApp,Version=v3.1::Amazon.CloudWatch.EMF.IntegrationTests.MetricsLoggerIntegrationTest.TestSingleFlushOverTCP&lt;/TestId&gt;
