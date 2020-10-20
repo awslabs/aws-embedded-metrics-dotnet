@@ -9,9 +9,9 @@ namespace Amazon.CloudWatch.EMF.Config
     /// </summary>
     public class EnvironmentConfigurationProvider
     {
-        private static Configuration _config;
+        private static IConfiguration _config;
 
-        public static Configuration Config
+        public static IConfiguration Config
         {
             get
             {

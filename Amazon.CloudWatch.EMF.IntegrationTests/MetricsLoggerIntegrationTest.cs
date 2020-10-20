@@ -16,7 +16,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
 {
     public class MetricsLoggerIntegrationTest
     {
-        private Configuration _config = EnvironmentConfigurationProvider.Config;
+        private IConfiguration _config = EnvironmentConfigurationProvider.Config;
         private static readonly string _serviceName = "IntegrationTests-" + GetLocalHost();
         private static readonly string _serviceType = "AutomatedTest";
         private static readonly string _logGroupName = "aws-emf-java-integ";

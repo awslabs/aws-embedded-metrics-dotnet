@@ -7,12 +7,12 @@ namespace Amazon.CloudWatch.EMF.Environment
     public class EC2Environment : AgentBasedEnvironment
     {
         private EC2Metadata _ec2Metadata;
-        private ResourceFetcher _resourceFetcher;
+        private IResourceFetcher _resourceFetcher;
 
         private const string INSTANCE_IDENTITY_URL = "http://169.254.169.254/latest/dynamic/instance-identity/document";
         private const string CFN_EC2_TYPE = "AWS::EC2::Instance";
 
-        public EC2Environment(Configuration configuration, ResourceFetcher resourceFetcher) : base(configuration)
+        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher) : base(configuration)
         {
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
         }

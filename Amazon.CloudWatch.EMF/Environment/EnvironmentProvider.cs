@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Config;
 
@@ -10,22 +11,22 @@ namespace Amazon.CloudWatch.EMF.Environment
     public class EnvironmentProvider
     {
         private static IEnvironment _cachedEnvironment;
-        private static readonly Configuration _configuration = EnvironmentConfigurationProvider.Config;
+        private static readonly IConfiguration _configuration = EnvironmentConfigurationProvider.Config;
         private readonly IEnvironment _lambdaEnvironment = new LambdaEnvironment();
         private readonly IEnvironment _ec2Environment = new EC2Environment(_configuration, new ResourceFetcher());
         private readonly IEnvironment _ecsEnvironment = new ECSEnvironment(_configuration, new ResourceFetcher());
-            
+
 
         private IEnvironment[] _allEnvironments;
-        
+
         internal IEnvironment DefaultEnvironment { get; } = new DefaultEnvironment(_configuration);
 
         public EnvironmentProvider()
         {
             // Ordering of this array matters
-            _allEnvironments = new IEnvironment[]{_lambdaEnvironment, _ecsEnvironment, _ec2Environment, DefaultEnvironment };
+            _allEnvironments = new IEnvironment[] { _lambdaEnvironment, _ecsEnvironment, _ec2Environment, DefaultEnvironment };
         }
-        
+
         /// <summary>
         ///  Find the current environment
         /// </summary>
@@ -50,16 +51,16 @@ namespace Amazon.CloudWatch.EMF.Environment
                     return Task.FromResult(_cachedEnvironment);
                 }
             }
-            
+
             return Task.FromResult(DefaultEnvironment);
         }
 
         private IEnvironment GetEnvironmentFromOverride()
         {
-            Configuration config = EnvironmentConfigurationProvider.Config;
+            IConfiguration config = EnvironmentConfigurationProvider.Config;
 
             IEnvironment environment;
-            switch (config.EnvironmentOverride) 
+            switch (config.EnvironmentOverride)
             {
                 case Environments.Lambda:
                     environment = _lambdaEnvironment;

@@ -2,23 +2,8 @@
 
 namespace Amazon.CloudWatch.EMF.Config
 {
-    public class Configuration : IConfiguration
+    public interface IConfiguration
     {
-        public Configuration(string serviceName, string serviceType, string logGroupName, string logStreamName,
-            string agentEndPoint, Environments environmentOverride)
-        {
-
-            ServiceName = serviceName;
-            ServiceType = serviceType;
-            LogGroupName = logGroupName;
-            LogStreamName = logStreamName;
-            AgentEndPoint = agentEndPoint;
-            EnvironmentOverride = environmentOverride;
-        }
-
-        /// <summary>
-        /// Gets name of the service to use in the default dimensions
-        /// </summary>
         public string ServiceName { get; set; }
 
         /// <summary>
@@ -35,7 +20,7 @@ namespace Amazon.CloudWatch.EMF.Config
         /// <summary>
         /// Gets the LogStream name to use. This will be ignored when using the Lambda scope.
         /// </summary>
-        public string LogStreamName { get; private set; }
+        public string LogStreamName { get;}
 
         /// <summary>
         /// Gets the endpoint to use to connect to the CloudWatch Agent.
@@ -50,6 +35,6 @@ namespace Amazon.CloudWatch.EMF.Config
         /// - Agent: no decoration and sends over TCP
         /// - EC2: decorates logs with EC2 metadata and sends over TCP
         /// </summary>
-        public Environments EnvironmentOverride { get; private set; }
+        public Environments EnvironmentOverride { get; }
     }
 }

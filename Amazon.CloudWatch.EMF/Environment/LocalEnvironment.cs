@@ -7,9 +7,9 @@ namespace Amazon.CloudWatch.EMF.Environment
     public class LocalEnvironment : IEnvironment
     {
         private ISink _sink = null;
-        private Configuration _config;
+        private IConfiguration _config;
 
-        public LocalEnvironment(Configuration config)
+        public LocalEnvironment(IConfiguration config)
         {
             _config = config;
         }

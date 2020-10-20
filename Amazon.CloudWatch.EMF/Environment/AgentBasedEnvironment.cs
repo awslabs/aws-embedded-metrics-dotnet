@@ -8,9 +8,9 @@ namespace Amazon.CloudWatch.EMF.Environment
     public abstract class AgentBasedEnvironment : IEnvironment
     {
         private ISink _sink;
-        protected Configuration _configuration;
-        
-        protected AgentBasedEnvironment(Configuration configuration)
+        protected IConfiguration _configuration;
+
+        public AgentBasedEnvironment(IConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
@@ -21,22 +21,22 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         public string LogGroupName => !string.IsNullOrEmpty(_configuration.LogGroupName) ? _configuration.LogGroupName : Name + "_metrics";
 
-        public string LogStreamName => !string.IsNullOrEmpty(_configuration.LogStreamName) ? _configuration.LogGroupName : "";
+        public string LogStreamName => !string.IsNullOrEmpty(_configuration.LogStreamName) ? _configuration.LogStreamName : "";
 
         public ISink Sink
         {
             get
             {
-                if (_sink == null) 
+                if (_sink == null)
                 {
                     Endpoint endpoint;
                     if (string.IsNullOrEmpty(_configuration.AgentEndPoint))
                     {
                         //log.info("Endpoint is not defined. Using default: {}",
-                         //   Endpoint.DEFAULT_TCP_ENDPOINT);
+                        //   Endpoint.DEFAULT_TCP_ENDPOINT);
                         endpoint = Endpoint.DEFAULT_TCP_ENDPOINT;
-                    } 
-                    else 
+                    }
+                    else
                     {
                         endpoint = Endpoint.fromURL(_configuration.AgentEndPoint);
                     }

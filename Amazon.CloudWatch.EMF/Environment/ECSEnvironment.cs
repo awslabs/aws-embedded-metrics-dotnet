@@ -10,7 +10,7 @@ namespace Amazon.CloudWatch.EMF.Environment
     public class ECSEnvironment : AgentBasedEnvironment
     {
         private ECSMetadata _ecsMetadata;
-        private ResourceFetcher _resourceFetcher;
+        private IResourceFetcher _resourceFetcher;
         private string _fluentBitEndpoint;
         private string _hostname;
         
@@ -18,7 +18,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         private const string FLUENT_HOST = "FLUENT_HOST";
         private const string ENVIRONMENT_TYPE = "AWS::ECS::Container";
 
-        public ECSEnvironment(Configuration configuration, ResourceFetcher resourceFetcher) : base(configuration)
+        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher) : base(configuration)
         {
             
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));

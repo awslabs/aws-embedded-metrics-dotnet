@@ -1,12 +1,11 @@
 using System;
 using System.IO;
 using System.Net;
-using Amazon.CloudWatch.EMF;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
-    public class ResourceFetcher
+    public class ResourceFetcher : IResourceFetcher
     {
         /// <summary>
         /// Fetch a json object from a given uri and deserialize it to the specified class: T
@@ -18,10 +17,10 @@ namespace Amazon.CloudWatch.EMF.Environment
 
             return JsonConvert.DeserializeObject<T>(response);
         }
-        
-        private string ReadResource(Uri endpoint, string method) 
+
+        private string ReadResource(Uri endpoint, string method)
         {
-            try 
+            try
             {
 
                 HttpWebRequest httpWebRequest = GetHttpWebRequest(endpoint, method);
@@ -32,16 +31,16 @@ namespace Amazon.CloudWatch.EMF.Environment
                 {
                     return GetResponse(httpWebResponse);
                 }
-                else if (httpWebResponse.StatusCode == HttpStatusCode.NotFound) 
+                else if (httpWebResponse.StatusCode == HttpStatusCode.NotFound)
                 {
                     throw new EMFClientException("The requested metadata is not found at " + httpWebRequest.RequestUri.AbsolutePath);
-                } 
-                else 
+                }
+                else
                 {
                     HandleErrorResponse(httpWebResponse);
                 }
-            } 
-            catch (IOException ioException) 
+            }
+            catch (IOException ioException)
             {
                 /*log.debug(
                     "An IOException occurred when connecting to service endpoint: "
@@ -57,7 +56,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             string errorResponse = GetResponse(httpWebResponse);
 
-            try 
+            try
             {
                 /*JsonNode node = Jackson.jsonNodeOf(errorResponse);
                 JsonNode code = node.get("code");
@@ -74,14 +73,14 @@ namespace Amazon.CloudWatch.EMF.Environment
                 throw new EMFClientException(exceptionMessage);*/
 
             }
-            catch (System.Exception exception) 
+            catch (System.Exception exception)
             {
                 throw new EMFClientException("Unable to parse error stream: ", exception);
             }
         }
         private HttpWebRequest GetHttpWebRequest(Uri endpoint, string method)
         {
-            var httpWebRequest = (HttpWebRequest) WebRequest.CreateHttp(endpoint);
+            var httpWebRequest = (HttpWebRequest)WebRequest.CreateHttp(endpoint);
             httpWebRequest.Method = method;
             httpWebRequest.Timeout = 1000;
             httpWebRequest.ReadWriteTimeout = 1000;
@@ -90,7 +89,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         private string GetResponse(HttpWebResponse response)
         {
             var inputStream = response.GetResponseStream();
-                    
+
             // convert stream to string
             using var reader = new StreamReader(inputStream);
             return reader.ReadToEnd();
