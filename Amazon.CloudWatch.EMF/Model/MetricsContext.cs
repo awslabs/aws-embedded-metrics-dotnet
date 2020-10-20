@@ -91,8 +91,8 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        ///Add a metric measurement to the context.
-        ///Multiple calls using the same key will be stored as an array of scalar values.
+        /// Add a metric measurement to the context.
+        /// Multiple calls using the same key will be stored as an array of scalar values.
         /// </summary>
         /// <example>
         /// metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
