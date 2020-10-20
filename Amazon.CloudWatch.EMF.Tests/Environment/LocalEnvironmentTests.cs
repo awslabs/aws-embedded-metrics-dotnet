@@ -1,6 +1,5 @@
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
-using NFluent;
 using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Environment
@@ -12,7 +11,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             var configuration = new Configuration("", "", "", "", "", Environments.Agent);
             var ctor = new LocalEnvironment(configuration);
-            Check.That(ctor.Probe()).Equals(false);
+            Assert.False(ctor.Probe());
         }
     }
 }

@@ -1,130 +1,99 @@
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using NSubstitute;
+using NSubstitute.ClearExtensions;
 using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Environment
 {
     public class EnvironmentProviderTests
     {
-
-        private readonly IFixture _fixture;
-
-        public EnvironmentProviderTests()
-        {
-            _fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
-        }
-
         [Fact]
-        public async void ResolveEnvironment_ReturnCachedEnv()
+        public void ResolveEnvironment_ReturnCachedEnv()
         {
             //Arrange
-            var configuration = _fixture.Create<IConfiguration>();
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
+            var configuration = fixture.Create<IConfiguration>();
             configuration.EnvironmentOverride.Returns(Environments.Local);
-            var resourceFetcher = _fixture.Create<IResourceFetcher>();
+            var resourceFetcher = fixture.Create<IResourceFetcher>();
             var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
 
             //Act
-            var environment = await environmentProvider.ResolveEnvironment();
-            var environmentCache = await environmentProvider.ResolveEnvironment();
+            var environment = environmentProvider.ResolveEnvironment();
+            var environmentCache = environmentProvider.ResolveEnvironment();
 
             //Assert
             Assert.Equal(environment, environmentCache);
         }
 
-        //[Fact]
-        //public async void ResolveEnvironment_ReturnsLambdaEnvironment()
-        //{
-        //    //Arrange
-        //    var lambdaEnvironment = _fixture.Create<LambdaEnvironment>();
-        //    lambdaEnvironment.Probe().Returns(true);
-        //    var envronments = new IEnvironment[] { lambdaEnvironment };
-        //    var environmentProvider = new EnvironmentProvider(envronments);
+        [Fact]
+        public void ResolveEnvironment_ReturnsLambdaEnvironment()
+        {
+            //Arrange
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
+            var configuration = fixture.Create<IConfiguration>();
+            configuration.EnvironmentOverride.Returns(Environments.Lambda);
+            var resourceFetcher = fixture.Create<IResourceFetcher>();
+            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
 
-        //    //Act
-        //    var environment = await environmentProvider.ResolveEnvironment();
+            //Act
+            var environment = environmentProvider.ResolveEnvironment();
 
-        //    //Assert
-        //    Assert.True(environment is LambdaEnvironment);
-        //}
+            //Assert
+            Assert.True(environment is LambdaEnvironment);
+        }
 
-        //    @Test
-        //    public void testResolveEnvironmentReturnsLambdaFromOverride()
-        //{
-        //    PowerMockito.mockStatic(EnvironmentConfigurationProvider.class);
-        //when(EnvironmentConfigurationProvider.getConfig()).thenReturn(config);
-        //when(config.getEnvironmentOverride()).thenReturn(Environments.Lambda);
+        [Fact]
+        public void ResolveEnvironment_ReturnsLocalEnvironment()
+        {
+            //Arrange
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
+            var configuration = fixture.Create<IConfiguration>();
+            configuration.EnvironmentOverride.Returns(Environments.Local);
+            var resourceFetcher = fixture.Create<IResourceFetcher>();
+            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
 
-        //environmentProvider.cleanResolvedEnvironment();
+            //Act
+            var environment = environmentProvider.ResolveEnvironment();
 
-        //CompletableFuture<Environment> resolvedEnvironment =
-        //        environmentProvider.resolveEnvironment();
+            //Assert
+            Assert.True(environment is LocalEnvironment);
+        }
 
-        //assertTrue(resolvedEnvironment.join() instanceof LambdaEnvironment);
-        //    }
+        [Fact]
+        public void ResolveEnvironment_ReturnsEC2Environment()
+        {
+            //Arrange
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
+            var configuration = fixture.Create<IConfiguration>();
+            configuration.EnvironmentOverride.Returns(Environments.EC2);
+            var resourceFetcher = fixture.Create<IResourceFetcher>();
+            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
 
-        //    @Test
-        //    public void testResolveEnvironmentReturnsDefaultEnvironment()
-        //{
-        //    PowerMockito.mockStatic(EnvironmentConfigurationProvider.class);
-        //when(EnvironmentConfigurationProvider.getConfig()).thenReturn(config);
-        //when(config.getEnvironmentOverride()).thenReturn(Environments.Agent);
+            //Act
+            var environment = environmentProvider.ResolveEnvironment();
 
-        //environmentProvider.cleanResolvedEnvironment();
+            //Assert
+            Assert.True(environment is EC2Environment);
+        }
 
-        //CompletableFuture<Environment> resolvedEnvironment =
-        //        environmentProvider.resolveEnvironment();
+        [Fact]
+        public void ResolveEnvironment_ReturnsECSEnvironment()
+        {
+            //Arrange
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
+            var configuration = fixture.Create<IConfiguration>();
+            configuration.EnvironmentOverride.Returns(Environments.ECS);
+            var resourceFetcher = fixture.Create<IResourceFetcher>();
+            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
 
-        //assertTrue(resolvedEnvironment.join() instanceof DefaultEnvironment);
-        //    }
+            //Act
+            var environment = environmentProvider.ResolveEnvironment();
 
-        //    @Test
-        //    public void testResolveEnvironmentReturnsEC2Environment()
-        //{
-        //    PowerMockito.mockStatic(EnvironmentConfigurationProvider.class);
-        //when(EnvironmentConfigurationProvider.getConfig()).thenReturn(config);
-        //when(config.getEnvironmentOverride()).thenReturn(Environments.EC2);
-
-        //environmentProvider.cleanResolvedEnvironment();
-
-        //CompletableFuture<Environment> resolvedEnvironment =
-        //        environmentProvider.resolveEnvironment();
-
-        //assertTrue(resolvedEnvironment.join() instanceof EC2Environment);
-        //    }
-
-        //    @Test
-        //    public void testResolveEnvironmentReturnsECSEnvironment()
-        //{
-        //    PowerMockito.mockStatic(EnvironmentConfigurationProvider.class);
-        //when(EnvironmentConfigurationProvider.getConfig()).thenReturn(config);
-        //when(config.getEnvironmentOverride()).thenReturn(Environments.ECS);
-
-        //environmentProvider.cleanResolvedEnvironment();
-
-        //CompletableFuture<Environment> resolvedEnvironment =
-        //        environmentProvider.resolveEnvironment();
-
-        //assertTrue(resolvedEnvironment.join() instanceof ECSEnvironment);
-        //    }
-
-        //    @Test
-        //    public void testResolveEnvironmentReturnsLocalEnvironment()
-        //{
-        //    PowerMockito.mockStatic(EnvironmentConfigurationProvider.class);
-        //when(EnvironmentConfigurationProvider.getConfig()).thenReturn(config);
-        //when(config.getEnvironmentOverride()).thenReturn(Environments.Local);
-
-        //environmentProvider.cleanResolvedEnvironment();
-
-        //CompletableFuture<Environment> resolvedEnvironment =
-        //        environmentProvider.resolveEnvironment();
-
-        //assertTrue(resolvedEnvironment.join() instanceof LocalEnvironment);
-        //    }
+            //Assert
+            Assert.True(environment is ECSEnvironment);
+        }
     }
 }
