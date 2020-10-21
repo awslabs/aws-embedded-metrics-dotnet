@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Model
@@ -12,7 +11,7 @@ namespace Amazon.CloudWatch.EMF.Model
     /// </summary>
     public class MetricDirective
     {
-        private List<MetricDefinition> _metrics;
+        private readonly List<MetricDefinition> _metrics;
         private bool _shouldUseDefaultDimensionSet;
 
         public MetricDirective()
@@ -73,9 +72,12 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             get
             {
-                var keys = new List<List<string>>();
-                GetAllDimensionSets().ForEach(s => keys.Add(s.DimensionKeys));
-                return keys;
+                var keys = GetAllDimensionSets()
+                    .Where(s => s.DimensionKeys.Any())
+                    .SelectMany(s => s.DimensionKeys)
+                    .ToList();
+
+                return new List<List<string>> { keys };
             }
         }
 
