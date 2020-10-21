@@ -1,16 +1,18 @@
+using System;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Environment
 {
-    public class EC2EnvironmentTests
+    public class Ec2EnvironmentTests
     {
         private readonly IFixture _fixture;
-        public EC2EnvironmentTests()
+        public Ec2EnvironmentTests()
         {
             _fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
         }
@@ -145,7 +147,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         }
 
         [Fact]
-        public void Probe()
+        public void Probe_True()
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
@@ -157,6 +159,54 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
 
             // Assert
             Assert.True(result);
+        }
+
+        [Fact]
+        public void Probe_False()
+        {
+            // Arrange
+            var configuration = _fixture.Create<IConfiguration>();
+            var resourceFetcher = _fixture.Create<IResourceFetcher>();
+            resourceFetcher.Fetch<EC2Metadata>(Arg.Any<Uri>()).Throws<EMFClientException>();
+            var environment = new EC2Environment(configuration, resourceFetcher);
+
+            // Act
+            var result = environment.Probe();
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void Type_WhenNoMetadata()
+        {
+            // Arrange
+            var configuration = _fixture.Create<IConfiguration>();
+            var resourceFetcher = _fixture.Create<IResourceFetcher>();
+            resourceFetcher.Fetch<EC2Metadata>(Arg.Any<Uri>()).Throws<EMFClientException>();
+            var environment = new EC2Environment(configuration, resourceFetcher);
+            environment.Probe();
+
+            // Act
+            var result = environment.Type;
+            // Assert
+            Assert.Equal(Constants.UNKNOWN, result);
+        }
+
+        [Fact]
+        public void Type_WithMetadata()
+        {
+            // Arrange
+            var configuration = _fixture.Create<IConfiguration>();
+            var resourceFetcher = _fixture.Create<IResourceFetcher>();
+            resourceFetcher.Fetch<EC2Metadata>(Arg.Any<Uri>()).Returns(new EC2Metadata());
+            var environment = new EC2Environment(configuration, resourceFetcher);
+            environment.Probe();
+
+            // Act
+            var result = environment.Type;
+            // Assert
+            Assert.Equal("AWS::EC2::Instance", result);
         }
     }
 }
