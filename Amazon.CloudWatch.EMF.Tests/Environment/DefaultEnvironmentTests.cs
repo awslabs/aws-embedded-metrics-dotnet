@@ -105,7 +105,6 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             Assert.Equal(string.Empty, streamName);
         }
 
-
         [Fact]
         public void LogGroupName_Configuration_Set()
         {
