@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Amazon.CloudWatch.EMF.Model;
-using Amazon.CloudWatch.EMF.Serializer;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Model

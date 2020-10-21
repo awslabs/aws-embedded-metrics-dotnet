@@ -18,7 +18,7 @@ namespace Amazon.CloudWatch.EMF.Sink
                     Console.WriteLine(metric);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
                 // ToDo: add logging
                 // log.error("Failed to serialize a MetricsContext: ", e);

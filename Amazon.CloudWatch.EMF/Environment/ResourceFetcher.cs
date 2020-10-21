@@ -39,7 +39,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                     HandleErrorResponse(httpWebResponse);
                 }
             }
-            catch (IOException ioException)
+            catch (IOException)
             {
                 /*log.debug(
                     "An IOException occurred when connecting to service endpoint: "

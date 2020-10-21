@@ -20,7 +20,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             {
                 _udpClient.Send(data, data.Length);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }
