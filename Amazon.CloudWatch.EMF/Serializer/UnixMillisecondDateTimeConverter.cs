@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Globalization;
 
 namespace Amazon.CloudWatch.EMF.Serializer
 {

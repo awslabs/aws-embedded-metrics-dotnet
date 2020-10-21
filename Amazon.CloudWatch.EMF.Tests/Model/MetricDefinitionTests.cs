@@ -8,7 +8,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
     public class MetricDefinitionTests
     {
         [Fact]
-        public void MetricDefinition_WithoutUnit()
+        public void MetricDefinition_WithoutUnit_Returns_ValidJson()
         {
             MetricDefinition metricDefinition = new MetricDefinition("Time");
 
@@ -18,7 +18,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
         }
         
         [Fact]
-        public void MetricDefinition_WithUnit()
+        public void MetricDefinition_WithUnit_Returns_ValidJson()
         {
             MetricDefinition metricDefinition = new MetricDefinition("Time", Unit.MILLISECONDS, 10);
 
@@ -28,7 +28,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
         }
         
         [Fact]
-        public void MetricDefinition_AddValue()
+        public void MetricDefinition_AddValue_Returns_ValidValues()
         {
             MetricDefinition metricDefinition = new MetricDefinition("Time", Unit.MILLISECONDS, 10);
             
@@ -37,7 +37,6 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             metricDefinition.AddValue(20);
             
             Assert.Equal(new List<double>(){10,20}, metricDefinition.Values);
-
         }
     }
 }
