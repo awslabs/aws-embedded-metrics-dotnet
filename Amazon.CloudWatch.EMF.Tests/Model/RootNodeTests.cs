@@ -17,7 +17,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
         }
 
         [Fact]
-        public void Serialize_ReturnsExpectedValues()
+        public void Serialize_Returns_ValidValues()
         {
             MetricsContext mc = new MetricsContext();
 
