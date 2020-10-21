@@ -39,7 +39,7 @@ namespace Amazon.CloudWatch.EMF.Config
                 // Get the enum for environmentName
                 return (Environments)Enum.Parse(typeof(Environments), environmentName);
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
                 return Environments.Unknown;
             }

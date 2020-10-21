@@ -41,7 +41,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                 FormatImageName();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // log.debug("Failed to get response from: " + parsedURI, ex);
             }
@@ -116,7 +116,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             {
                 _hostname = Dns.GetHostName();
             }
-            catch (System.Net.Sockets.SocketException ex)
+            catch (System.Net.Sockets.SocketException)
             {
                 // log.debug("Unable to get hostname: ", ex);
             }

@@ -1,8 +1,8 @@
+using Amazon.CloudWatch.EMF.Model;
+using Amazon.CloudWatch.EMF.Sink;
+
 namespace Amazon.CloudWatch.EMF.Environment
 {
-    using Amazon.CloudWatch.EMF.Model;
-    using Amazon.CloudWatch.EMF.Sink;
-
     /// <summary>
     /// A runtime environment (e.g. Lambda, EKS, ECS, EC2).
     /// </summary>

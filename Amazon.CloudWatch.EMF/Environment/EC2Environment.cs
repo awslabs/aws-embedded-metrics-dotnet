@@ -24,7 +24,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             {
                 uri = new Uri(INSTANCE_IDENTITY_URL);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // log.debug("Failed to construct url: " + INSTANCE_IDENTITY_URL);
                 return false;
@@ -35,7 +35,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                 _ec2Metadata = _resourceFetcher.Fetch<EC2Metadata>(uri);
                 return true;
             }
-            catch (EMFClientException ex)
+            catch (EMFClientException)
             {
                 // log.debug("Failed to get response from: " + endpoint, ex);
             }

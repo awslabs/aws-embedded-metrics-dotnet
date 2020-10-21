@@ -1,4 +1,3 @@
-using System;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Sink;

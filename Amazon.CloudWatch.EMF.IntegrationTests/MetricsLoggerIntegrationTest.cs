@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,8 +103,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             metricRequest.MetricName = metricName;
             metricRequest.Dimensions = dimensions;
             metricRequest.Period = 60;
-            metricRequest.StartTime = now.Subtract(TimeSpan.FromMilliseconds(5000));
-            metricRequest.EndTime = now;
+            metricRequest.StartTimeUtc = now.Subtract(TimeSpan.FromMilliseconds(5000));
+            metricRequest.EndTimeUtc = now;
             metricRequest.Statistics.Add(Statistic.SampleCount);
             return metricRequest;
         }
@@ -165,7 +164,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             {
                 return Dns.GetHostName();
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
                 return "UnknownHost";
             }

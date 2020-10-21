@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Logger;

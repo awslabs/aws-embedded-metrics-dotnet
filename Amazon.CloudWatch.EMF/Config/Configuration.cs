@@ -1,5 +1,4 @@
 ﻿using Amazon.CloudWatch.EMF.Environment;
-using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Config
 {

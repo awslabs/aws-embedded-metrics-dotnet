@@ -27,7 +27,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             {
                 parsedUri = new Uri(endpoint);
             }
-            catch (UriFormatException ex)
+            catch (UriFormatException)
             {
                 // log.warn("Failed to parse the endpoint: {} ", endpoint);
                 return DEFAULT_TCP_ENDPOINT;
@@ -47,7 +47,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             }
 
             // Catch IllegalArgumentException
-            catch (Exception e)
+            catch (Exception)
             {
                 /*log.warn(
                     "Unsupported protocol: {}. Would use default endpoint: {}",

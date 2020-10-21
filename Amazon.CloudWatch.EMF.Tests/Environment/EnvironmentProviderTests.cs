@@ -3,7 +3,6 @@ using Amazon.CloudWatch.EMF.Environment;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using NSubstitute;
-using NSubstitute.ClearExtensions;
 using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Environment

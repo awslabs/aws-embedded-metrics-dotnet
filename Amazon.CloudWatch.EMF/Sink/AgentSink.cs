@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Amazon.CloudWatch.EMF.Model;
 
 namespace Amazon.CloudWatch.EMF.Sink
@@ -42,7 +41,7 @@ namespace Amazon.CloudWatch.EMF.Sink
              }
 
              // JsonProcessingException
-             catch (Exception e)
+             catch (Exception)
              {
                  // log.error("Failed to serialize the metrics with the exception: ", e);
              }
