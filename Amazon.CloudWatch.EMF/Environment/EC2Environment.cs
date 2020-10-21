@@ -9,8 +9,8 @@ namespace Amazon.CloudWatch.EMF.Environment
         private const string INSTANCE_IDENTITY_URL = "http://169.254.169.254/latest/dynamic/instance-identity/document";
         private const string CFN_EC2_TYPE = "AWS::EC2::Instance";
 
+        private readonly IResourceFetcher _resourceFetcher;
         private EC2Metadata _ec2Metadata;
-        private IResourceFetcher _resourceFetcher;
 
         public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher) : base(configuration)
         {

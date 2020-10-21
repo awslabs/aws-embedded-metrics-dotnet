@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Config;
 
 namespace Amazon.CloudWatch.EMF.Environment
@@ -9,9 +8,11 @@ namespace Amazon.CloudWatch.EMF.Environment
     /// </summary>
     public class EnvironmentProvider : IEnvironmentProvider
     {
-        private static IConfiguration _configuration;
-        private static IResourceFetcher _resourceFetcher;
-        private static IEnvironment _cachedEnvironment;
+        private readonly IConfiguration _configuration;
+        private readonly IResourceFetcher _resourceFetcher;
+        private IEnvironment _cachedEnvironment;
+
+        public IEnvironment DefaultEnvironment => new DefaultEnvironment(_configuration);
 
         public EnvironmentProvider(IConfiguration configuration, IResourceFetcher resourceFetcher)
         {
@@ -19,66 +20,49 @@ namespace Amazon.CloudWatch.EMF.Environment
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
         }
 
-        public IEnvironment DefaultEnvironment
-        {
-            get
-            {
-                return new DefaultEnvironment(_configuration);
-            }
-        }
-
         /// <summary>
         ///  Find the current environment
         /// </summary>
         /// <returns></returns>
-        public Task<IEnvironment> ResolveEnvironment()
+        public IEnvironment ResolveEnvironment()
         {
             if (_cachedEnvironment != null)
-                return Task.FromResult(_cachedEnvironment);
+                return _cachedEnvironment;
 
             var env = GetEnvironmentFromConfig();
             if (env != null)
             {
                 _cachedEnvironment = env;
-                return Task.FromResult(_cachedEnvironment);
+                return _cachedEnvironment;
             }
 
             env = GetEnvironmentByProbe();
             if (env != null)
             {
                 _cachedEnvironment = env;
-                return Task.FromResult(_cachedEnvironment);
+                return _cachedEnvironment;
             }
 
-            return Task.FromResult(DefaultEnvironment);
+            return DefaultEnvironment;
         }
 
         private IEnvironment GetEnvironmentFromConfig()
         {
-            IEnvironment environment;
             switch (_configuration.EnvironmentOverride)
             {
                 case Environments.Lambda:
-                    environment = new LambdaEnvironment();
-                    break;
+                    return new LambdaEnvironment();
                 case Environments.Agent:
-                    environment = new DefaultEnvironment(_configuration);
-                    break;
+                    return new DefaultEnvironment(_configuration);
                 case Environments.EC2:
-                    environment = new EC2Environment(_configuration, _resourceFetcher);
-                    break;
+                    return new EC2Environment(_configuration, _resourceFetcher);
                 case Environments.ECS:
-                    environment = new ECSEnvironment(_configuration, _resourceFetcher);
-                    break;
+                    return new ECSEnvironment(_configuration, _resourceFetcher);
                 case Environments.Local:
-                    environment = new LocalEnvironment(_configuration);
-                    break;
+                    return new LocalEnvironment(_configuration);
                 default:
-                    environment = null;
-                    break;
+                    return null;
             }
-
-            return environment;
         }
 
         /// <summary>

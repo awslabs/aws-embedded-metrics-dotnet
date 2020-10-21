@@ -11,7 +11,7 @@ namespace Amazon.CloudWatch.EMF.Logger
     public class MetricsLogger
     {
         private MetricsContext _context;
-        private Task<IEnvironment> _environmentFuture;
+        private IEnvironment _environmentFuture;
         private IEnvironmentProvider _environmentProvider;
 
         // TODO: considering switching to ILoggerFactory
@@ -68,10 +68,10 @@ namespace Amazon.CloudWatch.EMF.Logger
             try
             {
                 _logger.LogDebug("Resolving the environment");
-                environment = _environmentFuture.Result;
+                environment = _environmentFuture;
                 _logger.LogDebug($"Resolved environment {environment.Name}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogInformation(ex, "Failed to resolve environment. Fallback to default environment.");
                 environment = _environmentProvider.DefaultEnvironment;
