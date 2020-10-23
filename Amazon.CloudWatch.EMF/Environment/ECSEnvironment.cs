@@ -147,7 +147,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
     }
-    
+
     public class ECSMetadata
     {
         [JsonProperty("name")]
