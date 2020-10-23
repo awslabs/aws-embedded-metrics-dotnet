@@ -6,7 +6,7 @@ namespace Amazon.CloudWatch.EMF.Sink
 {
     public class UDPClient : ISocketClient
     {
-        private UdpClient _udpClient;
+        private readonly UdpClient _udpClient;
 
         public UDPClient(Endpoint endpoint)
         {
@@ -15,7 +15,7 @@ namespace Amazon.CloudWatch.EMF.Sink
 
         public void SendMessage(string message)
         {
-            Byte[] data = Encoding.ASCII.GetBytes(message);
+            var data = Encoding.ASCII.GetBytes(message);
             try
             {
                 _udpClient.Send(data, data.Length);

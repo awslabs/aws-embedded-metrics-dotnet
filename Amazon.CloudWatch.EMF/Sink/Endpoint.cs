@@ -29,7 +29,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             }
             catch (UriFormatException)
             {
-                // log.warn("Failed to parse the endpoint: {} ", endpoint);
+                // _logger.LogWarning("Failed to parse the endpoint: {} ", endpoint);
                 return DEFAULT_TCP_ENDPOINT;
             }
 

@@ -6,12 +6,12 @@ namespace Amazon.CloudWatch.EMF.Model
 {
     public class MetricsContext
     {
-        private RootNode _rootNode;
+        private readonly RootNode _rootNode;
 
         /// <summary>
         /// holds a reference to _rootNode.MetaData.CloudWatchDirective;
         /// </summary>
-        private MetricDirective _metricDirective;
+        private readonly MetricDirective _metricDirective;
 
         public MetricsContext() : this(new RootNode())
         {
@@ -83,7 +83,7 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Indicates whether default dimensions have alrady been set on this context.
+        /// Indicates whether default dimensions have already been set on this context.
         /// </summary>
         public bool HasDefaultDimensions
         {
@@ -100,7 +100,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
         /// <param name="unit">the units of the metric</param>
-        public void PutMetric(String key, double value, Unit unit)
+        public void PutMetric(string key, double value, Unit unit)
         {
             _metricDirective.PutMetric(key, value, unit);
         }
@@ -114,7 +114,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
-        public void PutMetric(String key, double value)
+        public void PutMetric(string key, double value)
         {
             PutMetric(key, value, Unit.NONE);
         }
@@ -138,7 +138,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Gets the value of the property with the specified name
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>the value of the property with the speicified name, or <c>null</c> if no property with that name has been set</returns>
+        /// <returns>the value of the property with the specified name, or <c>null</c> if no property with that name has been set</returns>
         public object GetProperty(string name)
         {
             _rootNode.GetProperties().TryGetValue(name, out var value);
@@ -205,12 +205,12 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <summary>
         /// Serializes the metrics in this context to strings.
         /// The EMF backend requires no more than 100 metrics in one log event.
-        /// If there're more than 100 metrics, we split the metrics into multiple log events (strings).
+        /// If there are more than 100 metrics, we split the metrics into multiple log events (strings).
         /// </summary>
         /// <returns>the serialized strings</returns>
         public List<string> Serialize()
         {
-            List<RootNode> nodes = new List<RootNode>();
+            var nodes = new List<RootNode>();
             if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MAX_METRICS_PER_EVENT)
             {
                 nodes.Add(_rootNode);
@@ -218,7 +218,7 @@ namespace Amazon.CloudWatch.EMF.Model
             else
             {
                 // split the root nodes into multiple and serialize each
-                int count = 0;
+                var count = 0;
                 while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
                 {
                     var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT);

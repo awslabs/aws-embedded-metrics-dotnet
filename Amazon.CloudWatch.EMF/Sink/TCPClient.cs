@@ -5,8 +5,8 @@ namespace Amazon.CloudWatch.EMF.Sink
 {
     public class TCPClient : ISocketClient
     {
-        private Endpoint _endpoint;
-        private TcpClient _tcpClient;
+        private readonly Endpoint _endpoint;
+        private readonly TcpClient _tcpClient;
 
         internal TCPClient(Endpoint endpoint)
         {
@@ -17,13 +17,13 @@ namespace Amazon.CloudWatch.EMF.Sink
         public void SendMessage(string message)
         {
             // Translate the passed message into ASCII and store it as a Byte array.
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+            var data = System.Text.Encoding.ASCII.GetBytes(message);
 
             if (!_tcpClient.Connected)
                 _tcpClient.Connect(_endpoint.Host, _endpoint.Port);
 
             // Get a client stream for reading and writing.
-            NetworkStream stream = _tcpClient.GetStream();
+            var stream = _tcpClient.GetStream();
 
             // Send the message to the connected TcpServer.
             stream.Write(data, 0, data.Length);

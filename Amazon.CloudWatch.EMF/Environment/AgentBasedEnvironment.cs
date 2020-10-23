@@ -27,26 +27,24 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             get
             {
-                if (_sink == null)
-                {
-                    Endpoint endpoint;
-                    if (string.IsNullOrEmpty(_configuration.AgentEndPoint))
-                    {
-                        // log.info("Endpoint is not defined. Using default: {}",
-                        // Endpoint.DEFAULT_TCP_ENDPOINT);
-                        endpoint = Endpoint.DEFAULT_TCP_ENDPOINT;
-                    }
-                    else
-                    {
-                        endpoint = Endpoint.FromURL(_configuration.AgentEndPoint);
-                    }
+                if (_sink != null) return _sink;
 
-                    _sink = new AgentSink(
-                        LogGroupName,
-                        LogStreamName,
-                        endpoint,
-                        new SocketClientFactory());
+                Endpoint endpoint;
+                if (string.IsNullOrEmpty(_configuration.AgentEndPoint))
+                {
+                    // log.info("Endpoint is not defined. Using default: {}", Endpoint.DEFAULT_TCP_ENDPOINT);
+                    endpoint = Endpoint.DEFAULT_TCP_ENDPOINT;
                 }
+                else
+                {
+                    endpoint = Endpoint.FromURL(_configuration.AgentEndPoint);
+                }
+
+                _sink = new AgentSink(
+                    LogGroupName,
+                    LogStreamName,
+                    endpoint,
+                    new SocketClientFactory());
 
                 return _sink;
             }

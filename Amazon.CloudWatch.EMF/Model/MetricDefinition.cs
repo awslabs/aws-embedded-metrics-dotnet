@@ -9,11 +9,11 @@ namespace Amazon.CloudWatch.EMF.Model
         {
         }
 
-        public MetricDefinition(string name, double value) : this(name, Unit.NONE, new List<double>() { value })
+        public MetricDefinition(string name, double value) : this(name, Unit.NONE, new List<double> { value })
         {
         }
 
-        public MetricDefinition(string name, Unit unit, double value) : this(name, unit, new List<double>() { value })
+        public MetricDefinition(string name, Unit unit, double value) : this(name, unit, new List<double> { value })
         {
         }
 

@@ -8,6 +8,7 @@ using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Logger;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.Model;
+using Microsoft.Extensions.Logging.Abstractions;
 using NFluent;
 using Xunit;
 
@@ -119,7 +120,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
 
         private void LogMetric(String metricName)
         {
-            MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher()), _logger);
+            MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher()), NullLoggerFactory.Instance);
             logger.PutDimensions(_dimensions);
             logger.PutMetric(metricName, 100, Unit.MILLISECONDS);
             logger.Flush();

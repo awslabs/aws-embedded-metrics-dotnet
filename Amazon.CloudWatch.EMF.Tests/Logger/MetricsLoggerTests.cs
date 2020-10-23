@@ -19,7 +19,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         public MetricsLoggerTests()
         {
             _fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
-            var logger = _fixture.Create<ILogger>();
+            var logger = _fixture.Create<ILoggerFactory>();
             var env = _fixture.Create<IEnvironment>();
             var environmentProvider = _fixture.Create<IEnvironmentProvider>();
 
