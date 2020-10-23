@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Amazon.CloudWatch.EMF.Model
 {
     /*
-    EXAMPLE OF DESIRED SERILIZATION OUTPUT:
+    EXAMPLE OF DESIRED SERIALIZATION OUTPUT:
 
     {
         "_aws": {
@@ -67,9 +67,9 @@ namespace Amazon.CloudWatch.EMF.Model
                     targetMembers.Add(data.Key, data.Value);
                 }
 
-                foreach (MetricDefinition metricDefinition in AWS.MetricDirective.Metrics)
+                foreach (var metricDefinition in AWS.MetricDirective.Metrics)
                 {
-                    List<double> values = metricDefinition.Values;
+                    var values = metricDefinition.Values;
                     targetMembers.Add(metricDefinition.Name, values.Count == 1 ? (object)values[0] : values);
                 }
 
@@ -90,7 +90,7 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             var dimensions = new Dictionary<string, string>();
             var dimensionSets = AWS.MetricDirective.GetAllDimensionSets();
-            foreach (DimensionSet dimensionSet in dimensionSets)
+            foreach (var dimensionSet in dimensionSets)
             {
                 foreach (var dimension in dimensionSet.Dimensions)
                 {

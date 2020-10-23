@@ -27,10 +27,11 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             get
             {
-                if (_sink == null)
-                {
-                    Endpoint endpoint;
-                    endpoint = string.IsNullOrEmpty(_configuration.AgentEndPoint) ? Endpoint.DEFAULT_TCP_ENDPOINT : Endpoint.FromURL(_configuration.AgentEndPoint);
+                if (_sink != null) return _sink;
+
+                var endpoint = string.IsNullOrEmpty(_configuration.AgentEndPoint)
+                    ? Endpoint.DEFAULT_TCP_ENDPOINT
+                    : new Endpoint(_configuration.AgentEndPoint);
 
                 _sink = new AgentSink(
                     LogGroupName,

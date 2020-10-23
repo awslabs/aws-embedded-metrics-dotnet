@@ -1,12 +1,26 @@
 using System;
 using System.IO;
 using System.Net;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
     public class ResourceFetcher : IResourceFetcher
     {
+        private readonly ILogger _logger;
+
+        public ResourceFetcher() : this(NullLoggerFactory.Instance)
+        {
+        }
+
+        public ResourceFetcher(ILoggerFactory loggerFactory)
+        {
+            loggerFactory ??= NullLoggerFactory.Instance;
+            _logger = loggerFactory.CreateLogger<ResourceFetcher>();
+        }
+
         /// <summary>
         /// Fetch a json object from a given uri and deserialize it to the specified class: T
         /// </summary>
@@ -22,7 +36,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             try
             {
-                HttpWebRequest httpWebRequest = GetHttpWebRequest(endpoint, method);
+                var httpWebRequest = GetHttpWebRequest(endpoint, method);
 
                 var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
@@ -39,14 +53,14 @@ namespace Amazon.CloudWatch.EMF.Environment
                     HandleErrorResponse(httpWebResponse);
                 }
             }
-            catch (IOException)
+            catch (IOException e)
             {
-                /*log.debug(
+                _logger.LogDebug(
                     "An IOException occurred when connecting to service endpoint: "
                     + endpoint
                     + "\n Retrying to connect "
                     + "again.");
-                throw new EMFClientException("Failed to connect to service endpoint: ", ioException);*/
+                throw new EMFClientException("Failed to connect to service endpoint: ", e);
             }
 
             return string.Empty;

@@ -1,6 +1,8 @@
 using System;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Environment
@@ -10,12 +12,20 @@ namespace Amazon.CloudWatch.EMF.Environment
         private const string INSTANCE_IDENTITY_URL = "http://169.254.169.254/latest/dynamic/instance-identity/document";
         private const string CFN_EC2_TYPE = "AWS::EC2::Instance";
 
+        private readonly ILogger _logger;
         private readonly IResourceFetcher _resourceFetcher;
         private EC2Metadata _ec2Metadata;
 
-        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher) : base(configuration)
+        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher) : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
+        {
+        }
+
+        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory) : base(configuration)
         {
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
+
+            loggerFactory ??= NullLoggerFactory.Instance;
+            _logger = loggerFactory.CreateLogger<EC2Environment>();
         }
 
         public override bool Probe()
@@ -27,7 +37,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
             catch (Exception)
             {
-                // log.debug("Failed to construct url: " + INSTANCE_IDENTITY_URL);
+                _logger.LogDebug("Failed to construct url: " + INSTANCE_IDENTITY_URL);
                 return false;
             }
 
@@ -38,7 +48,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
             catch (EMFClientException ex)
             {
-                // log.debug("Failed to get response from: " + endpoint, ex);
+                _logger.LogDebug("Failed to get response from: " + uri, ex);
             }
 
             return false;

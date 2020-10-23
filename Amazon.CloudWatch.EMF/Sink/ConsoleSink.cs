@@ -1,5 +1,7 @@
 using System;
 using Amazon.CloudWatch.EMF.Model;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amazon.CloudWatch.EMF.Sink
 {
@@ -8,20 +10,31 @@ namespace Amazon.CloudWatch.EMF.Sink
     /// </summary>
     public class ConsoleSink : ISink
     {
+        private readonly ILogger _logger;
+
+        public ConsoleSink() : this(NullLoggerFactory.Instance)
+        {
+        }
+
+        public ConsoleSink(ILoggerFactory loggerFactory)
+        {
+            loggerFactory ??= NullLoggerFactory.Instance;
+            _logger = loggerFactory.CreateLogger<ConsoleSink>();
+        }
+
         public void Accept(MetricsContext context)
         {
             try
             {
                 var serializedMetrics = context.Serialize();
-                foreach (string metric in serializedMetrics)
+                foreach (var metric in serializedMetrics)
                 {
                     Console.WriteLine(metric);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // ToDo: add logging
-                // log.error("Failed to serialize a MetricsContext: ", e);
+                _logger.LogError("Failed to serialize a MetricsContext: ", e);
             }
         }
     }

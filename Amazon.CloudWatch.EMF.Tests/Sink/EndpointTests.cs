@@ -6,29 +6,33 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
     public class EndpointTests
     {
         [Fact]
-        public void TestParseTCPEndpoint() {
+        public void TestParseTCPEndpoint()
+        {
             string tcpEndpoint = "tcp://173.9.0.12:2580";
-            var endpoint = Endpoint.FromURL(tcpEndpoint);
+            var endpoint = new Endpoint(tcpEndpoint);
 
             Assert.Equal(endpoint.ToString(), tcpEndpoint);
         }
 
         [Fact]
-        public void TestParseUDPEndpoint() {
+        public void TestParseUDPEndpoint()
+        {
             string udpEndpoint = "udp://173.9.0.12:2580";
             string tcpEndpoint = "tcp://173.9.0.12:2580";
-            Endpoint endpoint = Endpoint.FromURL(udpEndpoint);
+            Endpoint endpoint = new Endpoint(udpEndpoint);
 
             Assert.Equal(endpoint.ToString(), tcpEndpoint);
         }
 
         [Fact]
-        public void TestReturnDefaultEndpointForInvalidURI() {
-            string unsupportedEndpoint = "http://173.9.0.12:2580";
-            Endpoint endpoint = Endpoint.FromURL(unsupportedEndpoint);
-            Endpoint endpointFromEmptyString = Endpoint.FromURL("");
+        public void TestReturnDefaultEndpointForInvalidURI()
+        {
+            var defaultEndpoint = Endpoint.DEFAULT_TCP_ENDPOINT;
+            var endpoint = new Endpoint("");
 
-            Assert.Equal(endpointFromEmptyString, Endpoint.DEFAULT_TCP_ENDPOINT);
+            Assert.Equal(defaultEndpoint.Host, endpoint.Host);
+            Assert.Equal(defaultEndpoint.Port, endpoint.Port);
+            Assert.Equal(defaultEndpoint.CurrentProtocol, endpoint.CurrentProtocol);
         }
     }
 }

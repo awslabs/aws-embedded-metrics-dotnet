@@ -23,7 +23,6 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
         private static readonly string _dimensionName = "Operation";
         private static readonly string _dimensionValue = "Integ-Test-Agent";
         private DimensionSet _dimensions = new DimensionSet(_dimensionName, _dimensionValue);
-        private Microsoft.Extensions.Logging.ILogger _logger;
 
         public MetricsLoggerIntegrationTest()
         {

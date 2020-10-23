@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Utils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Environment
@@ -14,19 +17,28 @@ namespace Amazon.CloudWatch.EMF.Environment
         private const string FLUENT_HOST = "FLUENT_HOST";
         private const string ENVIRONMENT_TYPE = "AWS::ECS::Container";
 
+        private readonly ILogger _logger;
+        private readonly IResourceFetcher _resourceFetcher;
         private ECSMetadata _ecsMetadata;
-        private IResourceFetcher _resourceFetcher;
         private string _fluentBitEndpoint;
         private string _hostname;
 
-        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher) : base(configuration)
+        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher) : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
+        {
+        }
+
+        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory) : base(configuration)
         {
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
+
+            loggerFactory ??= NullLoggerFactory.Instance;
+
+            _logger = loggerFactory.CreateLogger<ECSEnvironment>();
         }
 
         public override bool Probe()
         {
-            string uri = EnvUtils.GetEnv(ECS_CONTAINER_METADATA_URI);
+            var uri = EnvUtils.GetEnv(ECS_CONTAINER_METADATA_URI);
 
             if (uri == null)
             {
@@ -42,9 +54,9 @@ namespace Amazon.CloudWatch.EMF.Environment
                 FormatImageName();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // log.debug("Failed to get response from: " + parsedURI, ex);
+                _logger.LogDebug("Failed to get response from: " + uri, ex);
             }
 
             return false;
@@ -117,9 +129,9 @@ namespace Amazon.CloudWatch.EMF.Environment
             {
                 _hostname = Dns.GetHostName();
             }
-            catch (System.Net.Sockets.SocketException)
+            catch (SocketException ex)
             {
-                // log.debug("Unable to get hostname: ", ex);
+                _logger.LogDebug("Unable to get hostname: ", ex);
             }
 
             return _hostname;
@@ -127,24 +139,23 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         private void CheckAndSetFluentHost()
         {
-            string fluentHost = EnvUtils.GetEnv(FLUENT_HOST);
-            if (fluentHost != null && string.IsNullOrEmpty(_configuration.AgentEndPoint))
-            {
-                _fluentBitEndpoint = string.Format("tcp://%s:%d", fluentHost, Constants.DEFAULT_AGENT_PORT);
-                _configuration.AgentEndPoint = _fluentBitEndpoint;
+            var fluentHost = EnvUtils.GetEnv(FLUENT_HOST);
 
-                // log.info("Using FluentBit configuration. Endpoint: {}", fluentBitEndpoint);
-            }
+            if (fluentHost == null || !string.IsNullOrEmpty(_configuration.AgentEndPoint)) return;
+
+            _fluentBitEndpoint = string.Format("tcp://%s:%d", fluentHost, Constants.DEFAULT_AGENT_PORT);
+            _configuration.AgentEndPoint = _fluentBitEndpoint;
+
+            _logger.LogInformation("Using FluentBit configuration. Endpoint: {}", _fluentBitEndpoint);
         }
 
         private void FormatImageName()
         {
-            if (_ecsMetadata != null && _ecsMetadata.Image != null)
-            {
-                string imageName = _ecsMetadata.Image;
-                string[] splitImageNames = imageName.Split("\\/");
-                _ecsMetadata.FormattedImageName = splitImageNames[^1];
-            }
+            if (_ecsMetadata?.Image == null) return;
+
+            var imageName = _ecsMetadata.Image;
+            var splitImageNames = imageName.Split("\\/");
+            _ecsMetadata.FormattedImageName = splitImageNames[^1];
         }
     }
 

@@ -1,50 +1,60 @@
 using System;
 using Amazon.CloudWatch.EMF.Model;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amazon.CloudWatch.EMF.Sink
 {
-     public class AgentSink : ISink
-     {
-         private readonly string _logGroupName;
-         private readonly string _logStreamName;
-         private readonly ISocketClient _socketClient;
+    public class AgentSink : ISink
+    {
+        private readonly ILogger _logger;
+        private readonly string _logGroupName;
+        private readonly string _logStreamName;
+        private readonly ISocketClient _socketClient;
 
-         public AgentSink(
+        public AgentSink(string logGroupName, string logStreamName, Endpoint endpoint, SocketClientFactory clientFactory) : this(logGroupName, logStreamName, endpoint, clientFactory, NullLoggerFactory.Instance)
+        {
+        }
+
+        public AgentSink(
              string logGroupName,
              string logStreamName,
              Endpoint endpoint,
-             SocketClientFactory clientFactory)
-         {
-             _logGroupName = logGroupName;
-             _logStreamName = logStreamName;
-             _socketClient = clientFactory.GetClient(endpoint);
-         }
+             SocketClientFactory clientFactory,
+             ILoggerFactory loggerFactory)
+        {
+            _logGroupName = logGroupName;
+            _logStreamName = logStreamName;
+            _socketClient = clientFactory.GetClient(endpoint);
 
-         public void Accept(MetricsContext metricsContext)
-         {
-             if (!String.IsNullOrEmpty(_logGroupName))
-             {
-                 metricsContext.PutMetadata("LogGroupName", _logGroupName);
-             }
+            loggerFactory ??= NullLoggerFactory.Instance;
 
-             if (!String.IsNullOrEmpty(_logStreamName))
-             {
-                 metricsContext.PutMetadata("LogStreamName", _logStreamName);
-             }
+            _logger = loggerFactory.CreateLogger<AgentSink>();
+        }
 
-             try
-             {
-                 foreach (string data in metricsContext.Serialize())
-                 {
-                     _socketClient.SendMessage(data);
-                 }
-             }
+        public void Accept(MetricsContext metricsContext)
+        {
+            if (!string.IsNullOrEmpty(_logGroupName))
+            {
+                metricsContext.PutMetadata("LogGroupName", _logGroupName);
+            }
 
-             // JsonProcessingException
-             catch (Exception)
-             {
-                 // log.error("Failed to serialize the metrics with the exception: ", e);
-             }
-         }
-     }
+            if (!string.IsNullOrEmpty(_logStreamName))
+            {
+                metricsContext.PutMetadata("LogStreamName", _logStreamName);
+            }
+
+            try
+            {
+                foreach (var data in metricsContext.Serialize())
+                {
+                    _socketClient.SendMessage(data);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Failed to serialize the metrics with the exception: ", e);
+            }
+        }
+    }
 }
