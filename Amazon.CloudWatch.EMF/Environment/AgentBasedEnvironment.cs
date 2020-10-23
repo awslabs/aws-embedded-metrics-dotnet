@@ -7,7 +7,7 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public abstract class AgentBasedEnvironment : IEnvironment
     {
-        protected IConfiguration _configuration;
+        protected readonly IConfiguration _configuration;
         private ISink _sink;
 
         protected AgentBasedEnvironment(IConfiguration configuration)
@@ -15,30 +15,22 @@ namespace Amazon.CloudWatch.EMF.Environment
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public string Name => !string.IsNullOrEmpty(_configuration.ServiceName) ? _configuration.ServiceName : Constants.UNKNOWN;
+        public virtual string Name => !string.IsNullOrEmpty(_configuration.ServiceName) ? _configuration.ServiceName : Constants.UNKNOWN;
 
-        public string Type => !string.IsNullOrEmpty(_configuration.ServiceType) ? _configuration.ServiceType : Constants.UNKNOWN;
+        public virtual string Type => !string.IsNullOrEmpty(_configuration.ServiceType) ? _configuration.ServiceType : Constants.UNKNOWN;
 
-        public string LogGroupName => !string.IsNullOrEmpty(_configuration.LogGroupName) ? _configuration.LogGroupName : Name + "_metrics";
+        public virtual string LogGroupName => !string.IsNullOrEmpty(_configuration.LogGroupName) ? _configuration.LogGroupName : Name + "_metrics";
 
-        public string LogStreamName => !string.IsNullOrEmpty(_configuration.LogStreamName) ? _configuration.LogStreamName : string.Empty;
+        public virtual string LogStreamName => !string.IsNullOrEmpty(_configuration.LogStreamName) ? _configuration.LogStreamName : string.Empty;
 
         public ISink Sink
         {
             get
             {
-                if (_sink != null) return _sink;
-
-                Endpoint endpoint;
-                if (string.IsNullOrEmpty(_configuration.AgentEndPoint))
+                if (_sink == null)
                 {
-                    // log.info("Endpoint is not defined. Using default: {}", Endpoint.DEFAULT_TCP_ENDPOINT);
-                    endpoint = Endpoint.DEFAULT_TCP_ENDPOINT;
-                }
-                else
-                {
-                    endpoint = Endpoint.FromURL(_configuration.AgentEndPoint);
-                }
+                    Endpoint endpoint;
+                    endpoint = string.IsNullOrEmpty(_configuration.AgentEndPoint) ? Endpoint.DEFAULT_TCP_ENDPOINT : Endpoint.FromURL(_configuration.AgentEndPoint);
 
                 _sink = new AgentSink(
                     LogGroupName,
@@ -50,12 +42,12 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
 
-        public bool Probe()
+        public virtual bool Probe()
         {
             return true;
         }
 
-        public void ConfigureContext(MetricsContext context)
+        public virtual void ConfigureContext(MetricsContext context)
         {
         }
     }

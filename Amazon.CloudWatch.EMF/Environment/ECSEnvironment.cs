@@ -4,6 +4,7 @@ using System.Net;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Utils;
+using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
@@ -23,7 +24,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
         }
 
-        public new bool Probe()
+        public override bool Probe()
         {
             string uri = EnvUtils.GetEnv(ECS_CONTAINER_METADATA_URI);
 
@@ -49,7 +50,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             return false;
         }
 
-        public new string Name
+        public override string Name
         {
             get
             {
@@ -67,7 +68,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
 
-        public new string Type
+        public override string Type
         {
             get
             {
@@ -80,7 +81,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
 
-        public new string LogGroupName
+        public override string LogGroupName
         {
             get
             {
@@ -95,7 +96,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
 
-        public void ConfigureContext(MetricsContext metricsContext)
+        public override void ConfigureContext(MetricsContext metricsContext)
         {
             metricsContext.PutProperty("containerId", GetHostName());
             metricsContext.PutProperty("createdAt", _ecsMetadata.CreatedAt);
@@ -147,25 +148,33 @@ namespace Amazon.CloudWatch.EMF.Environment
         }
     }
 
-    // TODO: why is this class static in Java?
     public class ECSMetadata
     {
+        [JsonProperty("name")]
         internal string Name { get; set; }
 
+        [JsonProperty("dockerId")]
         internal string DockerId { get; set; }
 
+        [JsonProperty("dockerName")]
         internal string DockerName { get; set; }
 
+        [JsonProperty("image")]
         internal string Image { get; set; }
 
+        [JsonProperty("formattedImageName")]
         internal string FormattedImageName { get; set; }
 
+        [JsonProperty("imageId")]
         internal string ImageId { get; set; }
 
+        [JsonProperty("labels")]
         internal Dictionary<string, string> Labels { get; set; }
 
+        [JsonProperty("createdAt")]
         internal string CreatedAt { get; set; }
 
+        [JsonProperty("startedAt")]
         internal string StartedAt { get; set; }
     }
 }

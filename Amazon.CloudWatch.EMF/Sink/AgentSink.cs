@@ -5,9 +5,9 @@ namespace Amazon.CloudWatch.EMF.Sink
 {
      public class AgentSink : ISink
      {
-         private string _logGroupName;
-         private string _logStreamName;
-         private ISocketClient _socketClient;
+         private readonly string _logGroupName;
+         private readonly string _logStreamName;
+         private readonly ISocketClient _socketClient;
 
          public AgentSink(
              string logGroupName,
