@@ -12,21 +12,6 @@ namespace Amazon.CloudWatch.EMF.Model
     /// </summary>
     public class MetaData
     {
-        [JsonProperty]
-        [JsonConverter(typeof(UnixMillisecondDateTimeConverter))]
-        internal DateTime Timestamp { get; set; }
-
-        /// <summary>
-        /// Represents the MetricDirective.
-        /// NOTE: serialization emits an Array, but only a single MetricDirective is supported by this library.
-        /// </summary>
-        [JsonProperty]
-        internal IReadOnlyCollection<MetricDirective> CloudWatchMetrics { get; set; }
-
-        internal MetricDirective MetricDirective => CloudWatchMetrics.First();
-
-        internal Dictionary<string, object> CustomMetadata { get; set; } = new Dictionary<string, object>();
-
         public MetaData()
         {
             CloudWatchMetrics = new List<MetricDirective>() { new MetricDirective() };
@@ -38,5 +23,21 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             return !MetricDirective.HasNoMetrics();
         }
+
+        [JsonProperty]
+        [JsonConverter(typeof(UnixMillisecondDateTimeConverter))]
+        internal DateTime Timestamp { get; set; }
+
+        /// <summary>
+        /// Represents the MetricDirective.
+        /// NOTE: serialization emits an Array, but only a single MetricDirective is supported by this library.
+        /// </summary>
+        [JsonProperty]
+        internal IReadOnlyCollection<MetricDirective> CloudWatchMetrics { get; set; }
+
+        [JsonExtensionData]
+        internal Dictionary<string, object> CustomMetadata { get; } = new Dictionary<string, object>();
+
+        internal MetricDirective MetricDirective => CloudWatchMetrics.First();
     }
 }

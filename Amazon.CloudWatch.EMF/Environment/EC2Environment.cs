@@ -1,6 +1,7 @@
 using System;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
+using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
@@ -17,7 +18,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
         }
 
-        public new bool Probe()
+        public override bool Probe()
         {
             Uri uri = null;
             try
@@ -35,7 +36,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                 _ec2Metadata = _resourceFetcher.Fetch<EC2Metadata>(uri);
                 return true;
             }
-            catch (EMFClientException)
+            catch (EMFClientException ex)
             {
                 // log.debug("Failed to get response from: " + endpoint, ex);
             }
@@ -43,7 +44,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             return false;
         }
 
-        public new string Type
+        public override string Type
         {
             get
             {
@@ -61,7 +62,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
 
-        public new void ConfigureContext(MetricsContext metricsContext)
+        public override void ConfigureContext(MetricsContext metricsContext)
         {
             if (_ec2Metadata != null)
             {
@@ -74,17 +75,21 @@ namespace Amazon.CloudWatch.EMF.Environment
         }
     }
 
-    // TODO: why is this class static in Java?
     public class EC2Metadata
     {
+        [JsonProperty("imageId")]
         internal string ImageId { get; set; }
 
+        [JsonProperty("availabilityZone")]
         internal string AvailabilityZone { get; set; }
 
+        [JsonProperty("privateIp")]
         internal string PrivateIp { get; set; }
 
+        [JsonProperty("instanceId")]
         internal string InstanceId { get; set; }
 
+        [JsonProperty("instanceType")]
         internal string InstanceType { get; set; }
     }
 }

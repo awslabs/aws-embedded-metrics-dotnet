@@ -11,7 +11,7 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
         static void Main(string[] args)
         {
             var configuration = new Configuration("Test Console App", "Console", "TestConsoleApp", "TestConsoleApp", "",
-                Environments.ECS);
+                Environments.EC2);
             EnvironmentConfigurationProvider.Config = configuration;
 
             var logger = new MetricsLogger();
