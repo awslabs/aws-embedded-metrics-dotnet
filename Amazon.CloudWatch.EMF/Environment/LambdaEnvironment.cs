@@ -65,7 +65,6 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
         }
 
-        // TODO: Java uses optional string, validate if this works as expected
         private string GetSampledTrace()
         {
             string traceId = EnvUtils.GetEnv(TRACE_ID);
