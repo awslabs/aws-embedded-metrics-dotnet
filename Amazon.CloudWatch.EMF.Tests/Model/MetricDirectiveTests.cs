@@ -50,7 +50,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             metricDirective.PutMetric("Time", 10);
             metricDirective.PutMetric("Time", 20);
             
-            Assert.Equal(1, metricDirective.Metrics.Count);
+            Assert.Single(metricDirective.Metrics);
             Assert.Equal(new List<double>(){10,20},metricDirective.Metrics[0].Values);
         }
         

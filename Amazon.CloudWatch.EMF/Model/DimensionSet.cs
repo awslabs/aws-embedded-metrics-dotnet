@@ -19,7 +19,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="value">the value for the dimension</param>
         public DimensionSet(string key, string value)
         {
-            Dimensions.Add(key, value);
+            Dimensions[key] = value;
         }
 
         internal Dictionary<string, string> Dimensions { get; } = new Dictionary<string, string>();
@@ -31,7 +31,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="value">the dimension value</param>
         public void AddDimension(string key, string value)
         {
-            Dimensions.Add(key, value);
+            Dimensions[key] = value;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             foreach (var dimension in other?.Dimensions)
             {
-                Dimensions.Add(dimension.Key, dimension.Value);
+                Dimensions[dimension.Key] = dimension.Value;
             }
 
             return this;
@@ -61,7 +61,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <returns>the value of the dimension with the specified dimension key</returns>
         public string GetDimensionValue(string key)
         {
-            return Dimensions[key];
+            return DimensionKeys.Contains(key) ? Dimensions[key] : null;
         }
     }
 }

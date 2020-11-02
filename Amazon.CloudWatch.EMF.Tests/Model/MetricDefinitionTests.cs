@@ -15,16 +15,29 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             string metricString = JsonConvert.SerializeObject(metricDefinition);
 
             Assert.Equal("{\"Name\":\"Time\",\"Unit\":\"None\"}", metricString);
+            Assert.Empty(metricDefinition.Values);
         }
         
         [Fact]
-        public void MetricDefinition_WithUnit_Returns_ValidJson()
+        public void MetricDefinition_WithValue_Returns_ValidJson()
+        {
+            MetricDefinition metricDefinition = new MetricDefinition("Time", 20);
+
+            string metricString = JsonConvert.SerializeObject(metricDefinition);
+
+            Assert.Equal("{\"Name\":\"Time\",\"Unit\":\"None\"}", metricString);
+            Assert.Equal(new List<double>(){20}, metricDefinition.Values);
+        }
+        
+        [Fact]
+        public void MetricDefinition_WithUnitAndValue_Returns_ValidJson()
         {
             MetricDefinition metricDefinition = new MetricDefinition("Time", Unit.MILLISECONDS, 10);
 
             string metricString = JsonConvert.SerializeObject(metricDefinition);
 
             Assert.Equal( "{\"Name\":\"Time\",\"Unit\":\"Milliseconds\"}", metricString);
+            Assert.Equal(new List<double>(){10}, metricDefinition.Values);
         }
         
         [Fact]

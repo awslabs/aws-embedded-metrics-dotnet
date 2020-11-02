@@ -42,7 +42,7 @@ namespace Amazon.CloudWatch.EMF.Model
             return _properties;
         }
 
-        /// <summary>
+       /* /// <summary>
         /// Emits the target members that are referenced by metrics, dimensions and properties.
         /// </summary>
         /// <returns></returns>
@@ -75,14 +75,14 @@ namespace Amazon.CloudWatch.EMF.Model
 
                 return targetMembers;
             }
-        }
+        }*/
 
         public string Serialize()
         {
             return JsonConvert.SerializeObject(this);
         }
 
-        /// <summary>
+       /*/// <summary>
         /// Return a list of all dimensions from all dimension sets.
         /// </summary>
         /// <returns></returns>
@@ -99,6 +99,6 @@ namespace Amazon.CloudWatch.EMF.Model
             }
 
             return dimensions;
-        }
+        }*/
     }
 }

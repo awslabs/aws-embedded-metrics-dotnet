@@ -119,6 +119,10 @@ namespace Amazon.CloudWatch.EMF.Model
             PutMetric(key, value, Unit.NONE);
         }
 
+        public List<MetricDefinition> Metrics => _metricDirective.Metrics;
+
+        public Dictionary<string, object> MetaData => _rootNode.AWS.CustomMetadata;
+
         /// <summary>
         /// Add a property to this log entry.
         /// Properties are additional values that can be associated with metrics.
@@ -135,7 +139,7 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Gets the value of the property with the specified name
+        /// Gets the value of the property with the specified name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns>the value of the property with the specified name, or <c>null</c> if no property with that name has been set</returns>
@@ -145,15 +149,10 @@ namespace Amazon.CloudWatch.EMF.Model
             return value;
         }
 
-        /**
-         * Add dimensions to the metric context.
-         *
-         * <pre>{@code
-         * metricContext.PutDimension(DimensionSet.of("Dim", "Value" ))
-         * }</pre>
-         *
-         * @param dimensionSet the dimensions set to add
-         */
+        /// <summary>
+        /// Add dimensions to the metric context.
+        /// </summary>
+        /// <param name="dimensionSet">the dimensions set to add.</param>
         public void PutDimension(DimensionSet dimensionSet)
         {
             _metricDirective.CustomDimensionSets.Add(dimensionSet);
@@ -165,8 +164,8 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <example>
         /// metricContext.PutDimension("ExampleDimension", "ExampleValue")
         /// </example>
-        /// <param name="dimension">the name of the new dimension</param>
-        /// <param name="value">the value of the new dimension</param>
+        /// <param name="dimension">the name of the new dimension.</param>
+        /// <param name="value">the value of the new dimension.</param>
         public void PutDimension(string dimension, string value)
         {
             var dimensionSet = new DimensionSet();
@@ -177,7 +176,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <summary>
         /// Gets all dimension sets that have been added, including default dimensions.
         /// </summary>
-        /// <returns>the list of dimensions that has been added, including default dimensions</returns>
+        /// <returns>the list of dimensions that has been added, including default dimensions.</returns>
         public List<DimensionSet> GetAllDimensionSets()
         {
             return _metricDirective.GetAllDimensionSets();
@@ -193,13 +192,24 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Adds the specified key-value pair to the metadata
+        /// Adds the specified key-value pair to the metadata.
         /// </summary>
-        /// <param name="key">the name of the key</param>
-        /// <param name="value">the value to associate with the specified key</param>
+        /// <param name="key">the name of the key.</param>
+        /// <param name="value">the value to associate with the specified key.</param>
         public void PutMetadata(string key, object value)
         {
             _rootNode.AWS.CustomMetadata.Add(key, value);
+        }
+
+        /// <summary>
+        /// Adds the specified key-value pair to the metadata.
+        /// </summary>
+        /// <param name="key">Gets the value of the metadata with the specified name.</param>
+        /// <param name="value">the value to associate with the specified key.</param>
+        public object GetMetadata(string key)
+        {
+            _rootNode.AWS.CustomMetadata.TryGetValue(key, out var value);
+            return value;
         }
 
         /// <summary>
@@ -217,14 +227,37 @@ namespace Amazon.CloudWatch.EMF.Model
             }
             else
             {
-                // split the root nodes into multiple and serialize each
-                var count = 0;
-                while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
-                {
-                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT);
+                var rootNodes = new List<RootNode>();
+                var metricsMap = new Dictionary<string, MetricDefinition>();
+                int count = 0;
 
-                    // TODO: split the notes into multiples and seralize each, copying metadata, properties, etc.
-                    throw new NotImplementedException();
+                foreach (MetricDefinition metric in _rootNode.AWS.MetricDirective.Metrics)
+                {
+                    metricsMap.Add(metric.Name, metric);
+                    count++;
+                    if (metricsMap.Count == Constants.MAX_METRICS_PER_EVENT ||
+                        count == _rootNode.AWS.MetricDirective.Metrics.Count)
+                    {
+                        var metaData = _rootNode.AWS;
+                        var metricDirective = metaData.MetricDirective;
+
+                        // TODO: complete this implementation
+                        /*var clonedMetricDirective = new MetricDirective() {Metrics = { }}
+                        var clonedMetaData = new MetaData() {CloudWatchMetrics = metricDirective.Metrics }
+                        rootNodes.Add(new RootNode()
+
+                        metricsMap = new Dictionary<string, MetricDefinition>();*/
+                    }
+
+                    // split the root nodes into multiple and serialize each
+                    while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
+                    {
+                        var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count)
+                            .Take(Constants.MAX_METRICS_PER_EVENT);
+
+                        // TODO: split the notes into multiples and serialize each, copying metadata, properties, etc.
+                        throw new NotImplementedException();
+                    }
                 }
             }
 

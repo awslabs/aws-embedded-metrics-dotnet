@@ -22,16 +22,16 @@ namespace Amazon.CloudWatch.EMF.Model
             _shouldUseDefaultDimensionSet = true;
         }
 
-        public bool HasNoMetrics()
+        /*public bool HasNoMetrics()
         {
             return !Metrics.Any();
-        }
+        }*/
 
         [JsonProperty("Namespace")]
         internal string Namespace { get; set; }
 
         [JsonProperty("Metrics")]
-        internal IReadOnlyList<MetricDefinition> Metrics
+        internal List<MetricDefinition> Metrics
         {
             get { return _metrics; }
         }
@@ -55,7 +55,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="unit"></param>
         internal void PutMetric(string key, double value, Unit unit)
         {
-            var metric = _metrics.Where(m => m.Name == key).FirstOrDefault();
+            var metric = _metrics.FirstOrDefault(m => m.Name == key);
             if (metric != null)
             {
                 metric.AddValue(value);
@@ -97,8 +97,9 @@ namespace Amazon.CloudWatch.EMF.Model
                 return CustomDimensionSets;
             }
 
+            CustomDimensionSets.ForEach(ds => DefaultDimensionSet.AddRange(ds));
+
             var dimensions = new List<DimensionSet>() { DefaultDimensionSet };
-            dimensions.AddRange(CustomDimensionSets);
             return dimensions;
         }
     }

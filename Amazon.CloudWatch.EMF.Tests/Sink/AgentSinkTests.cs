@@ -8,31 +8,34 @@ using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Sink
 {
+    public class TestClient : ISocketClient 
+    {
+
+        private string _message;
+        public void SendMessage(string message)
+        {
+            message = _message;
+        }
+            
+        public string GetMessage() 
+        {
+            return _message;
+        }
+    }
     public class AgentSinkTests
     {
-        private SocketClientFactory factory;
-        private TestClient client;
+        private SocketClientFactory _socketClientFactory;
+        private TestClient _client;
         private readonly IFixture _fixture;
         
-        public AgentSinkTests() {
+        public AgentSinkTests()
+        {
             _fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
-            var clientFactory = _fixture.Create<SocketClientFactory>();
-            client = new TestClient();
-            clientFactory.GetClient(Arg.Any<Endpoint>()).Returns(client);
+            _socketClientFactory = _fixture.Create<SocketClientFactory>();
+            _client = new TestClient();
+            _socketClientFactory.GetClient(Endpoint.DEFAULT_TCP_ENDPOINT).Returns(_client);
         }
-
-        class TestClient : ISocketClient {
-
-            private string _message;
-            public void SendMessage(string message)
-            {
-                message = _message;
-            }
-            
-            public string GetMessage() {
-                return _message;
-            }
-        }
+        
         
         [Fact]
         public void TestAccept() {
@@ -46,7 +49,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
             mc.PutProperty(prop, propValue);
             mc.PutMetric("Time", 10);
 
-            AgentSink sink = new AgentSink(logGroupName, logStreamName, Endpoint.DEFAULT_TCP_ENDPOINT, factory);
+            AgentSink sink = new AgentSink(logGroupName, logStreamName, Endpoint.DEFAULT_TCP_ENDPOINT, _socketClientFactory);
 
             sink.Accept(mc);
 

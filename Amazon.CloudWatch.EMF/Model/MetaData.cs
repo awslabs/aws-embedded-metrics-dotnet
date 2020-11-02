@@ -19,10 +19,10 @@ namespace Amazon.CloudWatch.EMF.Model
             CustomMetadata = new Dictionary<string, object>();
         }
 
-        internal bool IsEmpty()
+        /*internal bool IsEmpty()
         {
             return !MetricDirective.HasNoMetrics();
-        }
+        }*/
 
         [JsonProperty]
         [JsonConverter(typeof(UnixMillisecondDateTimeConverter))]
@@ -33,7 +33,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// NOTE: serialization emits an Array, but only a single MetricDirective is supported by this library.
         /// </summary>
         [JsonProperty]
-        internal IReadOnlyCollection<MetricDirective> CloudWatchMetrics { get; set; }
+        internal List<MetricDirective> CloudWatchMetrics { get; set; }
 
         [JsonExtensionData]
         internal Dictionary<string, object> CustomMetadata { get; } = new Dictionary<string, object>();

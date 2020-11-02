@@ -36,6 +36,6 @@ namespace Amazon.CloudWatch.EMF.Model
         public List<double> Values { get; }
 
         [JsonProperty("Unit")]
-        private Unit Unit { get; set; }
+        public Unit Unit { get; set; }
     }
 }
