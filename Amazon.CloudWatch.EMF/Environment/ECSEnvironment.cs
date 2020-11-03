@@ -110,12 +110,15 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         public override void ConfigureContext(MetricsContext metricsContext)
         {
-            metricsContext.PutProperty("containerId", GetHostName());
-            metricsContext.PutProperty("createdAt", _ecsMetadata.CreatedAt);
-            metricsContext.PutProperty("startedAt", _ecsMetadata.StartedAt);
-            metricsContext.PutProperty("image", _ecsMetadata.Image);
-            metricsContext.PutProperty("cluster", _ecsMetadata.Labels["com.amazonaws.ecs.cluster"]);
-            metricsContext.PutProperty("taskArn", _ecsMetadata.Labels["com.amazonaws.ecs.task-arn"]);
+            if (_ecsMetadata != null)
+            {
+                metricsContext.PutProperty("containerId", GetHostName());
+                metricsContext.PutProperty("createdAt", _ecsMetadata.CreatedAt);
+                metricsContext.PutProperty("startedAt", _ecsMetadata.StartedAt);
+                metricsContext.PutProperty("image", _ecsMetadata.Image);
+                metricsContext.PutProperty("cluster", _ecsMetadata.Labels["com.amazonaws.ecs.cluster"]);
+                metricsContext.PutProperty("taskArn", _ecsMetadata.Labels["com.amazonaws.ecs.task-arn"]);
+            }
         }
 
         private string GetHostName()
