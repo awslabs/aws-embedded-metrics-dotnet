@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Model
@@ -101,6 +103,26 @@ namespace Amazon.CloudWatch.EMF.Model
 
             var dimensions = new List<DimensionSet>() { DefaultDimensionSet };
             return dimensions;
+        }
+
+        internal MetricDirective DeepCloneWithNewMetrics(List<MetricDefinition> metrics)
+        {
+            var clone = new MetricDirective();
+            clone.CustomDimensionSets = new List<DimensionSet>();
+            foreach (var dimension in CustomDimensionSets)
+            {
+                clone.CustomDimensionSets.Add(dimension.DeepClone());
+            }
+
+            clone.DefaultDimensionSet = DefaultDimensionSet.DeepClone();
+            clone.Namespace = Namespace;
+            clone._shouldUseDefaultDimensionSet = _shouldUseDefaultDimensionSet;
+            foreach (var metric in metrics)
+            {
+                clone._metrics.Add(metric);
+            }
+
+            return clone;
         }
     }
 }

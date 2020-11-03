@@ -39,5 +39,23 @@ namespace Amazon.CloudWatch.EMF.Model
         internal Dictionary<string, object> CustomMetadata { get; } = new Dictionary<string, object>();
 
         internal MetricDirective MetricDirective => CloudWatchMetrics.First();
+
+        internal MetaData DeepCloneWithNewMetrics(List<MetricDefinition> metrics)
+        {
+            var clone = new MetaData();
+            clone.CloudWatchMetrics = new List<MetricDirective>();
+            foreach (var metric in CloudWatchMetrics)
+            {
+                clone.CloudWatchMetrics.Add(metric.DeepCloneWithNewMetrics(metrics));
+            }
+
+            foreach (var metadata in CustomMetadata)
+            {
+                clone.CustomMetadata.Add(metadata.Key, metadata.Value);
+            }
+
+            clone.Timestamp = Timestamp;
+            return clone;
+        }
     }
 }

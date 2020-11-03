@@ -30,7 +30,7 @@ namespace Amazon.CloudWatch.EMF.Model
         private readonly Dictionary<string, object> _properties = new Dictionary<string, object>();
 
         [JsonProperty("_aws")]
-        internal MetaData AWS { get; } = new MetaData();
+        internal MetaData AWS { get; private set; } = new MetaData();
 
         public void PutProperty(string key, object value)
         {
@@ -42,7 +42,7 @@ namespace Amazon.CloudWatch.EMF.Model
             return _properties;
         }
 
-       /* /// <summary>
+        /// <summary>
         /// Emits the target members that are referenced by metrics, dimensions and properties.
         /// </summary>
         /// <returns></returns>
@@ -75,14 +75,21 @@ namespace Amazon.CloudWatch.EMF.Model
 
                 return targetMembers;
             }
-        }*/
+        }
 
         public string Serialize()
         {
             return JsonConvert.SerializeObject(this);
         }
 
-       /*/// <summary>
+        internal RootNode DeepCloneWithNewMetrics(List<MetricDefinition> metrics)
+        {
+            var clone = new RootNode();
+            clone.AWS = AWS.DeepCloneWithNewMetrics(metrics);
+            return clone;
+        }
+
+        /// <summary>
         /// Return a list of all dimensions from all dimension sets.
         /// </summary>
         /// <returns></returns>
@@ -99,6 +106,6 @@ namespace Amazon.CloudWatch.EMF.Model
             }
 
             return dimensions;
-        }*/
+        }
     }
 }

@@ -61,18 +61,21 @@ namespace Amazon.CloudWatch.EMF.Logger
         public void Flush()
         {
             IEnvironment environment;
+            _logger.LogDebug("Resolving the environment");
             try
             {
-                _logger.LogDebug("Resolving the environment");
                 environment = _environmentFuture;
-                _logger.LogDebug($"Resolved environment {environment.Name}");
             }
             catch (Exception ex)
             {
                 _logger.LogInformation(ex, "Failed to resolve environment. Fallback to default environment.");
                 environment = _environmentProvider.DefaultEnvironment;
-                _logger.LogDebug($"Resolved environment {environment.Name}");
             }
+
+            _logger.LogDebug($"Resolved environment {environment.Name}");
+
+            // TODO: uncomment this line of code to test serialization results
+            // var result = _context.Serialize();
 
             _logger.LogDebug($"Configuring context for environment  {environment.Name}");
             ConfigureContextForEnvironment(_context, environment);

@@ -63,5 +63,16 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             return DimensionKeys.Contains(key) ? Dimensions[key] : null;
         }
+
+        public DimensionSet DeepClone()
+        {
+            var clone = new DimensionSet();
+            foreach (var dimension in Dimensions)
+            {
+                clone.Dimensions.Add(dimension.Key, dimension.Value);
+            }
+
+            return clone;
+        }
     }
 }

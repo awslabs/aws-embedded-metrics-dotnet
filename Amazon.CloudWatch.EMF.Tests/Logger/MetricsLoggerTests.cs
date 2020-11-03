@@ -32,10 +32,10 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             _sink = new MockSink();
             _environment.Sink.Returns(_sink);
             _environmentProvider.ResolveEnvironment().Returns(_environment);
-            
+
             _metricsLogger = new MetricsLogger(_environmentProvider, _logger);
         }
-        
+
         [Fact]
         public void TestPutProperty()
         {
@@ -45,7 +45,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             _metricsLogger.Flush();
             Assert.Equal(propertyValue, _sink.MetricsContext.GetProperty(propertyName));
         }
-        
+
         [Fact]
         public void TestPutDimension()
         {
@@ -53,11 +53,11 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             var dimensionValue = "dimValue";
             _metricsLogger.PutDimensions(new DimensionSet(dimensionName, dimensionValue));
             _metricsLogger.Flush();
-            
+
             Assert.Single(_sink.MetricsContext.GetAllDimensionSets());
             Assert.Equal(dimensionValue, _sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(dimensionName));
         }
-        
+
         [Fact]
         public void TestOverrideDefaultDimensions()
         {
@@ -65,19 +65,19 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             var dimensionValue = "dimValue";
             var defaultDimName = "defaultDim";
             var defaultDimValue = "defaultDimValue";
-            
+
             MetricsContext metricsContext = new MetricsContext();
             metricsContext.DefaultDimensions.AddDimension(defaultDimName, defaultDimValue);
             metricsContext.SetDimensions(new DimensionSet(defaultDimName, defaultDimValue));
-            
+
             _metricsLogger = new MetricsLogger(_environmentProvider, metricsContext, _logger);
             _metricsLogger.SetDimensions(new DimensionSet(dimensionName, dimensionValue));
             _metricsLogger.Flush();
-            
+
             Assert.Single(_sink.MetricsContext.GetAllDimensionSets());
             Assert.Null(_sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(defaultDimName));
         }
-        
+
         [Fact]
         public void TestOverridePreviousDimensions()
         {
@@ -85,9 +85,9 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             var dimensionValue = "dimValue";
             _metricsLogger.PutDimensions(new DimensionSet("foo", "bar"));
             _metricsLogger.SetDimensions(new DimensionSet(dimensionName, dimensionValue));
-            
+
             _metricsLogger.Flush();
-            
+
             Assert.Single(_sink.MetricsContext.GetAllDimensionSets());
             Assert.Single(_sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys);
             Assert.Equal(dimensionValue, _sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(dimensionName));
@@ -101,38 +101,38 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             _metricsLogger.Flush();
             Assert.Equal(namespaceValue, _sink.MetricsContext.Namespace);
         }
-        
+
         [Fact]
         public void TestFlushWithConfiguredServiceName()
         {
             string serviceName = "TestServiceName";
             _environment.Name.Returns(serviceName);
             _metricsLogger.Flush();
-            
+
             ExpectDimension("ServiceName", serviceName);
         }
-        
+
         [Fact]
         public void TestFlushWithConfiguredServiceType()
         {
             string serviceType = "TestServiceType";
             _environment.Type.Returns(serviceType);
             _metricsLogger.Flush();
-            
+
             ExpectDimension("ServiceType", serviceType);
         }
-        
+
         [Fact]
         public void TestFlushWithConfiguredLogGroup()
         {
             string logGroup = "LogGroup";
             _environment.LogGroupName.Returns(logGroup);
             _metricsLogger.Flush();
-            
+
             ExpectDimension("LogGroup", logGroup);
         }
-        
-        
+
+
         [Fact]
         public void TestFlushWithDefaultDimensionDefined()
         {
@@ -142,7 +142,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             string logGroup = "TestLogGroup";
             _environment.LogGroupName.Returns(logGroup);
             _metricsLogger.Flush();
-            
+
             ExpectDimension("foo", "bar");
             ExpectDimension("LogGroup", null);
         }
@@ -150,17 +150,21 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         [Fact]
         public void TestPutMetricWithNoUnit()
         {
-             string expectedKey = "test";
-             double expectedValue = 2.0;
+            string expectedKey = "test";
+            double expectedValue = 2.0;
             _metricsLogger.PutMetric(expectedKey, expectedValue);
             _metricsLogger.Flush();
 
-            var metricDefinition = _sink.MetricsContext.Metrics.FirstOrDefault(m => m.Name == expectedKey);
+            var metricDirective = typeof(MetricsContext)
+                .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == expectedKey);
 
             Assert.Equal(expectedValue, metricDefinition.Values[0]);
             Assert.Equal(Unit.NONE, metricDefinition.Unit);
         }
-        
+
         [Fact]
         public void TestPutMetricWithUnit()
         {
@@ -169,12 +173,16 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             _metricsLogger.PutMetric(expectedKey, expectedValue, Unit.MILLISECONDS);
             _metricsLogger.Flush();
 
-            var metricDefinition = _sink.MetricsContext.Metrics.FirstOrDefault(m => m.Name == expectedKey);
+            var metricDirective = typeof(MetricsContext)
+              .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+              .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == expectedKey);
 
             Assert.Equal(expectedValue, metricDefinition.Values[0]);
             Assert.Equal(Unit.MILLISECONDS, metricDefinition.Unit);
         }
-        
+
         [Fact]
         public void TestPutMetaData()
         {
@@ -182,14 +190,20 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             string expectedValue = "testValue";
             _metricsLogger.PutMetadata(expectedKey, expectedValue);
             _metricsLogger.Flush();
-            
-            Assert.Equal(expectedValue, _sink.MetricsContext.GetMetadata(expectedKey));
+
+            var rootNode = typeof(MetricsContext)
+                .GetField("_rootNode", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .GetValue(_sink.MetricsContext) as RootNode;
+
+            rootNode.AWS.CustomMetadata.TryGetValue(expectedKey, out var actualValue);
+
+            Assert.Equal(expectedValue, actualValue);
         }
 
         private void ExpectDimension(string dimension, string value)
         {
             List<DimensionSet> dimensions = _sink.MetricsContext.GetAllDimensionSets();
-            
+
             Assert.Single(dimensions);
 
             if (value != null)

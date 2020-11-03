@@ -119,10 +119,6 @@ namespace Amazon.CloudWatch.EMF.Model
             PutMetric(key, value, Unit.NONE);
         }
 
-        public List<MetricDefinition> Metrics => _metricDirective.Metrics;
-
-        public Dictionary<string, object> MetaData => _rootNode.AWS.CustomMetadata;
-
         /// <summary>
         /// Add a property to this log entry.
         /// Properties are additional values that can be associated with metrics.
@@ -202,17 +198,6 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
-        /// Adds the specified key-value pair to the metadata.
-        /// </summary>
-        /// <param name="key">Gets the value of the metadata with the specified name.</param>
-        /// <param name="value">the value to associate with the specified key.</param>
-        public object GetMetadata(string key)
-        {
-            _rootNode.AWS.CustomMetadata.TryGetValue(key, out var value);
-            return value;
-        }
-
-        /// <summary>
         /// Serializes the metrics in this context to strings.
         /// The EMF backend requires no more than 100 metrics in one log event.
         /// If there are more than 100 metrics, we split the metrics into multiple log events (strings).
@@ -227,37 +212,14 @@ namespace Amazon.CloudWatch.EMF.Model
             }
             else
             {
-                var rootNodes = new List<RootNode>();
-                var metricsMap = new Dictionary<string, MetricDefinition>();
-                int count = 0;
-
-                foreach (MetricDefinition metric in _rootNode.AWS.MetricDirective.Metrics)
+                // split the root nodes into multiple and serialize each
+                var count = 0;
+                while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
                 {
-                    metricsMap.Add(metric.Name, metric);
-                    count++;
-                    if (metricsMap.Count == Constants.MAX_METRICS_PER_EVENT ||
-                        count == _rootNode.AWS.MetricDirective.Metrics.Count)
-                    {
-                        var metaData = _rootNode.AWS;
-                        var metricDirective = metaData.MetricDirective;
+                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT).ToList();
 
-                        // TODO: complete this implementation
-                        /*var clonedMetricDirective = new MetricDirective() {Metrics = { }}
-                        var clonedMetaData = new MetaData() {CloudWatchMetrics = metricDirective.Metrics }
-                        rootNodes.Add(new RootNode()
-
-                        metricsMap = new Dictionary<string, MetricDefinition>();*/
-                    }
-
-                    // split the root nodes into multiple and serialize each
-                    while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
-                    {
-                        var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count)
-                            .Take(Constants.MAX_METRICS_PER_EVENT);
-
-                        // TODO: split the notes into multiples and serialize each, copying metadata, properties, etc.
-                        throw new NotImplementedException();
-                    }
+                    var node = _rootNode.DeepCloneWithNewMetrics(metrics);
+                    nodes.Add(node);
                 }
             }
 
