@@ -217,9 +217,9 @@ namespace Amazon.CloudWatch.EMF.Model
                 while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
                 {
                     var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT).ToList();
-
                     var node = _rootNode.DeepCloneWithNewMetrics(metrics);
                     nodes.Add(node);
+                    count += Constants.MAX_METRICS_PER_EVENT;
                 }
             }
 
