@@ -24,14 +24,14 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
     }
     public class AgentSinkTests
     {
-        private SocketClientFactory _socketClientFactory;
+        private ISocketClientFactory _socketClientFactory;
         private TestClient _client;
         private readonly IFixture _fixture;
         
         public AgentSinkTests()
         {
             _fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
-            _socketClientFactory = _fixture.Create<SocketClientFactory>();
+            _socketClientFactory = _fixture.Create<ISocketClientFactory>();
             _client = new TestClient();
             _socketClientFactory.GetClient(Endpoint.DEFAULT_TCP_ENDPOINT).Returns(_client);
         }
@@ -52,8 +52,6 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
             AgentSink sink = new AgentSink(logGroupName, logStreamName, Endpoint.DEFAULT_TCP_ENDPOINT, _socketClientFactory);
 
             sink.Accept(mc);
-
         }
-
     }
 }

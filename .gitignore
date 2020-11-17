@@ -3,3 +3,4 @@ obj/
 .DS_Store
 /.idea/
 /.vs/
+.temp

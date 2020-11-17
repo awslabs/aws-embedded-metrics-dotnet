@@ -22,6 +22,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
         private static readonly string _logGroupName = "aws-emf-dotnet-integ";
         private static readonly string _dimensionName = "Operation";
         private static readonly string _dimensionValue = "Integ-Test-Agent";
+        private static readonly DateTime _testStartTime = DateTime.UtcNow.RoundDown(TimeSpan.FromMinutes(1)).AddMinutes(-1);
         private DimensionSet _dimensions = new DimensionSet(_dimensionName, _dimensionValue);
 
         public MetricsLoggerIntegrationTest()
@@ -88,7 +89,6 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
 
         private GetMetricStatisticsRequest BuildRequest(String metricName)
         {
-            var now = DateTime.Now;
             List<Dimension> dimensions = new List<Dimension>()
             {
                 GetDimension("ServiceName", _serviceName),
@@ -102,8 +102,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             metricRequest.MetricName = metricName;
             metricRequest.Dimensions = dimensions;
             metricRequest.Period = 60;
-            metricRequest.StartTimeUtc = now.Subtract(TimeSpan.FromMilliseconds(5000));
-            metricRequest.EndTimeUtc = now;
+            metricRequest.StartTimeUtc = _testStartTime;
+            metricRequest.EndTimeUtc = DateTime.UtcNow.RoundUp(TimeSpan.FromMinutes(1));
             metricRequest.Statistics.Add(Statistic.SampleCount);
             return metricRequest;
         }
@@ -130,8 +130,8 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             while (!CheckMetricExistence(request, expected))
             {
                 attempts++;
-                Console.Out.Write(
-                    "No metrics yet. Sleeping before trying again. Attempt #" + attempts);
+                Console.WriteLine(
+                    $"No metrics yet. Sleeping before trying again. Attempt #{attempts}");
                 Thread.Sleep(2000);
             }
             return true;
@@ -154,6 +154,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             {
                 sampleCounts += datapoint.SampleCount;
             }
+            Console.WriteLine($"Found {sampleCounts}. Expected {expectedSampleCount}");
             return sampleCounts.Equals(expectedSampleCount);
         }
 

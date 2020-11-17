@@ -15,7 +15,7 @@ namespace Amazon.CloudWatch.EMF.Sink
 
         public void SendMessage(string message)
         {
-            var data = Encoding.ASCII.GetBytes(message);
+            var data = Encoding.ASCII.GetBytes(message + "\n");
             try
             {
                 _udpClient.Send(data, data.Length);

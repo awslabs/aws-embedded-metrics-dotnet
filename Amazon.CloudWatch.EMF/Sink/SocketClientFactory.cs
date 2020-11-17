@@ -1,6 +1,11 @@
 namespace Amazon.CloudWatch.EMF.Sink
 {
-    public class SocketClientFactory
+    public interface ISocketClientFactory
+    {
+        ISocketClient GetClient(Endpoint endpoint);
+    }
+
+    public class SocketClientFactory : ISocketClientFactory
     {
         public ISocketClient GetClient(Endpoint endpoint)
         {

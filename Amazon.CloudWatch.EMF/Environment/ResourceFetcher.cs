@@ -53,13 +53,12 @@ namespace Amazon.CloudWatch.EMF.Environment
                     HandleErrorResponse(httpWebResponse);
                 }
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 _logger.LogDebug(
                     "An IOException occurred when connecting to service endpoint: "
                     + endpoint
-                    + "\n Retrying to connect "
-                    + "again.");
+                    + "\n Attempting to reconnect.");
                 throw new EMFClientException("Failed to connect to service endpoint: ", e);
             }
 
