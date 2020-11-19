@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.Conso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.Lambda", "Amazon.CloudWatch.EMF.Lambda\Amazon.CloudWatch.EMF.Lambda.csproj", "{799C402C-25A6-49E0-B0BC-1DB5FBB31F0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CloudWatch.EMF.Canary", "Amazon.CloudWatch.EMF.Canary\Amazon.CloudWatch.EMF.Canary.csproj", "{A0D65086-AEF0-4D2F-8E9E-47DEEB812FAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{799C402C-25A6-49E0-B0BC-1DB5FBB31F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{799C402C-25A6-49E0-B0BC-1DB5FBB31F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{799C402C-25A6-49E0-B0BC-1DB5FBB31F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0D65086-AEF0-4D2F-8E9E-47DEEB812FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0D65086-AEF0-4D2F-8E9E-47DEEB812FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0D65086-AEF0-4D2F-8E9E-47DEEB812FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0D65086-AEF0-4D2F-8E9E-47DEEB812FAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

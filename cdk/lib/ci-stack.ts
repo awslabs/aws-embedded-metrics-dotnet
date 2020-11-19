@@ -3,12 +3,14 @@ import { BuildSpec, Source, Project, PipelineProject } from '@aws-cdk/aws-codebu
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
+import * as ecr from '@aws-cdk/aws-ecr';
 
 export class CIStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     this.createPrBuildProject();
     this.createPipeline();
+    this.createCanaryResources();
   }
 
   createPrBuildProject() {
@@ -34,8 +36,15 @@ export class CIStack extends cdk.Stack {
   }
 
   createPipeline() {
-    const build = new PipelineProject(this, 'dotnet-pipeline-build', {
+    const buildProject = new PipelineProject(this, 'dotnet-pipeline-build', {
       buildSpec: BuildSpec.fromSourceFilename('buildspecs/buildspec.yml'),
+      environment: {
+        privileged: true
+      },
+    });
+
+    const canaryReleaseProject = new PipelineProject(this, 'dotnet-pipeline-canary', {
+      buildSpec: BuildSpec.fromSourceFilename('buildspecs/buildspec.canary.yml'),
       environment: {
         privileged: true
       },
@@ -49,13 +58,13 @@ export class CIStack extends cdk.Stack {
         {
           stageName: 'Source',
           actions: [
-            new codepipeline_actions.BitBucketSourceAction({
+            new codepipeline_actions.GitHubSourceAction({
               actionName: 'Build',
-              branch: 'main',
+              branch: 'jared/cicd', // TODO: change this to main
               owner: 'awslabs',
               repo: 'aws-embedded-metrics-dotnet',
               output: sourceOutput,
-              connectionArn: 
+              oauthToken: cdk.SecretValue.secretsManager('github-token'),
             }),
           ],
         },
@@ -64,13 +73,30 @@ export class CIStack extends cdk.Stack {
           actions: [
             new codepipeline_actions.CodeBuildAction({
               actionName: 'Build',
-              project: build,
+              project: buildProject,
               input: sourceOutput,
               outputs: [buildOutput],
             }),
           ],
+        },
+        {
+          stageName: 'Deploy-Canary',
+          actions: [
+            new codepipeline_actions.CodeBuildAction({
+              actionName: 'Deploy-Canary',
+              project: canaryReleaseProject,
+              input: sourceOutput,
+              outputs: [new codepipeline.Artifact()],
+            }),
+          ],
         }
       ],
+    });
+  }
+
+  createCanaryResources() {
+    new ecr.Repository(this, 'emf-dotnet-canary', {
+      repositoryName: 'emf-dotnet-canary'
     });
   }
 }

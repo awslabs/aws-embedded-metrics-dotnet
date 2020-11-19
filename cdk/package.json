@@ -24,6 +24,7 @@
     "@aws-cdk/aws-codebuild": "^1.74.0",
     "@aws-cdk/aws-codepipeline": "^1.74.0",
     "@aws-cdk/aws-codepipeline-actions": "^1.74.0",
+    "@aws-cdk/aws-ecr": "^1.74.0",
     "@aws-cdk/aws-iam": "^1.74.0",
     "@aws-cdk/core": "1.74.0",
     "source-map-support": "^0.5.16"

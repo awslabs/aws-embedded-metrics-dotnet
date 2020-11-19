@@ -4,6 +4,10 @@ namespace Amazon.CloudWatch.EMF.Config
 {
     public class Configuration : IConfiguration
     {
+        public Configuration()
+        {
+        }
+
         public Configuration(string serviceName, string serviceType, string logGroupName, string logStreamName, string agentEndPoint, Environments environmentOverride)
         {
             ServiceName = serviceName;
