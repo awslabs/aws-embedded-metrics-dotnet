@@ -1,20 +1,30 @@
 import * as cdk from '@aws-cdk/core';
-import { BuildSpec, Source, Project, PipelineProject } from '@aws-cdk/aws-codebuild';
+import { BuildSpec, Source, Project, PipelineProject, LinuxBuildImage, ComputeType } from '@aws-cdk/aws-codebuild';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import * as ecr from '@aws-cdk/aws-ecr';
+import * as cw from '@aws-cdk/aws-cloudwatch';
+
+const environment = {
+  // grants sudo permissions so we can use docker
+  privileged: true,
+  // AL2 3.0 build spec which supports .net 3.1
+  // https://github.com/aws/aws-codebuild-docker-images/blob/407e02949dd24cd14a0db830c03639f34ff46ced/al2/x86_64/standard/3.0/Dockerfile#L406-L412
+  buildImage: LinuxBuildImage.AMAZON_LINUX_2_3
+};
 
 export class CIStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-    this.createPrBuildProject();
     this.createPipeline();
     this.createCanaryResources();
+    this.createDashboard();
   }
 
-  createPrBuildProject() {
-    const prBuild = new Project(this, 'aws-embedded-metrics-dotnet', {
+  createPipeline() {
+    const buildProject = new Project(this, 'aws-embedded-metrics-dotnet', {
+      projectName: 'aws-embedded-metrics-dotnet',
       buildSpec: BuildSpec.fromSourceFilename('buildspecs/buildspec.yml'),
       description: 'Default build for PRs',
       source: Source.gitHub({
@@ -22,38 +32,35 @@ export class CIStack extends cdk.Stack {
         repo: 'aws-embedded-metrics-dotnet',
         webhook: true,
       }),
-      environment: {
-        privileged: true
-        // Note that additional environment variables are
-        // specified in the buildspec files
-      }
+      environment,
     });
 
-    prBuild.addToRolePolicy(new PolicyStatement({
+    buildProject.addToRolePolicy(new PolicyStatement({
       actions: ['ssm:GetParameters'],
       resources: ['*']
     }));
-  }
 
-  createPipeline() {
-    const buildProject = new PipelineProject(this, 'dotnet-pipeline-build', {
-      buildSpec: BuildSpec.fromSourceFilename('buildspecs/buildspec.yml'),
-      environment: {
-        privileged: true
-      },
-    });
-
-    const canaryReleaseProject = new PipelineProject(this, 'dotnet-pipeline-canary', {
+    const canaryReleaseProject = new PipelineProject(this, 'dotnet-canary', {
+      projectName: 'dotnet-canary',
       buildSpec: BuildSpec.fromSourceFilename('buildspecs/buildspec.canary.yml'),
-      environment: {
-        privileged: true
-      },
+      environment,
     });
+
+    canaryReleaseProject.addToRolePolicy(new PolicyStatement({
+      actions: [
+        'ssm:GetParameters',
+        'ecr:GetLogin',
+        'ecs:UpdateService',
+        'ecs:RegisterTaskDefinition',
+      ],
+      resources: ['*']
+    }));
 
     const sourceOutput = new codepipeline.Artifact();
     const buildOutput = new codepipeline.Artifact();
 
     new codepipeline.Pipeline(this, 'dotnet-pipeline', {
+      pipelineName: 'aws-embedded-metrics-dotnet-pipeline',
       stages: [
         {
           stageName: 'Source',
@@ -97,6 +104,64 @@ export class CIStack extends cdk.Stack {
   createCanaryResources() {
     new ecr.Repository(this, 'emf-dotnet-canary', {
       repositoryName: 'emf-dotnet-canary'
+    });
+  }
+
+  createDashboard() {
+    new cw.Dashboard(this, 'Dashboard', {
+      dashboardName: 'emf-dotnet-deployment',
+      widgets: [
+        [
+          new cw.GraphWidget({
+            title: 'Memory',
+            left: [ 
+              new cw.MathExpression({ 
+                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version}  MetricName="Memory.RSS" AND "Dotnet"', 'Average', 60)`, 
+                usingMetrics: {} 
+              }) 
+            ],
+          }),
+          new cw.GraphWidget({
+            title: 'Init',
+            left: [ 
+              new cw.MathExpression({ 
+                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version} MetricName="Init" AND "Dotnet"', 'Sum', 60)`, 
+                usingMetrics: {} 
+              })
+            ],
+          }),
+        ],
+        [
+          new cw.LogQueryWidget({
+            title: 'Application Errors',
+            logGroupNames: ['/ecs/emf-dotnet-canary'],
+            queryString: `
+            filter @logStream ~= 'canary'
+            | fields @timestamp, @message
+            | sort @timestamp desc 
+            | limit 20`,
+          }),
+          new cw.GraphWidget({
+            title: 'Event Count',
+            left: [ 
+              new cw.MathExpression({ 
+                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version} MetricName="Invoke" AND "Dotnet"', 'SampleCount', 60)`, 
+                usingMetrics: {} 
+              })
+            ],
+          }),
+        ],
+        [
+          new cw.LogQueryWidget({
+            title: 'Recent EMF Data',
+            logGroupNames: ['/Canary/Dotnet/CloudWatchAgent/Metrics'],
+            queryString: `
+            fields @timestamp, @message
+            | sort @timestamp desc
+            | limit 20`,
+          }),
+        ]
+      ]
     });
   }
 }
