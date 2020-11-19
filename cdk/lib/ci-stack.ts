@@ -114,19 +114,32 @@ export class CIStack extends cdk.Stack {
         [
           new cw.GraphWidget({
             title: 'Memory',
-            left: [ 
-              new cw.MathExpression({ 
-                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version}  MetricName="Memory.RSS" AND "Dotnet"', 'Average', 60)`, 
-                usingMetrics: {} 
-              }) 
+            width: 12,
+            left: [
+              new cw.MathExpression({
+                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version}  MetricName="Memory.RSS" AND "Dotnet"', 'Average', 60)`,
+                usingMetrics: {}
+              })
             ],
+            right: [
+              new cw.Metric({
+                namespace: 'AWS/ECS',
+                metricName: 'CPUUtilization',
+                dimensions: {
+                  ServiceName: 'emf-dotnet-canary',
+                  ClusterName: 'emf-canary'
+                },
+                color: '#c7c7c7'
+              })
+            ]
           }),
           new cw.GraphWidget({
             title: 'Init',
-            left: [ 
-              new cw.MathExpression({ 
-                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version} MetricName="Init" AND "Dotnet"', 'Sum', 60)`, 
-                usingMetrics: {} 
+            width: 12,
+            left: [
+              new cw.MathExpression({
+                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version} MetricName="Init" AND "Dotnet"', 'Sum', 60)`,
+                usingMetrics: {}
               })
             ],
           }),
@@ -134,6 +147,7 @@ export class CIStack extends cdk.Stack {
         [
           new cw.LogQueryWidget({
             title: 'Application Errors',
+            width: 12,
             logGroupNames: ['/ecs/emf-dotnet-canary'],
             queryString: `
             filter @logStream ~= 'canary'
@@ -143,10 +157,11 @@ export class CIStack extends cdk.Stack {
           }),
           new cw.GraphWidget({
             title: 'Event Count',
-            left: [ 
-              new cw.MathExpression({ 
-                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version} MetricName="Invoke" AND "Dotnet"', 'SampleCount', 60)`, 
-                usingMetrics: {} 
+            width: 12,
+            left: [
+              new cw.MathExpression({
+                expression: `SEARCH('{Canary,Runtime,Platform,Agent,Version} MetricName="Invoke" AND "Dotnet"', 'SampleCount', 60)`,
+                usingMetrics: {}
               })
             ],
           }),
@@ -154,6 +169,7 @@ export class CIStack extends cdk.Stack {
         [
           new cw.LogQueryWidget({
             title: 'Recent EMF Data',
+            width: 24,
             logGroupNames: ['/Canary/Dotnet/CloudWatchAgent/Metrics'],
             queryString: `
             fields @timestamp, @message
