@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Amazon.CloudWatch.EMF.Model
@@ -31,6 +32,14 @@ namespace Amazon.CloudWatch.EMF.Model
 
         [JsonProperty("_aws")]
         internal MetaData AWS { get; private set; } = new MetaData();
+
+        // Do not serialize the _aws node if no metrics have been added
+        public bool ShouldSerializeAWS()
+        {
+            return
+                AWS.CloudWatchMetrics?.Count > 0
+                && AWS.CloudWatchMetrics?.Where(m => m.Metrics.Count > 0).Count() == 0;
+        }
 
         public void PutProperty(string key, object value)
         {

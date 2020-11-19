@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amazon.CloudWatch.EMF.Logger
 {
-    public class MetricsLogger : IMetricsLogger
+    public class MetricsLogger : IMetricsLogger, IDisposable
     {
         private readonly ILogger _logger;
         private readonly IEnvironment _environmentFuture;
@@ -185,6 +185,14 @@ namespace Amazon.CloudWatch.EMF.Logger
         {
             _context.Namespace = logNamespace;
             return this;
+        }
+
+        /// <summary>
+        /// Implement IDisposable so the logger can be used as a scoped dependency in ASP.Net Core DI
+        /// </summary>
+        public void Dispose()
+        {
+            this.Flush();
         }
 
         /// <summary>
