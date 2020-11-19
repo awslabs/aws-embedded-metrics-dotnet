@@ -12,7 +12,8 @@ namespace Amazon.CloudWatch.EMF.Sink
         private readonly string _logStreamName;
         private readonly ISocketClient _socketClient;
 
-        public AgentSink(string logGroupName, string logStreamName, Endpoint endpoint, ISocketClientFactory clientFactory) : this(logGroupName, logStreamName, endpoint, clientFactory, NullLoggerFactory.Instance)
+        public AgentSink(string logGroupName, string logStreamName, Endpoint endpoint, ISocketClientFactory clientFactory)
+        : this(logGroupName, logStreamName, endpoint, clientFactory, NullLoggerFactory.Instance)
         {
         }
 

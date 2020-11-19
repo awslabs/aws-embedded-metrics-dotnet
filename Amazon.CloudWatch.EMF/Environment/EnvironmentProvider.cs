@@ -1,5 +1,7 @@
 using System;
 using Amazon.CloudWatch.EMF.Config;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
@@ -10,6 +12,8 @@ namespace Amazon.CloudWatch.EMF.Environment
     {
         private readonly IConfiguration _configuration;
         private readonly IResourceFetcher _resourceFetcher;
+        private readonly NullLoggerFactory _loggerFactory;
+        private readonly ILogger<ECSEnvironment> _logger;
         private IEnvironment _cachedEnvironment;
 
         public IEnvironment DefaultEnvironment => new DefaultEnvironment(_configuration);
@@ -18,6 +22,14 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
+        }
+
+        public EnvironmentProvider(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory)
+        {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
+            _loggerFactory ??= NullLoggerFactory.Instance;
+            _logger = loggerFactory.CreateLogger<ECSEnvironment>();
         }
 
         /// <summary>
@@ -48,6 +60,7 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         private IEnvironment GetEnvironmentFromConfig()
         {
+            Console.WriteLine(_configuration.EnvironmentOverride.ToString());
             switch (_configuration.EnvironmentOverride)
             {
                 case Environments.Lambda:
@@ -55,9 +68,9 @@ namespace Amazon.CloudWatch.EMF.Environment
                 case Environments.Agent:
                     return new DefaultEnvironment(_configuration);
                 case Environments.EC2:
-                    return new EC2Environment(_configuration, _resourceFetcher);
+                    return new EC2Environment(_configuration, _resourceFetcher, _loggerFactory);
                 case Environments.ECS:
-                    return new ECSEnvironment(_configuration, _resourceFetcher);
+                    return new ECSEnvironment(_configuration, _resourceFetcher, _loggerFactory);
                 case Environments.Local:
                     return new LocalEnvironment(_configuration);
                 default:
@@ -74,10 +87,10 @@ namespace Amazon.CloudWatch.EMF.Environment
             IEnvironment environment = new LambdaEnvironment();
             if (environment.Probe()) return environment;
 
-            environment = new ECSEnvironment(_configuration, _resourceFetcher);
+            environment = new ECSEnvironment(_configuration, _resourceFetcher, _loggerFactory);
             if (environment.Probe()) return environment;
 
-            environment = new EC2Environment(_configuration, _resourceFetcher);
+            environment = new EC2Environment(_configuration, _resourceFetcher, _loggerFactory);
             if (environment.Probe()) return environment;
 
             environment = new DefaultEnvironment(_configuration);

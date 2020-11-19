@@ -52,6 +52,6 @@ namespace Amazon.CloudWatch.EMF.Config
         /// - Agent: no decoration and sends over TCP
         /// - EC2: decorates logs with EC2 metadata and sends over TCP
         /// </summary>
-        public Environments EnvironmentOverride { get; private set; }
+        public Environments EnvironmentOverride { get; set; }
     }
 }

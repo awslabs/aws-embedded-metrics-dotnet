@@ -2,8 +2,10 @@
 using System.Diagnostics;
 using System.Threading;
 using Amazon.CloudWatch.EMF.Config;
+using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Logger;
 using Amazon.CloudWatch.EMF.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Amazon.CloudWatch.EMF.Canary
 {
@@ -11,17 +13,25 @@ namespace Amazon.CloudWatch.EMF.Canary
     {
         static void Main(string[] args)
         {
-            while (true) {
+            while (true)
+            {
                 // TODO: get the package version
                 var version = "";
 
                 var configuration = new Configuration
                 {
-                    LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics"
+                    LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
+                    EnvironmentOverride = Environments.ECS
                 };
+
                 EnvironmentConfigurationProvider.Config = configuration;
 
-                var logger = new MetricsLogger();
+                var logger = new MetricsLogger(
+                    LoggerFactory.Create(builder =>
+                        builder
+                            .SetMinimumLevel(LogLevel.Debug)
+                            .AddConsole()));
+
                 logger.SetNamespace("Canary");
 
                 var dimensionSet = new DimensionSet();
