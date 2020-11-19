@@ -8,23 +8,13 @@
 #   export AWS_REGION=us-west-2
 #   ./start-agent.sh
 
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-
-# validates that the provided parameter is set
-function validate() {
-    if [[ -z "$1" ]]; then
-        echo -e "$RED $2 is not set $1 $NC"
-        exit 1
-    fi
-}
+rootdir=$(git rev-parse --show-toplevel)
+rootdir=${rootdir:-$(pwd)} # in case we are not in a git repository (Code Pipelines)
+source $rootdir/scripts/utils.sh
 
 validate "$AWS_ACCESS_KEY_ID" "AWS_ACCESS_KEY_ID"
 validate "$AWS_SECRET_ACCESS_KEY" "AWS_SECRET_ACCESS_KEY"
 validate "$AWS_REGION" "AWS_REGION"
-
-rootdir=$(git rev-parse --show-toplevel)
-rootdir=${rootdir:-$(pwd)} # in case we are not in a git repository (Code Pipelines)
 
 cwagent_dir="$rootdir/scripts/cwagent"
 tempfile="$cwagent_dir/.temp"
@@ -49,4 +39,5 @@ docker run  -p 25888:25888/udp -p 25888:25888/tcp  \
     -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
     agent:latest &> $tempfile &
+check_exit
 popd

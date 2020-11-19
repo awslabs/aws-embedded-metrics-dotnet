@@ -14,12 +14,7 @@
           "condition": "START"
         }
       ],
-      "environment": [
-        {
-          "name": "AWS_EMF_AGENT_ENDPOINT",
-          "value": "tcp://cloudwatch-agent:25888"
-        }
-      ],
+      "environment": [ ],
       "image": "863722843142.dkr.ecr.us-west-2.amazonaws.com/emf-dotnet-canary",
       "links": ["cloudwatch-agent"],
       "name": "emf-dotnet-canary"

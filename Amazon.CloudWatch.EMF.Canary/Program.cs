@@ -13,18 +13,19 @@ namespace Amazon.CloudWatch.EMF.Canary
     {
         static void Main(string[] args)
         {
-            // Give the agent some time to initialize
+            Console.WriteLine("Waiting for agent to start up");
             Thread.Sleep(5000);
 
             while (true)
             {
                 // TODO: get the package version
-                var version = "";
+                var version = "TBD";
 
                 var configuration = new Configuration
                 {
                     LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
-                    EnvironmentOverride = Environments.ECS
+                    EnvironmentOverride = Environments.ECS,
+                    AgentEndPoint = "tcp://cloudwatch-agent:25888"
                 };
 
                 EnvironmentConfigurationProvider.Config = configuration;
