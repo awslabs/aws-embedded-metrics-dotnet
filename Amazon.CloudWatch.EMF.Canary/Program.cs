@@ -13,6 +13,9 @@ namespace Amazon.CloudWatch.EMF.Canary
     {
         static void Main(string[] args)
         {
+            // Give the agent some time to initialize
+            Thread.Sleep(5000);
+
             while (true)
             {
                 // TODO: get the package version
