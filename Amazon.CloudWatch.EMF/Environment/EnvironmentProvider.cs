@@ -44,6 +44,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             var env = GetEnvironmentFromConfig();
             if (env != null)
             {
+                _logger.LogDebug("Loaded environment from config: {EnvName}", env.GetType());
                 _cachedEnvironment = env;
                 return _cachedEnvironment;
             }
@@ -51,16 +52,17 @@ namespace Amazon.CloudWatch.EMF.Environment
             env = GetEnvironmentByProbe();
             if (env != null)
             {
+                _logger.LogDebug("Detected environment: {EnvName}", env.GetType());
                 _cachedEnvironment = env;
                 return _cachedEnvironment;
             }
 
+            _logger.LogDebug("Failed to detect environment, using default.");
             return DefaultEnvironment;
         }
 
         private IEnvironment GetEnvironmentFromConfig()
         {
-            Console.WriteLine(_configuration.EnvironmentOverride.ToString());
             switch (_configuration.EnvironmentOverride)
             {
                 case Environments.Lambda:

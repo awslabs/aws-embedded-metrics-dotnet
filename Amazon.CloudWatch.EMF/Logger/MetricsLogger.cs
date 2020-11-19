@@ -89,9 +89,9 @@ namespace Amazon.CloudWatch.EMF.Logger
             }
 
             sink.Accept(_context);
-            _logger.LogInformation($"Creating new context after flushing logs...");
+            _logger.LogDebug($"Creating new context after flushing logs...");
             _context = _context.CreateCopyWithContext();
-            _logger.LogInformation($"New context successfully created.");
+            _logger.LogDebug($"New context successfully created.");
         }
 
         /// <summary>

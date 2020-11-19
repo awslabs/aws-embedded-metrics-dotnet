@@ -12,14 +12,21 @@ namespace Amazon.CloudWatch.EMF.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(
+            IConfiguration configuration, 
+            IHostEnvironment hostEnv)
         {
             Configuration = configuration;
 
             EMF.Config.EnvironmentConfigurationProvider.Config = new EMF.Config.Configuration
             {
                 LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
-                EnvironmentOverride = EMF.Environment.Environments.Local
+                EnvironmentOverride = hostEnv.IsDevelopment()
+                    ? EMF.Environment.Environments.Local
+                    // Setting this to unknown will cause the SDK to attempt to 
+                    // detect the environment. If you know the compute environment
+                    // you will be running on, then you can set this yourself.
+                    : EMF.Environment.Environments.Unknown
             };
         }
 
@@ -30,6 +37,9 @@ namespace Amazon.CloudWatch.EMF.Web
         {
             services.AddControllers();
             services.AddScoped<IMetricsLogger, MetricsLogger>();
+            services.AddSingleton<EMF.Environment.IEnvironmentProvider, EMF.Environment.EnvironmentProvider>();
+            services.AddSingleton<EMF.Environment.IResourceFetcher, EMF.Environment.ResourceFetcher>();
+            services.AddSingleton<EMF.Config.IConfiguration>(EMF.Config.EnvironmentConfigurationProvider.Config);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

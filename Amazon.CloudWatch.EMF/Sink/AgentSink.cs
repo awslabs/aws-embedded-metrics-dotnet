@@ -48,6 +48,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             {
                 foreach (var data in metricsContext.Serialize())
                 {
+                    _logger.LogDebug("Writing to socket");
                     _socketClient.SendMessage(data);
                 }
             }
