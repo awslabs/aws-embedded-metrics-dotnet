@@ -18,6 +18,7 @@ phases:
       - npm install
   build:
     commands:
+      - ls /root/.dotnet/sdk/
       - dotnet --version
       - pwd && ./scripts/start-agent.sh
       - dotnet restore
