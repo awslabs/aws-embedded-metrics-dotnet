@@ -13,7 +13,6 @@ namespace Amazon.CloudWatch.EMF.Canary
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Waiting for agent to start up");
             Thread.Sleep(5000);
 
             while (true)
@@ -24,7 +23,7 @@ namespace Amazon.CloudWatch.EMF.Canary
                 var configuration = new Configuration
                 {
                     LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
-                    EnvironmentOverride = Environments.ECS,
+                    EnvironmentOverride = Environments.Local,
                     AgentEndPoint = "tcp://cloudwatch-agent:25888"
                 };
 
@@ -43,7 +42,7 @@ namespace Amazon.CloudWatch.EMF.Canary
                 dimensionSet.AddDimension("Platform", "ECS");
                 dimensionSet.AddDimension("Agent", "CloudWatchAgent");
                 dimensionSet.AddDimension("Version", version);
-                logger.PutDimensions(dimensionSet);
+                logger.SetDimensions(dimensionSet);
 
                 Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
 
