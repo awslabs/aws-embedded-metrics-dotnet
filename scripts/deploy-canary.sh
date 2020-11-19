@@ -12,11 +12,12 @@ IMAGE_NAME=emf-dotnet-canary
 ECS_CLUSTER_NAME=emf-canary
 ECS_TASK_FAMILY=emf-dotnet-canary
 ECS_SERVICE_NAME=emf-dotnet-canary
-ECR_REMOTE=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$IMAGE_NAME
+ECR_ENDPOINT=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+ECR_REMOTE=$ECR_ENDPOINT/$IMAGE_NAME
 
 pushd $CANARY_PATH
 echo 'BUILDING THE EXAMPLE DOCKER IMAGE'
-`aws ecr get-login --no-include-email --region $REGION`
+aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_ENDPOINT
 dotnet restore
 dotnet publish -c Release
 docker build . -t $IMAGE_NAME:latest 
@@ -41,7 +42,7 @@ aws ecs update-service \
                         --execution-role-arn "arn:aws:iam::$ACCOUNT_ID:role/ecsTaskExecutionRole" \
                         --region $REGION \
                         --memory 256 \
-                        --cpu '1 vcpu' \
+                        --cpu '.25 vcpu' \
                         --family $ECS_TASK_FAMILY \
                         --container-definitions "$(cat container-definitions.json)" \
                     | jq --raw-output '.taskDefinition.taskDefinitionArn' | awk -F '/' '{ print $2 }')
