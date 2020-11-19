@@ -14,6 +14,7 @@ namespace Amazon.CloudWatch.EMF.Canary
         static void Main(string[] args)
         {
             Thread.Sleep(5000);
+            var init = true;
 
             while (true)
             {
@@ -47,8 +48,11 @@ namespace Amazon.CloudWatch.EMF.Canary
                 Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
 
                 logger.PutMetric("Invoke", 1, Unit.NONE);
-                // There doesn't seem to be a corresponding metric to Memory.HeapTotal for .Net
-                // logger.PutMetric("Memory.HeapTotal", GC.GetTotalMemory(false), Unit.BYTES);
+
+                if (init) {
+                    init = false;
+                    logger.PutMetric("Init", 1, Unit.NONE);
+                }
 
                 logger.PutMetric("Memory.HeapUsed", GC.GetTotalMemory(false), Unit.BYTES);
                 //https://github.com/dotnet/corefx/blob/3633ea2c6bf9d52029681efeedd84fd7a06eb6ba/src/System.Diagnostics.Process/src/System/Diagnostics/ProcessManager.Linux.cs#L137
