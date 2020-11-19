@@ -23,7 +23,7 @@ namespace Amazon.CloudWatch.EMF.Canary
                 var configuration = new Configuration
                 {
                     LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
-                    EnvironmentOverride = Environments.Local,
+                    EnvironmentOverride = Environments.ECS,
                     AgentEndPoint = "tcp://cloudwatch-agent:25888"
                 };
 
