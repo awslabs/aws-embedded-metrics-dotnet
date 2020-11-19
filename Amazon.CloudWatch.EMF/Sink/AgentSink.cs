@@ -29,7 +29,6 @@ namespace Amazon.CloudWatch.EMF.Sink
             _socketClient = clientFactory.GetClient(endpoint);
 
             loggerFactory ??= NullLoggerFactory.Instance;
-
             _logger = loggerFactory.CreateLogger<AgentSink>();
         }
 

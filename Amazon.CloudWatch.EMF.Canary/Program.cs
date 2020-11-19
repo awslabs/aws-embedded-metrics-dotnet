@@ -16,26 +16,26 @@ namespace Amazon.CloudWatch.EMF.Canary
             Thread.Sleep(5000);
             var init = true;
 
+            // TODO: get the package version
+            var version = "TBD";
+
+            var configuration = new Configuration
+            {
+                LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
+                EnvironmentOverride = Environments.ECS,
+                AgentEndPoint = "tcp://cloudwatch-agent:25888"
+            };
+
+            var loggerFactory = LoggerFactory.Create(builder =>
+                        builder
+                            .SetMinimumLevel(LogLevel.Information)
+                            .AddConsole());
+
+            EnvironmentConfigurationProvider.Config = configuration;
+
             while (true)
             {
-                // TODO: get the package version
-                var version = "TBD";
-
-                var configuration = new Configuration
-                {
-                    LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
-                    EnvironmentOverride = Environments.ECS,
-                    AgentEndPoint = "tcp://cloudwatch-agent:25888"
-                };
-
-                EnvironmentConfigurationProvider.Config = configuration;
-
-                var logger = new MetricsLogger(
-                    LoggerFactory.Create(builder =>
-                        builder
-                            .SetMinimumLevel(LogLevel.Debug)
-                            .AddConsole()));
-
+                var logger = new MetricsLogger(loggerFactory);
                 logger.SetNamespace("Canary");
 
                 var dimensionSet = new DimensionSet();
@@ -45,7 +45,11 @@ namespace Amazon.CloudWatch.EMF.Canary
                 dimensionSet.AddDimension("Version", version);
                 logger.SetDimensions(dimensionSet);
 
-                Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
+                using (Process currentProcess = System.Diagnostics.Process.GetCurrentProcess())
+                {
+                    //https://github.com/dotnet/corefx/blob/3633ea2c6bf9d52029681efeedd84fd7a06eb6ba/src/System.Diagnostics.Process/src/System/Diagnostics/ProcessManager.Linux.cs#L137
+                    logger.PutMetric("Memory.RSS", currentProcess.WorkingSet64, Unit.BYTES);
+                }
 
                 logger.PutMetric("Invoke", 1, Unit.NONE);
 
@@ -55,8 +59,6 @@ namespace Amazon.CloudWatch.EMF.Canary
                 }
 
                 logger.PutMetric("Memory.HeapUsed", GC.GetTotalMemory(false), Unit.BYTES);
-                //https://github.com/dotnet/corefx/blob/3633ea2c6bf9d52029681efeedd84fd7a06eb6ba/src/System.Diagnostics.Process/src/System/Diagnostics/ProcessManager.Linux.cs#L137
-                logger.PutMetric("Memory.RSS", currentProcess.WorkingSet64, Unit.BYTES);
 
                 logger.Flush();
                 Thread.Sleep(30_000);
