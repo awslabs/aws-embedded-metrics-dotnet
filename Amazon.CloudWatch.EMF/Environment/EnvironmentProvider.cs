@@ -12,16 +12,15 @@ namespace Amazon.CloudWatch.EMF.Environment
     {
         private readonly IConfiguration _configuration;
         private readonly IResourceFetcher _resourceFetcher;
-        private readonly NullLoggerFactory _loggerFactory;
+        private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<ECSEnvironment> _logger;
         private IEnvironment _cachedEnvironment;
 
         public IEnvironment DefaultEnvironment => new DefaultEnvironment(_configuration);
 
         public EnvironmentProvider(IConfiguration configuration, IResourceFetcher resourceFetcher)
+            : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
         }
 
         public EnvironmentProvider(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory)
