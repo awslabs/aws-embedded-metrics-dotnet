@@ -27,7 +27,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// </summary>
         /// <param name="loggerFactory">the logger where this metrics logger should log its internal diagnostics info.</param>
         public MetricsLogger(ILoggerFactory loggerFactory)
-            : this(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher()), loggerFactory)
+            : this(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher(), loggerFactory), loggerFactory)
         {
         }
 
