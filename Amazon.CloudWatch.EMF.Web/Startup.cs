@@ -51,8 +51,15 @@ namespace Amazon.CloudWatch.EMF.Web
             app.Use(async (context, next) =>
             {
                 await next.Invoke();
+
+                // the following will be executed on the backend of the request chain
+                // we add this here so that we have all of the necessary response informtation
+                // to add to the logs.
                 var logger = context.RequestServices.GetRequiredService<IMetricsLogger>();
                 var dimensions = new Model.DimensionSet();
+
+                // if the endpoint was successfully resolved, we will add the metadata to the 
+                // EMF payload.
                 var endpoint = context.GetEndpoint();
                 if (endpoint != null) {
                     var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();

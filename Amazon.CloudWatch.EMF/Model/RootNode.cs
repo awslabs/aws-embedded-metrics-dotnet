@@ -38,7 +38,7 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             return
                 AWS.CloudWatchMetrics?.Count > 0
-                && AWS.CloudWatchMetrics?.Where(m => m.Metrics.Count > 0).Count() == 0;
+                && AWS.CloudWatchMetrics?.Where(m => m.Metrics.Count > 0).Count() > 0;
         }
 
         public void PutProperty(string key, object value)
