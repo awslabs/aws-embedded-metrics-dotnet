@@ -40,5 +40,34 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             Assert.True(metadata.ContainsKey("Timestamp"));
             Assert.True(metadata.ContainsKey("CloudWatchMetrics"));
         }
+
+        [Fact]
+        public void MetadataNode_IsNotSerialize_IfNoMetrics()
+        {
+            // arrange
+            RootNode rootNode = new RootNode();
+
+            // act
+            var json = JsonConvert.SerializeObject(rootNode);
+
+            // assert
+            Assert.DoesNotContain("_aws", json);
+        }
+
+        [Fact]
+        public void MetadataNode_IsSerialized_IfMetricsArePresent()
+        {
+            // arrange
+            RootNode rootNode = new RootNode();
+            var metricDirective = new MetricDirective();
+            metricDirective.PutMetric("Metric", 1);
+            rootNode.AWS.CloudWatchMetrics.Add(metricDirective);
+
+            // act
+            var json = JsonConvert.SerializeObject(rootNode);
+
+            // assert
+            Assert.Contains("_aws", json);
+        }
     }
 }
