@@ -10,7 +10,6 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
 {
     public class TestClient : ISocketClient 
     {
-
         private string _message;
         public void SendMessage(string message)
         {
