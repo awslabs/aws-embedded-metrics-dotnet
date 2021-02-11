@@ -3,24 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF", "Amazon.CloudWatch.EMF\Amazon.CloudWatch.EMF.csproj", "{2273B766-F2AE-4340-85B7-AA881EB31BB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF", "src\Amazon.CloudWatch.EMF\Amazon.CloudWatch.EMF.csproj", "{2273B766-F2AE-4340-85B7-AA881EB31BB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.Tests", "Amazon.CloudWatch.EMF.Tests\Amazon.CloudWatch.EMF.Tests.csproj", "{DE74081D-79B8-44CA-94F7-60142C9F9A84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.Tests", "src\Amazon.CloudWatch.EMF.Tests\Amazon.CloudWatch.EMF.Tests.csproj", "{DE74081D-79B8-44CA-94F7-60142C9F9A84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.IntegrationTests", "Amazon.CloudWatch.EMF.IntegrationTests\Amazon.CloudWatch.EMF.IntegrationTests.csproj", "{BB012365-7A17-4BE1-93E4-399E3E3FF74F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.IntegrationTests", "src\Amazon.CloudWatch.EMF.IntegrationTests\Amazon.CloudWatch.EMF.IntegrationTests.csproj", "{BB012365-7A17-4BE1-93E4-399E3E3FF74F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E31C86A2-4A08-4020-9A23-885837CE15C8}"
 	ProjectSection(SolutionItems) = preProject
 		Amazon.CloudWatch.EMF.ruleset = Amazon.CloudWatch.EMF.ruleset
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.ConsoleApp", "Amazon.CloudWatch.EMF.ConsoleApp\Amazon.CloudWatch.EMF.ConsoleApp.csproj", "{668A3240-E6DD-415F-8E0C-1E134DC85DF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.ConsoleApp", "examples\Amazon.CloudWatch.EMF.ConsoleApp\Amazon.CloudWatch.EMF.ConsoleApp.csproj", "{668A3240-E6DD-415F-8E0C-1E134DC85DF6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.Lambda", "Amazon.CloudWatch.EMF.Lambda\Amazon.CloudWatch.EMF.Lambda.csproj", "{799C402C-25A6-49E0-B0BC-1DB5FBB31F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.EMF.Lambda", "examples\Amazon.CloudWatch.EMF.Lambda\Amazon.CloudWatch.EMF.Lambda.csproj", "{799C402C-25A6-49E0-B0BC-1DB5FBB31F0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CloudWatch.EMF.Canary", "Amazon.CloudWatch.EMF.Canary\Amazon.CloudWatch.EMF.Canary.csproj", "{A0D65086-AEF0-4D2F-8E9E-47DEEB812FAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CloudWatch.EMF.Canary", "src\Amazon.CloudWatch.EMF.Canary\Amazon.CloudWatch.EMF.Canary.csproj", "{A0D65086-AEF0-4D2F-8E9E-47DEEB812FAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CloudWatch.EMF.Web", "Amazon.CloudWatch.EMF.Web\Amazon.CloudWatch.EMF.Web.csproj", "{60C597A6-5884-410F-A7EB-925DBF0B5960}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CloudWatch.EMF.Web", "examples\Amazon.CloudWatch.EMF.Web\Amazon.CloudWatch.EMF.Web.csproj", "{60C597A6-5884-410F-A7EB-925DBF0B5960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

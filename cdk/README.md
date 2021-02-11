@@ -10,7 +10,8 @@ This document is intended for repository maintainers who need to make changes to
 
 ```
 npm run build && npm run test
-aws codebuild import-source-credentials --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token <pat-token>
+`isengardcli creds logs+emf+client+libraries`
+aws codebuild import-source-credentials --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token <pat-token> --region us-west-2
 AWS_DEFAULT_REGION=us-west-2 cdk deploy
 ```
 

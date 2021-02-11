@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Amazon.CloudWatch.EMF\Amazon.CloudWatch.EMF.csproj" />
+    <ProjectReference Include="..\..\src\Amazon.CloudWatch.EMF\Amazon.CloudWatch.EMF.csproj" />
   </ItemGroup>
 
 </Project>
