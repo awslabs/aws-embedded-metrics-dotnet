@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Amazon.CloudWatch.EMF.Sink
 {
@@ -13,12 +14,12 @@ namespace Amazon.CloudWatch.EMF.Sink
             _udpClient = new UdpClient(endpoint.Host, endpoint.Port);
         }
 
-        public void SendMessage(string message)
+        public async Task SendMessageAsync(string message)
         {
             var data = Encoding.ASCII.GetBytes(message + "\n");
             try
             {
-                _udpClient.Send(data, data.Length);
+                await _udpClient.SendAsync(data, data.Length);
             }
             catch (Exception)
             {

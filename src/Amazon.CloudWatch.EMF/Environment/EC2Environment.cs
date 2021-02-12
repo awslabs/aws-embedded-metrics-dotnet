@@ -16,11 +16,13 @@ namespace Amazon.CloudWatch.EMF.Environment
         private readonly IResourceFetcher _resourceFetcher;
         private EC2Metadata _ec2Metadata;
 
-        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher) : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
+        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher)
+        : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
         {
         }
 
-        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory) : base(configuration)
+        public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory)
+        : base(configuration, loggerFactory)
         {
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
 

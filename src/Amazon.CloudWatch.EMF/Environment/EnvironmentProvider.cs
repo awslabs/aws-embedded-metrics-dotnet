@@ -16,8 +16,6 @@ namespace Amazon.CloudWatch.EMF.Environment
         private readonly ILogger<ECSEnvironment> _logger;
         private IEnvironment _cachedEnvironment;
 
-        public IEnvironment DefaultEnvironment => new DefaultEnvironment(_configuration);
-
         public EnvironmentProvider(IConfiguration configuration, IResourceFetcher resourceFetcher)
             : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
         {
@@ -27,7 +25,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
-            _loggerFactory ??= NullLoggerFactory.Instance;
+            _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<ECSEnvironment>();
         }
 
@@ -57,7 +55,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             }
 
             _logger.LogDebug("Failed to detect environment, using default.");
-            return DefaultEnvironment;
+            return new DefaultEnvironment(_configuration, _loggerFactory);
         }
 
         private IEnvironment GetEnvironmentFromConfig()
@@ -67,7 +65,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                 case Environments.Lambda:
                     return new LambdaEnvironment();
                 case Environments.Agent:
-                    return new DefaultEnvironment(_configuration);
+                    return new DefaultEnvironment(_configuration, _loggerFactory);
                 case Environments.EC2:
                     return new EC2Environment(_configuration, _resourceFetcher, _loggerFactory);
                 case Environments.ECS:
@@ -94,7 +92,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             environment = new EC2Environment(_configuration, _resourceFetcher, _loggerFactory);
             if (environment.Probe()) return environment;
 
-            environment = new DefaultEnvironment(_configuration);
+            environment = new DefaultEnvironment(_configuration, _loggerFactory);
             return environment.Probe() ? environment : null;
         }
     }

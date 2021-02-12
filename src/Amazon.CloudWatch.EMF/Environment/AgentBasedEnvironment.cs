@@ -2,17 +2,20 @@ using System;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
+using Microsoft.Extensions.Logging;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
     public abstract class AgentBasedEnvironment : IEnvironment
     {
         protected readonly IConfiguration _configuration;
+        private readonly ILoggerFactory _loggerFactory;
         private ISink _sink;
 
-        protected AgentBasedEnvironment(IConfiguration configuration)
+        protected AgentBasedEnvironment(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _loggerFactory = loggerFactory;
         }
 
         public virtual string Name => !string.IsNullOrEmpty(_configuration.ServiceName) ? _configuration.ServiceName : Constants.UNKNOWN;
@@ -37,7 +40,8 @@ namespace Amazon.CloudWatch.EMF.Environment
                     LogGroupName,
                     LogStreamName,
                     endpoint,
-                    new SocketClientFactory());
+                    new SocketClientFactory(),
+                    _loggerFactory);
 
                 return _sink;
             }

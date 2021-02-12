@@ -23,11 +23,13 @@ namespace Amazon.CloudWatch.EMF.Environment
         private string _fluentBitEndpoint;
         private string _hostname;
 
-        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher) : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
+        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher)
+        : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
         {
         }
 
-        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory) : base(configuration)
+        public ECSEnvironment(IConfiguration configuration, IResourceFetcher resourceFetcher, ILoggerFactory loggerFactory)
+        : base(configuration, loggerFactory)
         {
             _resourceFetcher = resourceFetcher ?? throw new ArgumentNullException(nameof(resourceFetcher));
 

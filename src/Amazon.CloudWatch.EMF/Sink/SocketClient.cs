@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace Amazon.CloudWatch.EMF.Sink
 {
     public interface ISocketClient
     {
-        void SendMessage(string message);
+        Task SendMessageAsync(string message);
     }
 }

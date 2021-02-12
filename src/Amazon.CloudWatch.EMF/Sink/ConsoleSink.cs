@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -36,6 +37,13 @@ namespace Amazon.CloudWatch.EMF.Sink
             {
                 _logger.LogError("Failed to serialize a MetricsContext: ", e);
             }
+        }
+
+        public Task Shutdown()
+        {
+            // this is a no-op for console since Accept blocks on
+            // successful writes (no in-process buffer)
+            return Task.CompletedTask;
         }
     }
 }

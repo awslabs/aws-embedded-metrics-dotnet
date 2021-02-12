@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Model;
@@ -10,7 +11,7 @@ namespace Amazon.CloudWatch.EMF.Logger
     public class MetricsLogger : IMetricsLogger, IDisposable
     {
         private readonly ILogger _logger;
-        private readonly IEnvironment _environmentFuture;
+        private readonly IEnvironment _environment;
         private readonly IEnvironmentProvider _environmentProvider;
 
         private MetricsContext _context;
@@ -43,15 +44,16 @@ namespace Amazon.CloudWatch.EMF.Logger
             loggerFactory ??= NullLoggerFactory.Instance;
 
             _context = metricsContext;
-            _environmentFuture = environmentProvider.ResolveEnvironment();
+            _environment = environmentProvider.ResolveEnvironment();
             _environmentProvider = environmentProvider;
             _logger = loggerFactory.CreateLogger<MetricsLogger>();
+            _logger.LogDebug($"Resolved environment {_environment.Name} with sink {_environment.Sink.ToString()}");
         }
 
         public MetricsLogger(IEnvironmentProvider environmentProvider, MetricsContext metricsContext)
         {
             _context = metricsContext;
-            _environmentFuture = environmentProvider.ResolveEnvironment();
+            _environment = environmentProvider.ResolveEnvironment();
             _environmentProvider = environmentProvider;
         }
 
@@ -60,38 +62,17 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// </summary>
         public void Flush()
         {
-            IEnvironment environment;
-            _logger.LogDebug("Resolving the environment");
-            try
+            _logger.LogDebug($"Configuring context for environment  {_environment.Name}");
+            ConfigureContextForEnvironment(_context);
+            if (_environment.Sink == null)
             {
-                environment = _environmentFuture;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation(ex, "Failed to resolve environment. Fallback to default environment.");
-                environment = _environmentProvider.DefaultEnvironment;
+                var message = $"No Sink is configured for environment `{_environment.GetType().Name}`";
+                throw new InvalidOperationException(message);
             }
 
-            _logger.LogDebug($"Resolved environment {environment.Name}");
-
-            // TODO: uncomment this line of code to test serialization results
-            // var result = _context.Serialize();
-
-            _logger.LogDebug($"Configuring context for environment  {environment.Name}");
-            ConfigureContextForEnvironment(_context, environment);
-            var sink = environment.Sink;
-            if (sink == null)
-            {
-                var message = $"No Sink is configured for environment `{environment.GetType().Name}`";
-                var ex = new InvalidOperationException(message);
-                _logger.LogError(ex, message);
-                throw ex;
-            }
-
-            sink.Accept(_context);
-            _logger.LogDebug($"Creating new context after flushing logs...");
+            _logger.LogDebug("Sending data to sink.");
+            _environment.Sink.Accept(_context);
             _context = _context.CreateCopyWithContext();
-            _logger.LogDebug($"New context successfully created.");
         }
 
         /// <summary>
@@ -195,12 +176,16 @@ namespace Amazon.CloudWatch.EMF.Logger
             this.Flush();
         }
 
+        public async Task ShutdownAsync()
+        {
+            await _environment.Sink.Shutdown();
+        }
+
         /// <summary>
         /// Adds default dimensions and properties from the specified environment into the specified metrics context.
         /// </summary>
         /// <param name="context">the context to configure with environment information</param>
-        /// <param name="environment">the environment to read dimensions and properties from</param>
-        private void ConfigureContextForEnvironment(MetricsContext context, IEnvironment environment)
+        private void ConfigureContextForEnvironment(MetricsContext context)
         {
             if (context.HasDefaultDimensions)
             {
@@ -208,11 +193,11 @@ namespace Amazon.CloudWatch.EMF.Logger
             }
 
             var defaultDimensions = new DimensionSet();
-            defaultDimensions.AddDimension("LogGroup", environment.LogGroupName);
-            defaultDimensions.AddDimension("ServiceName", environment.Name);
-            defaultDimensions.AddDimension("ServiceType", environment.Type);
+            defaultDimensions.AddDimension("LogGroup", _environment.LogGroupName);
+            defaultDimensions.AddDimension("ServiceName", _environment.Name);
+            defaultDimensions.AddDimension("ServiceType", _environment.Type);
             context.DefaultDimensions = defaultDimensions;
-            environment.ConfigureContext(context);
+            _environment.ConfigureContext(context);
         }
     }
 }
