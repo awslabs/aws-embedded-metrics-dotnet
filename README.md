@@ -30,7 +30,6 @@ When the logger is disposed, it will write the metrics to the configured sink.
 ```c#
 using (var logger = new MetricsLogger() {
     logger.SetNamespace("Canary");
-
     var dimensionSet = new DimensionSet();
     dimensionSet.AddDimension("Service", "aggregator");
     logger.SetDimensions(dimensionSet);
@@ -43,8 +42,36 @@ using (var logger = new MetricsLogger() {
 
 See the example in Amazon.CloudWatch.EMF.Web to create a logger that is hooked into the dependency injection framework and provides default metrics for each request. By adding some code to your Startup.cs file, you can get default metrics like the following. And of yourse, you can also emit additional custom metrics from your Controllers.
 
+1. Add the configuration to your Startup file.
 
+```cs
+public void ConfigureServices(IServiceCollection services) {
+    // Add the necessary services. After this is done, you will have the
+    // IMetricsLogger available for dependency injection in your
+    // controllers
+    services.AddEmf();
+}
 ```
+
+2. Add middleware to add default metrics to each request.
+
+```cs
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    // Add middleware which will set metric dimensions based on the request routing
+    app.UseEmfMiddleware();
+}
+```
+
+#### Example
+
+```sh
+▶ cd examples/Amazon.CloudWatch.EMF.Web
+▶ export AWS_EMF_ENVIRONMENT=Local
+▶ dotnet run
+```
+
+```sh
 ▶ curl http://localhost:5000
 ```
 
@@ -52,7 +79,7 @@ See the example in Amazon.CloudWatch.EMF.Web to create a logger that is hooked i
 {"TraceId":"0HM6EKOBA2CPJ:00000001","Path":"/","StatusCode":"404"}
 ```
 
-```
+```sh
 ▶ curl http://localhost:5000/weatherForecast
 ```
 
