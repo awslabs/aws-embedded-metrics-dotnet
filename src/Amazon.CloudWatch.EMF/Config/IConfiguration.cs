@@ -28,6 +28,11 @@ namespace Amazon.CloudWatch.EMF.Config
         public string AgentEndPoint { get; set; }
 
         /// <summary>
+        /// Buffer size for agent based environments
+        /// </summary>
+        public int AgentBufferSize { get; set; }
+
+        /// <summary>
         /// Environment override. This will short circuit auto-environment detection. Valid values
         /// include:
         /// - Local: no decoration and sends over stdout

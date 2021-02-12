@@ -15,12 +15,18 @@ namespace Amazon.CloudWatch.EMF.Config
         {
             get
             {
+                var bufferSize = Int32.TryParse(
+                        GetEnvVar(ConfigurationKeys.AGENT_BUFFER_SIZE), out var parsedBufferSize)
+                            ? parsedBufferSize
+                            : Configuration.DEFAULT_AGENT_BUFFER_SIZE;
+
                 return _config ??= new Configuration(
                     GetEnvVar(ConfigurationKeys.SERVICE_NAME),
                     GetEnvVar(ConfigurationKeys.SERVICE_TYPE),
                     GetEnvVar(ConfigurationKeys.LOG_GROUP_NAME),
                     GetEnvVar(ConfigurationKeys.LOG_STREAM_NAME),
                     GetEnvVar(ConfigurationKeys.AGENT_ENDPOINT),
+                    bufferSize,
                     GetEnvironmentOverride());
             }
             set => _config = value;

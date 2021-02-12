@@ -4,17 +4,27 @@ namespace Amazon.CloudWatch.EMF.Config
 {
     public class Configuration : IConfiguration
     {
+        public const int DEFAULT_AGENT_BUFFER_SIZE = 100;
+
         public Configuration()
         {
         }
 
-        public Configuration(string serviceName, string serviceType, string logGroupName, string logStreamName, string agentEndPoint, Environments environmentOverride)
+        public Configuration(
+            string serviceName,
+            string serviceType,
+            string logGroupName,
+            string logStreamName,
+            string agentEndPoint,
+            int agentBufferSize,
+            Environments environmentOverride)
         {
             ServiceName = serviceName;
             ServiceType = serviceType;
             LogGroupName = logGroupName;
             LogStreamName = logStreamName;
             AgentEndPoint = agentEndPoint;
+            AgentBufferSize = agentBufferSize;
             EnvironmentOverride = environmentOverride;
         }
 
@@ -43,6 +53,11 @@ namespace Amazon.CloudWatch.EMF.Config
         /// Gets the endpoint to use to connect to the CloudWatch Agent.
         /// </summary>
         public string AgentEndPoint { get; set; }
+
+        /// <summary>
+        /// Buffer size for agent based environments
+        /// </summary>
+        public int AgentBufferSize { get; set; } = DEFAULT_AGENT_BUFFER_SIZE;
 
         /// <summary>
         /// Environment override. This will short circuit auto-environment detection. Valid values

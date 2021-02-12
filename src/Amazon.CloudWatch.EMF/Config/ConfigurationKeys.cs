@@ -8,6 +8,7 @@ namespace Amazon.CloudWatch.EMF.Config
         public const string LOG_GROUP_NAME = "LOG_GROUP_NAME";
         public const string LOG_STREAM_NAME = "LOG_STREAM_NAME";
         public const string AGENT_ENDPOINT = "AGENT_ENDPOINT";
+        public const string AGENT_BUFFER_SIZE = "AGENT_BUFFER_SIZE";
         public const string ENVIRONMENT_OVERRIDE = "ENVIRONMENT";
     }
 }

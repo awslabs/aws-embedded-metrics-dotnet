@@ -41,6 +41,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                     LogStreamName,
                     endpoint,
                     new SocketClientFactory(),
+                    _configuration,
                     _loggerFactory);
 
                 return _sink;

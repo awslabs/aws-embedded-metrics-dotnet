@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -11,7 +12,7 @@ namespace Amazon.CloudWatch.EMF.Sink
     public class AgentSink : ISink
     {
         // TODO: set max capacity through config
-        private readonly BlockingCollection<string> _queue = new BlockingCollection<string>(10);
+        private readonly BlockingCollection<string> _queue;
         private readonly ILogger _logger;
         private readonly string _logGroupName;
         private readonly string _logStreamName;
@@ -19,8 +20,8 @@ namespace Amazon.CloudWatch.EMF.Sink
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly Task _sender;
 
-        public AgentSink(string logGroupName, string logStreamName, Endpoint endpoint, ISocketClientFactory clientFactory)
-        : this(logGroupName, logStreamName, endpoint, clientFactory, NullLoggerFactory.Instance)
+        public AgentSink(string logGroupName, string logStreamName, Endpoint endpoint, ISocketClientFactory clientFactory, IConfiguration config)
+        : this(logGroupName, logStreamName, endpoint, clientFactory, config, NullLoggerFactory.Instance)
         {
         }
 
@@ -29,11 +30,13 @@ namespace Amazon.CloudWatch.EMF.Sink
              string logStreamName,
              Endpoint endpoint,
              ISocketClientFactory clientFactory,
+             IConfiguration config,
              ILoggerFactory loggerFactory)
         {
             _logGroupName = logGroupName;
             _logStreamName = logStreamName;
             _socketClient = clientFactory.GetClient(endpoint);
+            _queue = new BlockingCollection<string>(config.AgentBufferSize);
             _logger = loggerFactory.CreateLogger<AgentSink>();
             _cancellationTokenSource = new CancellationTokenSource();
             _sender = RunSenderThread(loggerFactory);
