@@ -43,7 +43,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public void PutProperty(string key, object value)
         {
-            _properties.Add(key, value);
+            _properties[key] = value;
         }
 
         public Dictionary<string, object> GetProperties()

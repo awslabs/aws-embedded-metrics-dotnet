@@ -13,6 +13,11 @@ namespace Amazon.CloudWatch.EMF.Sink
             _endpoint = endpoint;
         }
 
+        public void Dispose()
+        {
+            _tcpClient.Close();
+        }
+
         public async Task SendMessageAsync(string message)
         {
             if (_tcpClient == null)
@@ -31,10 +36,6 @@ namespace Amazon.CloudWatch.EMF.Sink
 
             // Send the message to the connected TcpServer.
             await stream.WriteAsync(data, 0, data.Length);
-
-            // Close everything.
-            stream.Close();
-            _tcpClient.Close();
         }
     }
 }

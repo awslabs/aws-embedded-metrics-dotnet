@@ -14,6 +14,11 @@ namespace Amazon.CloudWatch.EMF.Sink
             _udpClient = new UdpClient(endpoint.Host, endpoint.Port);
         }
 
+        public void Dispose()
+        {
+            _udpClient.Dispose();
+        }
+
         public async Task SendMessageAsync(string message)
         {
             var data = Encoding.ASCII.GetBytes(message + "\n");

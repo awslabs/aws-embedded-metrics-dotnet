@@ -33,19 +33,21 @@ namespace Amazon.CloudWatch.EMF.Logger
         }
 
         public MetricsLogger(IEnvironmentProvider environmentProvider, ILoggerFactory loggerFactory)
-            : this(environmentProvider, new MetricsContext(), loggerFactory)
+            : this(environmentProvider.ResolveEnvironment(), new MetricsContext(), loggerFactory)
         {
         }
 
-        public MetricsLogger(IEnvironmentProvider environmentProvider, MetricsContext metricsContext, ILoggerFactory loggerFactory)
+        public MetricsLogger(IEnvironment environment, ILoggerFactory loggerFactory)
+            : this(environment, new MetricsContext(), loggerFactory)
         {
-            if (environmentProvider == null) throw new ArgumentNullException(nameof(environmentProvider));
-            if (metricsContext == null) throw new ArgumentNullException(nameof(metricsContext));
-            loggerFactory ??= NullLoggerFactory.Instance;
+        }
 
+        public MetricsLogger(IEnvironment environment, MetricsContext metricsContext, ILoggerFactory loggerFactory)
+        {
+            if (environment == null) throw new ArgumentNullException(nameof(environment));
+            if (metricsContext == null) throw new ArgumentNullException(nameof(metricsContext));
+            _environment = environment;
             _context = metricsContext;
-            _environment = environmentProvider.ResolveEnvironment();
-            _environmentProvider = environmentProvider;
             _logger = loggerFactory.CreateLogger<MetricsLogger>();
             _logger.LogDebug($"Resolved environment {_environment.Name} with sink {_environment.Sink.ToString()}");
         }
@@ -62,7 +64,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// </summary>
         public void Flush()
         {
-            _logger.LogDebug($"Configuring context for environment  {_environment.Name}");
+            _logger.LogDebug($"Configuring context for environment {_environment.Name}");
             ConfigureContextForEnvironment(_context);
             if (_environment.Sink == null)
             {

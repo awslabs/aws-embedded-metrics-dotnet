@@ -57,7 +57,7 @@ namespace Amazon.CloudWatch.EMF.Sink
                 {
                     _logger.LogInformation("Enqueuing data.");
 
-                    try 
+                    try
                     {
                         if (!_queue.TryAdd(data))
                         {
@@ -82,44 +82,47 @@ namespace Amazon.CloudWatch.EMF.Sink
         {
             _logger.LogDebug("Shutdown requested in AgentSink.");
             _queue.CompleteAdding();
-            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Cancel(false);
             await _sender;
+            _socketClient.Dispose();
         }
 
         private Task RunSenderThread(ILoggerFactory loggerFactory)
         {
-            return Task.Run(async () =>
-            {
-                var logger = loggerFactory.CreateLogger("SenderThread");
-                logger.LogInformation("Starting sender thread.");
-
-                // TODO: allow force cancellation after timeout
-                while (!_cancellationTokenSource.IsCancellationRequested || _queue.Count > 0)
+            return Task.Run(
+                async () =>
                 {
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        _logger.LogDebug($"Shutdown request received. {_queue.Count} messages pending.");
-                    }
+                    var logger = loggerFactory.CreateLogger("SenderThread");
+                    logger.LogInformation("Starting sender thread.");
 
-                    var message = _queue.Take(_cancellationTokenSource.Token);
-                    logger.LogDebug("Sending message to socket");
-
-                    // TODO: move into another method to avoid confusion of while loops
-                    while (true)
+                    // TODO: allow force cancellation after timeout
+                    while (!_cancellationTokenSource.IsCancellationRequested || _queue.Count > 0)
                     {
-                        try
+                        if (_cancellationTokenSource.IsCancellationRequested)
                         {
-                            await _socketClient.SendMessageAsync(message);
-                            break;
+                            _logger.LogDebug($"Shutdown request received. {_queue.Count} messages pending.");
                         }
-                        catch (Exception e)
+
+                        var message = _queue.Take();
+                        logger.LogDebug("Sending message to socket");
+
+                        // TODO: move into another method to avoid confusion of while loops
+                        while (true)
                         {
-                            logger.LogWarning("Failed to write message to socket. Backing off and trying again. {}", e.Message);
-                            Thread.Sleep(1000); // TODO: backoff
+                            try
+                            {
+                                await _socketClient.SendMessageAsync(message);
+                                logger.LogDebug("Successfully wrote to socket.");
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                                logger.LogWarning("Failed to write message to socket. Backing off and trying again. {}", e.Message);
+                                Thread.Sleep(1000); // TODO: backoff
+                            }
                         }
                     }
-                }
-            }); // TODO: pass in cancellation token
+                }); // TODO: pass in cancellation token
         }
     }
 }

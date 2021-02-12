@@ -15,20 +15,36 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
             var loggerFactory = LoggerFactory.Create(builder => builder
                 .SetMinimumLevel(LogLevel.Debug)
                 .AddConsole());
-            
-            var logger = loggerFactory.CreateLogger("Main");
-            
-            var configuration = new Configuration("Test Console App", "Console", "TestConsoleApp", "TestConsoleApp", "",
-                Environments.EC2);
-            EnvironmentConfigurationProvider.Config = configuration;
 
-            var environmentProvider = new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher(), loggerFactory);
-            var metrics = new MetricsLogger(environmentProvider, loggerFactory);
+            var logger = loggerFactory.CreateLogger("Main");
+
+            var configuration = new Configuration
+            {
+                ServiceName = "DemoApp",
+                ServiceType = "ConsoleApp",
+                LogGroupName = "DemoApp",
+                EnvironmentOverride = Environments.EC2
+            };
+
+            var environment = new DefaultEnvironment(configuration, loggerFactory);
+            var metrics = new MetricsLogger(environment, loggerFactory);
+            for (int i = 0; i < 10; i++)
+            {
+                EmitMetrics(logger, metrics);
+            }
+
+            logger.LogInformation("Shutting down");
+            metrics.ShutdownAsync().Wait(TimeSpan.FromSeconds(120));
+        }
+
+        private static void EmitMetrics(ILogger logger, IMetricsLogger metrics)
+        {
 
             var dimensionSet = new DimensionSet();
             dimensionSet.AddDimension("Service", "Aggregator");
             dimensionSet.AddDimension("Region", "us-west-2");
-            metrics.PutDimensions(dimensionSet);
+            metrics.SetDimensions(dimensionSet);
+
             metrics.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);
             metrics.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
             metrics.PutMetric("ProcessingLatency", 99, Unit.MILLISECONDS);
@@ -46,9 +62,6 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
 
             logger.LogInformation("Flushing");
             metrics.Flush();
-
-            logger.LogInformation("Shutting down");
-            metrics.ShutdownAsync().Wait(TimeSpan.FromSeconds(30));
         }
     }
 }

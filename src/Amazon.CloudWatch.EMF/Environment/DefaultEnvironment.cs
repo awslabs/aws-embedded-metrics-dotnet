@@ -5,7 +5,7 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public class DefaultEnvironment : AgentBasedEnvironment
     {
-        internal DefaultEnvironment(IConfiguration configuration, ILoggerFactory loggerFactory)
+        public DefaultEnvironment(IConfiguration configuration, ILoggerFactory loggerFactory)
         : base(configuration, loggerFactory)
         {
         }
