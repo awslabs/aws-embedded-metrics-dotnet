@@ -56,9 +56,17 @@ namespace Amazon.CloudWatch.EMF.Sink
                 foreach (var data in metricsContext.Serialize())
                 {
                     _logger.LogInformation("Enqueuing data.");
-                    if (!_queue.TryAdd(data))
+
+                    try 
                     {
-                        _logger.LogWarning("Failed to enqueue metrics because the queue was full.");
+                        if (!_queue.TryAdd(data))
+                        {
+                            _logger.LogWarning("Failed to enqueue metrics because the queue was full.");
+                        }
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        _logger.LogError("Attempted to publish data after the sink has been shutdown. {}", e.Message);
                     }
 
                     _logger.LogDebug("Data queued successfully.");
@@ -73,6 +81,7 @@ namespace Amazon.CloudWatch.EMF.Sink
         public async Task Shutdown()
         {
             _logger.LogDebug("Shutdown requested in AgentSink.");
+            _queue.CompleteAdding();
             _cancellationTokenSource.Cancel();
             await _sender;
         }
