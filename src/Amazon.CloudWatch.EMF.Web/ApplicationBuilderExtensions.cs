@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Logger;
 using Microsoft.AspNetCore.Builder;
@@ -20,9 +21,27 @@ namespace Amazon.CloudWatch.EMF.Web
                     dimensions.AddDimension("Controller", actionDescriptor.ControllerName);
                     dimensions.AddDimension("Action", actionDescriptor.ActionName);
                 }
+
                 dimensions.AddDimension("StatusCode", context.Response.StatusCode.ToString());
                 logger.SetDimensions(dimensions);
-                logger.PutProperty("TraceId", context.TraceIdentifier);
+
+                // Include the X-Ray trace id if it is set
+                // https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-tracingheader
+                var xRayTraceId = context.Request.Headers["X-Amzn-Trace-Id"];
+                if (!String.IsNullOrEmpty(xRayTraceId) && xRayTraceId.Count > 0) {
+                    logger.PutProperty("XRayTraceId", xRayTraceId[0]);
+                }
+
+                // If the request contains a w3c trace id, let's embed it in the logs
+                // Otherwise we'll include the TraceIdentifier which is the connectionId:requestCount
+                // identifier.
+                // https://www.w3.org/TR/trace-context/#traceparent-header
+                logger.PutProperty("TraceId", Activity.Current?.Id ?? context?.TraceIdentifier);
+
+                if (!String.IsNullOrEmpty(Activity.Current?.TraceStateString)) {
+                    logger.PutProperty("TraceState", Activity.Current.TraceStateString);
+                }
+
                 logger.PutProperty("Path", context.Request.Path);
                 return Task.CompletedTask;
             });
@@ -32,9 +51,13 @@ namespace Amazon.CloudWatch.EMF.Web
         {
             app.Use(async (context, next) =>
             {
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
                 await next.Invoke();
                 var logger = context.RequestServices.GetRequiredService<IMetricsLogger>();
                 await action(context, logger);
+                stopWatch.Stop();
+                logger.PutMetric("Time", stopWatch.ElapsedMilliseconds, Model.Unit.MILLISECONDS);
             });
         }
     }
