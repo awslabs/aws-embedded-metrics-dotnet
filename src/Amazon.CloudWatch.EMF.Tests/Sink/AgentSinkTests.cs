@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
 using AutoFixture;
@@ -20,12 +22,22 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
         {
             return _message;
         }
+
+        public Task SendMessageAsync(string message)
+        {
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+        }
     }
     public class AgentSinkTests
     {
         private ISocketClientFactory _socketClientFactory;
         private TestClient _client;
         private readonly IFixture _fixture;
+        private readonly IConfiguration _config = Config.EnvironmentConfigurationProvider.Config;
         
         public AgentSinkTests()
         {
@@ -48,7 +60,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
             mc.PutProperty(prop, propValue);
             mc.PutMetric("Time", 10);
 
-            AgentSink sink = new AgentSink(logGroupName, logStreamName, Endpoint.DEFAULT_TCP_ENDPOINT, _socketClientFactory);
+            AgentSink sink = new AgentSink(logGroupName, logStreamName, Endpoint.DEFAULT_TCP_ENDPOINT, _socketClientFactory, _config);
 
             sink.Accept(mc);
         }

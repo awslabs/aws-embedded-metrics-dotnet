@@ -26,7 +26,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             }
 
             // Translate the passed message into ASCII and store it as a Byte array.
-            var data = System.Text.Encoding.ASCII.GetBytes(message);
+            var data = System.Text.Encoding.ASCII.GetBytes(message + '\n');
 
             if (!_tcpClient.Connected)
                 await _tcpClient.ConnectAsync(_endpoint.Host, _endpoint.Port);

@@ -2,6 +2,7 @@ using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Xunit;
 
@@ -22,7 +23,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var name = "TestService";
             var configuration = _fixture.Create<IConfiguration>();
             configuration.ServiceName = name;
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var environmentName = environment.Name;
@@ -36,7 +37,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var environmentName = environment.Name;
@@ -52,7 +53,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var type = "TestServiceType";
             var configuration = _fixture.Create<IConfiguration>();
             configuration.ServiceType = type;
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var typeName = environment.Type;
@@ -66,7 +67,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var typeName = environment.Type;
@@ -82,7 +83,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var logStreamName = "TestServiceType";
             var configuration = _fixture.Create<IConfiguration>();
             configuration.LogStreamName.Returns(logStreamName);
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var streamName = environment.LogStreamName;
@@ -96,7 +97,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var streamName = environment.LogStreamName;
@@ -112,7 +113,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var logGroupName = "TestLogGroup";
             var configuration = _fixture.Create<IConfiguration>();
             configuration.LogGroupName = logGroupName;
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var groupName = environment.LogGroupName;
@@ -126,7 +127,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var streamName = environment.LogGroupName;
@@ -140,7 +141,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new DefaultEnvironment(configuration);
+            var environment = new DefaultEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var result = environment.Probe();

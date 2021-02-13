@@ -70,7 +70,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             metricsContext.DefaultDimensions.AddDimension(defaultDimName, defaultDimValue);
             metricsContext.SetDimensions(new DimensionSet(defaultDimName, defaultDimValue));
 
-            _metricsLogger = new MetricsLogger(_environmentProvider, metricsContext, _logger);
+            _metricsLogger = new MetricsLogger(_environment, metricsContext, _logger);
             _metricsLogger.SetDimensions(new DimensionSet(dimensionName, dimensionValue));
             _metricsLogger.Flush();
 
@@ -138,7 +138,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         {
             MetricsContext metricsContext = new MetricsContext();
             metricsContext.DefaultDimensions.Dimensions.Add("foo", "bar");
-            _metricsLogger = new MetricsLogger(_environmentProvider, metricsContext, _logger);
+            _metricsLogger = new MetricsLogger(_environment, metricsContext, _logger);
             string logGroup = "TestLogGroup";
             _environment.LogGroupName.Returns(logGroup);
             _metricsLogger.Flush();

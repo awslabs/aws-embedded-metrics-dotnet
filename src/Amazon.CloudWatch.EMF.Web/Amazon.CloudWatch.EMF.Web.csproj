@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Amazon.CloudWatch.EMF\Amazon.CloudWatch.EMF.csproj" />
+    <ProjectReference Include="..\Amazon.CloudWatch.EMF\Amazon.CloudWatch.EMF.csproj" />
   </ItemGroup>
 
 </Project>
