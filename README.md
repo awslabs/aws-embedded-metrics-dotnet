@@ -40,7 +40,8 @@ using (var logger = new MetricsLogger() {
 
 ### ASP.Net Core
 
-See the example in Amazon.CloudWatch.EMF.Web to create a logger that is hooked into the dependency injection framework and provides default metrics for each request. By adding some code to your Startup.cs file, you can get default metrics like the following. And of yourse, you can also emit additional custom metrics from your Controllers.
+We offer a helper package for ASP.Net Core applications that can be used to simplify the
+onboarding process and provide default metrics. See the example in examples/Amazon.CloudWatch.EMF.Examples.Web to create a logger that is hooked into the dependency injection framework and provides default metrics for each request. By adding some code to your Startup.cs file, you can get default metrics like the following. And of yourse, you can also emit additional custom metrics from your Controllers.
 
 1. Add the configuration to your Startup file.
 
