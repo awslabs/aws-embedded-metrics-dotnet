@@ -71,14 +71,13 @@ namespace Amazon.CloudWatch.EMF.Sink
             return CurrentProtocol.ToString().ToLower() + "://" + Host + ":" + Port;
         }
 
-        // TODO: fix this
         private static Protocol GetProtocol(string value)
         {
-            foreach (var protocol in Enum.GetValues(typeof(Protocol)))
+            foreach (Protocol protocol in Enum.GetValues(typeof(Protocol)))
             {
-                if (protocol.ToString().Equals(value))
+                if (protocol.ToString().Equals(value, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    return Protocol.TCP;
+                    return protocol;
                 }
             }
 

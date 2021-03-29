@@ -85,8 +85,12 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// <param name="key">the name of the property</param>
         /// <param name="value">the value of the property</param>
         /// <returns>the current logger</returns>
+        /// <exception cref="ArgumentException">An invalid parameter is provided.</exception>
         public MetricsLogger PutProperty(string key, object value)
         {
+            if ("_aws".Equals(key))
+                throw new ArgumentException("'_aws' cannot be used as a property key.");
+
             _context.PutProperty(key, value);
             return this;
         }

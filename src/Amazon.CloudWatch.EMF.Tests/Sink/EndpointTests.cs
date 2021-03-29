@@ -8,7 +8,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
         [Fact]
         public void TestParseTCPEndpoint()
         {
-            string tcpEndpoint = "tcp://173.9.0.12:2580";
+            string tcpEndpoint = "tcp://10.0.0.1:2580";
             var endpoint = new Endpoint(tcpEndpoint);
 
             Assert.Equal(endpoint.ToString(), tcpEndpoint);
@@ -17,11 +17,10 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
         [Fact]
         public void TestParseUDPEndpoint()
         {
-            string udpEndpoint = "udp://173.9.0.12:2580";
-            string tcpEndpoint = "tcp://173.9.0.12:2580";
+            string udpEndpoint = "udp://10.0.0.1:2580";
             Endpoint endpoint = new Endpoint(udpEndpoint);
 
-            Assert.Equal(endpoint.ToString(), tcpEndpoint);
+            Assert.Equal(endpoint.ToString(), udpEndpoint);
         }
 
         [Fact]
