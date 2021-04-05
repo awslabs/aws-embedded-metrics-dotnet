@@ -34,7 +34,8 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
             }
 
             logger.LogInformation("Shutting down");
-            metrics.ShutdownAsync().Wait(TimeSpan.FromSeconds(120));
+            
+            environment.Sink.Shutdown().Wait(TimeSpan.FromSeconds(120));
         }
 
         private static void EmitMetrics(ILogger logger, IMetricsLogger metrics)

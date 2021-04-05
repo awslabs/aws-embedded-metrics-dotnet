@@ -28,14 +28,41 @@ To get a metric logger, you can instantiate it like so.
 When the logger is disposed, it will write the metrics to the configured sink.
 
 ```c#
-using (var logger = new MetricsLogger() {
+using (var logger = new MetricsLogger()) {
     logger.SetNamespace("Canary");
     var dimensionSet = new DimensionSet();
     dimensionSet.AddDimension("Service", "aggregator");
     logger.SetDimensions(dimensionSet);
     logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
-    logger.SetProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
+    logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
 }
+```
+
+### Graceful Shutdown
+
+In any environment, other than AWS Lambda, we recommend running an out-of-process agent (the CloudWatch Agent or FireLens / Fluent-Bit) to collect the EMF events. A full example can be found in the examples directory.
+
+```c#
+var configuration = new Configuration
+{
+    ServiceName = "DemoApp",
+    ServiceType = "ConsoleApp",
+    LogGroupName = "DemoApp",
+    EnvironmentOverride = Environments.EC2
+};
+
+var environment = new DefaultEnvironment(configuration);
+
+using (var logger = new MetricsLogger()) {
+    logger.SetNamespace("Canary");
+    var dimensionSet = new DimensionSet();
+    dimensionSet.AddDimension("Service", "aggregator");
+    logger.SetDimensions(dimensionSet);
+    logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
+    logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
+}
+
+await environment.Sink.Shutdown();
 ```
 
 ### ASP.Net Core
@@ -106,36 +133,3 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
   "Temperature": -1.0
 }
 ```
-
-## Diagnosing Memory Leak Issues In Canary
-
-### Visual Studio
-
-If you're running on Windows, you can use Visual Studio's built-in diagnostic tools to collect memory
-snapshots and compare heap statistics across snapshots.
-
-### OSX
-
-Install `dotnet-gcdump`: `dotnet tool install -g dotnet-dump`
-
-```
-pid=$(ps aux | grep dotnet | grep Canary | awk '{ print $2 }')
-dotnet gcdump collect -p $pid
-dotnet gcdump report <file-path>
-```
-
-You can then compare results across snapshot files using shell commands or by importing into excel.
-
-1. Awk:
-
-```
-dotnet gcdump report <file-path> | awk TBD
-```
-
-2. Copy to clipboard:
-
-```
-dotnet gcdump report <file-path> | pbcopy
-```
-
-Follow this issue for improved tooling: https://github.com/dotnet/diagnostics/issues/194

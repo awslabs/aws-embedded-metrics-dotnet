@@ -182,6 +182,9 @@ namespace Amazon.CloudWatch.EMF.Logger
             this.Flush();
         }
 
+        /// <summary>
+        /// Shutdown the associated environment's sink.
+        /// </summary>
         public async Task ShutdownAsync()
         {
             await _environment.Sink.Shutdown();
@@ -199,7 +202,6 @@ namespace Amazon.CloudWatch.EMF.Logger
             }
 
             var defaultDimensions = new DimensionSet();
-            defaultDimensions.AddDimension("LogGroup", _environment.LogGroupName);
             defaultDimensions.AddDimension("ServiceName", _environment.Name);
             defaultDimensions.AddDimension("ServiceType", _environment.Type);
             context.DefaultDimensions = defaultDimensions;
