@@ -4,7 +4,7 @@ rootdir=$(git rev-parse --show-toplevel)
 rootdir=${rootdir:-$(pwd)} # in case we are not in a git repository (Code Pipelines)
 source $rootdir/scripts/utils.sh
 
-LIB_PATH=$rootdir
+LIB_PATH=$rootdir/tests
 CANARY_PATH=$LIB_PATH/Amazon.CloudWatch.EMF.Canary
 ACCOUNT_ID=863722843142
 REGION=us-west-2

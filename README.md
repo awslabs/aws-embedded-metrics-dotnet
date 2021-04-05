@@ -1,5 +1,8 @@
 # aws-embedded-metrics-dotnet
 
+![](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoidTNxSUFLdkhBQmtqTTNzUEZCU1A0eTM2eG55elpJR2RKN2Jjbys2OUl1MDlORjBLM1VJQk1QWWE3WFJnVE44L2FXOGREaFh4S2dZQUVqUS9ZbmtzajUwPSIsIml2UGFyYW1ldGVyU3BlYyI6IkM3YzJkL0VJVXY0UnlveEMiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)
+![](https://img.shields.io/nuget/v/Amazon.CloudWatch.EMF)
+
 Generate CloudWatch Metrics embedded within structured log events. The embedded metrics will be extracted so you can visualize and alarm on them for real-time incident detection. This allows you to monitor aggregated values while preserving the detailed event context that generated them.
 
 ## Use Cases
@@ -28,20 +31,56 @@ To get a metric logger, you can instantiate it like so.
 When the logger is disposed, it will write the metrics to the configured sink.
 
 ```c#
-using (var logger = new MetricsLogger() {
+using (var logger = new MetricsLogger()) {
     logger.SetNamespace("Canary");
     var dimensionSet = new DimensionSet();
     dimensionSet.AddDimension("Service", "aggregator");
     logger.SetDimensions(dimensionSet);
     logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
-    logger.SetProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
+    logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
 }
+```
+
+### Graceful Shutdown
+
+In any environment, other than AWS Lambda, we recommend running an out-of-process agent (the CloudWatch Agent or FireLens / Fluent-Bit) to collect the EMF events. 
+When using an out-of-process agent, we will buffer the data asynchronously in process to handle any transient communication
+issues with the agent. This means that when the `MetricsLogger` gets flushed, data may not be safely persisted yet.
+To gracefully shutdown the environment, you can call shutdown on the environment's sink. 
+This is an async call that should be awaited. A full example can be found in the examples directory.
+
+```c#
+var configuration = new Configuration
+{
+    ServiceName = "DemoApp",
+    ServiceType = "ConsoleApp",
+    LogGroupName = "DemoApp",
+    EnvironmentOverride = Environments.EC2
+};
+
+var environment = new DefaultEnvironment(configuration);
+
+using (var logger = new MetricsLogger()) {
+    logger.SetNamespace("Canary");
+    var dimensionSet = new DimensionSet();
+    dimensionSet.AddDimension("Service", "aggregator");
+    logger.SetDimensions(dimensionSet);
+    logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
+    logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
+}
+
+await environment.Sink.Shutdown();
 ```
 
 ### ASP.Net Core
 
 We offer a helper package for ASP.Net Core applications that can be used to simplify the
-onboarding process and provide default metrics. See the example in examples/Amazon.CloudWatch.EMF.Examples.Web to create a logger that is hooked into the dependency injection framework and provides default metrics for each request. By adding some code to your Startup.cs file, you can get default metrics like the following. And of yourse, you can also emit additional custom metrics from your Controllers.
+onboarding process and provide default metrics. 
+
+See the example in examples/Amazon.CloudWatch.EMF.Examples.Web to create a logger that is hooked into the 
+dependency injection framework and provides default metrics for each request. 
+By adding some code to your Startup.cs file, you can get default metrics like the following. 
+And of course, you can also emit additional custom metrics from your Controllers.
 
 1. Add the configuration to your Startup file.
 
@@ -54,7 +93,7 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
-2. Add middleware to add default metrics to each request.
+2. Add middleware to add default metrics and metadata to each request.
 
 ```cs
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -106,36 +145,3 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
   "Temperature": -1.0
 }
 ```
-
-## Diagnosing Memory Leak Issues In Canary
-
-### Visual Studio
-
-If you're running on Windows, you can use Visual Studio's built-in diagnostic tools to collect memory
-snapshots and compare heap statistics across snapshots.
-
-### OSX
-
-Install `dotnet-gcdump`: `dotnet tool install -g dotnet-dump`
-
-```
-pid=$(ps aux | grep dotnet | grep Canary | awk '{ print $2 }')
-dotnet gcdump collect -p $pid
-dotnet gcdump report <file-path>
-```
-
-You can then compare results across snapshot files using shell commands or by importing into excel.
-
-1. Awk:
-
-```
-dotnet gcdump report <file-path> | awk TBD
-```
-
-2. Copy to clipboard:
-
-```
-dotnet gcdump report <file-path> | pbcopy
-```
-
-Follow this issue for improved tooling: https://github.com/dotnet/diagnostics/issues/194
