@@ -12,20 +12,24 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
     {
         static void Main(string[] args)
         {
+            // Create a LoggerFactory responsible for internal logging
             var loggerFactory = LoggerFactory.Create(builder => builder
                 .SetMinimumLevel(LogLevel.Debug)
                 .AddConsole());
 
             var logger = loggerFactory.CreateLogger("Main");
 
+            // Manually setup the configuration for the library
             var configuration = new Configuration
             {
                 ServiceName = "DemoApp",
                 ServiceType = "ConsoleApp",
                 LogGroupName = "DemoApp",
-                EnvironmentOverride = Environments.EC2
+                EnvironmentOverride = Environments.EC2,
+                AgentEndPoint = "tcp://127.0.0.1:25888"
             };
 
+            // create the logger using a DefaultEnvironment which will write over TCP
             var environment = new DefaultEnvironment(configuration, loggerFactory);
             var metrics = new MetricsLogger(environment, loggerFactory);
             for (int i = 0; i < 10; i++)

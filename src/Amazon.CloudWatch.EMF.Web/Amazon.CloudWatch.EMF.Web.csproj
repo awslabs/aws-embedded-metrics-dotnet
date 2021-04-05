@@ -12,6 +12,7 @@
     <RepositoryUrl>https://github.com/awslabs/aws-embedded-metrics-dotnet</RepositoryUrl>
     <PackageTags>AWS Amazon cloud CloudWatch Metrics EMF</PackageTags>
     <PackageIconUrl>http://media.amazonwebservices.com/aws_singlebox_01.png</PackageIconUrl>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

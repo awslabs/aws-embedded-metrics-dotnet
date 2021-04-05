@@ -32,11 +32,21 @@ namespace Amazon.CloudWatch.EMF.Logger
         {
         }
 
+        /// <summary>
+        /// Creates a Metrics logger.
+        /// </summary>
+        /// <param name="environmentProvider">provides the environment responsible for annotating events and writing them to a destination</param>
+        /// <param name="loggerFactory">the logger where this metrics logger should log its internal diagnostics info.</param>
         public MetricsLogger(IEnvironmentProvider environmentProvider, ILoggerFactory loggerFactory)
             : this(environmentProvider.ResolveEnvironment(), new MetricsContext(), loggerFactory)
         {
         }
 
+        /// <summary>
+        /// Creates a Metrics logger.
+        /// </summary>
+        /// <param name="environment">an environment responsible for annotating events and writing them to a destination</param>
+        /// <param name="loggerFactory">the logger where this metrics logger should log its internal diagnostics info.</param>
         public MetricsLogger(IEnvironment environment, ILoggerFactory loggerFactory)
             : this(environment, new MetricsContext(), loggerFactory)
         {
