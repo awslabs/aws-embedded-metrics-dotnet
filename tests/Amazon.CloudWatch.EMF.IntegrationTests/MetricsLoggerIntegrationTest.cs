@@ -93,7 +93,6 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             {
                 GetDimension("ServiceName", _serviceName),
                 GetDimension("ServiceType", _serviceType),
-                GetDimension("LogGroup", _logGroupName),
                 GetDimension(_dimensionName, _dimensionValue)
             };
 
