@@ -12,6 +12,4 @@ phases:
   build:
     commands:
       - dotnet restore
-      - dotnet pack -c Release --version-suffix "ci-$(date +%s)"
-      - dotnet nuget push ./src/Amazon.CloudWatch.EMF/bin/Release/Amazon.CloudWatch.EMF.*.nupkg -k $NUGET_API_KEY
-      - dotnet nuget push ./src/Amazon.CloudWatch.EMF.Web/bin/Release/Amazon.CloudWatch.EMF.Web.*.nupkg -k $NUGET_API_KEY
+      - ./scripts/publish-package.sh
