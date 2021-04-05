@@ -123,17 +123,6 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         }
 
         [Fact]
-        public void TestFlushWithConfiguredLogGroup()
-        {
-            string logGroup = "LogGroup";
-            _environment.LogGroupName.Returns(logGroup);
-            _metricsLogger.Flush();
-
-            ExpectDimension("LogGroup", logGroup);
-        }
-
-
-        [Fact]
         public void TestFlushWithDefaultDimensionDefined()
         {
             MetricsContext metricsContext = new MetricsContext();
