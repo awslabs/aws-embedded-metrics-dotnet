@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
@@ -13,16 +14,12 @@ namespace Amazon.CloudWatch.EMF.Canary
     {
         static void Main(string[] args)
         {
-            Thread.Sleep(5000);
             var init = true;
-
-            // TODO: get the package version
-            var version = "TBD";
 
             var configuration = new Configuration
             {
                 LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
-                EnvironmentOverride = Environments.Local,
+                EnvironmentOverride = Environments.ECS,
                 AgentEndPoint = "tcp://cloudwatch-agent:25888"
             };
 
@@ -32,6 +29,9 @@ namespace Amazon.CloudWatch.EMF.Canary
                             .AddConsole());
 
             EnvironmentConfigurationProvider.Config = configuration;
+
+            // get the assembly version (this does not reflect NuGet pre-releases)
+            var packageVersion = GetPackageVersion();
 
             while (true)
             {
@@ -43,7 +43,7 @@ namespace Amazon.CloudWatch.EMF.Canary
                     dimensionSet.AddDimension("Runtime", "Dotnet");
                     dimensionSet.AddDimension("Platform", "ECS");
                     dimensionSet.AddDimension("Agent", "CloudWatchAgent");
-                    dimensionSet.AddDimension("Version", version);
+                    dimensionSet.AddDimension("Version", packageVersion);
                     logger.SetDimensions(dimensionSet);
 
                     using (var currentProcess = System.Diagnostics.Process.GetCurrentProcess())
@@ -63,6 +63,16 @@ namespace Amazon.CloudWatch.EMF.Canary
                 }
                 Thread.Sleep(1_000);
             }
+        }
+
+        private static String GetPackageVersion() {
+            foreach (var a in Assembly.GetExecutingAssembly().GetReferencedAssemblies()) {
+                if (a.Name.Equals("Amazon.CloudWatch.EMF")) {
+                    return a.Version?.ToString() ?? "Unknown";
+                }
+            }
+
+            return "Unknown";
         }
     }
 }
