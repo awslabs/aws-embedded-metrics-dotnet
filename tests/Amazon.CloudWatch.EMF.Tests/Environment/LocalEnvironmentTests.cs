@@ -4,6 +4,7 @@ using Amazon.CloudWatch.EMF.Sink;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using Xunit;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Amazon.CloudWatch.EMF.Tests.Environment
 {
@@ -19,7 +20,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         public void Probe_Returns_False()
         {
             var configuration = _fixture.Create<IConfiguration>();
-            var ctor = new LocalEnvironment(configuration);
+            var ctor = new LocalEnvironment(configuration, NullLoggerFactory.Instance);
 
             Assert.False(ctor.Probe());
         }
@@ -29,7 +30,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new LocalEnvironment(configuration);
+            var environment = new LocalEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var environmentName = environment.Name;
@@ -44,7 +45,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new LocalEnvironment(configuration);
+            var environment = new LocalEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var typeName = environment.Type;
@@ -58,7 +59,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
         {
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
-            var environment = new LocalEnvironment(configuration);
+            var environment = new LocalEnvironment(configuration, NullLoggerFactory.Instance);
 
             // Act
             var sink = environment.Sink;

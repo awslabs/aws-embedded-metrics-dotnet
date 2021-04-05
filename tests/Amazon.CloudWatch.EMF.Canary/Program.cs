@@ -48,7 +48,7 @@ namespace Amazon.CloudWatch.EMF.Canary
 
                     using (var currentProcess = System.Diagnostics.Process.GetCurrentProcess())
                     {
-                        //https://github.com/dotnet/corefx/blob/3633ea2c6bf9d52029681efeedd84fd7a06eb6ba/src/System.Diagnostics.Process/src/System/Diagnostics/ProcessManager.Linux.cs#L137
+                        // https://github.com/dotnet/corefx/blob/3633ea2c6bf9d52029681efeedd84fd7a06eb6ba/src/System.Diagnostics.Process/src/System/Diagnostics/ProcessManager.Linux.cs#L137
                         logger.PutMetric("Memory.RSS", currentProcess.WorkingSet64, Unit.BYTES);
                     }
 

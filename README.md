@@ -75,7 +75,7 @@ await environment.Sink.Shutdown();
 ### ASP.Net Core
 
 We offer a helper package for ASP.Net Core applications that can be used to simplify the
-onboarding process and provide default metrics. 
+onboarding process and provide default metrics.
 
 See the example in examples/Amazon.CloudWatch.EMF.Examples.Web to create a logger that is hooked into the 
 dependency injection framework and provides default metrics for each request. 
@@ -126,22 +126,27 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ```json
 {
   "_aws": {
-    "Timestamp": 1613059248188,
-    "CloudWatchMetrics": [{
-      "Namespace": "aws-embedded-metrics",
-      "Metrics": [
-        { "Name": "Temperature", "Unit": "None" }
-      ],
-      "Dimensions": [
-        [ "Controller", "Action", "StatusCode" ]
-      ]
-    }]
+    "Timestamp": 1617649416374,
+    "CloudWatchMetrics": [
+      {
+        "Namespace": "WeatherApp",
+        "Metrics": [
+          { "Name": "Temperature", "Unit": "None" },
+          { "Name": "Time", "Unit": "Milliseconds" }
+        ],
+        "Dimensions": [
+          [ "Controller", "Action" ],
+          [ "Controller", "Action", "StatusCode" ]
+        ]
+      }
+    ]
   },
-  "TraceId": "0HM6EKOBA2CPM:00000001",
-  "Path": "/weatherForecast",
+  "TraceId": "|f6eec800-4652f86aef0c7219.",
+  "Path": "/WeatherForecast",
   "Controller": "WeatherForecast",
   "Action": "Get",
   "StatusCode": "200",
-  "Temperature": -1.0
+  "Temperature": -10,
+  "Time": 189
 }
 ```

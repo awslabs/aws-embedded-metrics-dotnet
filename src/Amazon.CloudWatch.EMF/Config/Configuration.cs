@@ -1,4 +1,5 @@
-﻿using Amazon.CloudWatch.EMF.Environment;
+﻿using System;
+using Amazon.CloudWatch.EMF.Environment;
 
 namespace Amazon.CloudWatch.EMF.Config
 {

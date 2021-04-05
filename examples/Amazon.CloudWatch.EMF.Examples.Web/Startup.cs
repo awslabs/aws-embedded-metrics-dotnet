@@ -1,12 +1,8 @@
-using Amazon.CloudWatch;
-using Amazon.CloudWatch.EMF.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace Amazon.CloudWatch.EMF.Web
 {
@@ -20,6 +16,7 @@ namespace Amazon.CloudWatch.EMF.Web
 
             EMF.Config.EnvironmentConfigurationProvider.Config = new EMF.Config.Configuration
             {
+                ServiceName = "WeatherApp",
                 LogGroupName = "/Canary/Dotnet/CloudWatchAgent/Metrics",
                 EnvironmentOverride = hostEnv.IsDevelopment()
                     ? EMF.Environment.Environments.Local

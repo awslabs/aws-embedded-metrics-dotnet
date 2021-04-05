@@ -15,17 +15,12 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public MetricDirective()
         {
-            Namespace = "aws-embedded-metrics";
+            Namespace = Constants.DEFAULT_NAMESPACE;
             _metrics = new List<MetricDefinition>();
             CustomDimensionSets = new List<DimensionSet>();
             DefaultDimensionSet = new DimensionSet();
             _shouldUseDefaultDimensionSet = true;
         }
-
-        /*public bool HasNoMetrics()
-        {
-            return !Metrics.Any();
-        }*/
 
         [JsonProperty("Namespace")]
         internal string Namespace { get; set; }
@@ -73,10 +68,15 @@ namespace Amazon.CloudWatch.EMF.Model
             {
                 var keys = GetAllDimensionSets()
                     .Where(s => s.DimensionKeys.Any())
-                    .SelectMany(s => s.DimensionKeys)
+                    .Select(s => s.DimensionKeys)
                     .ToList();
 
-                return new List<List<string>> { keys };
+                if (keys.Count == 0)
+                {
+                    keys.Add(new List<string>());
+                }
+
+                return keys;
             }
         }
 

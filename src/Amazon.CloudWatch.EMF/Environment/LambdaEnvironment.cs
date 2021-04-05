@@ -1,7 +1,9 @@
 using System;
+using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
 using Amazon.CloudWatch.EMF.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
@@ -14,9 +16,16 @@ namespace Amazon.CloudWatch.EMF.Environment
         private const string TRACE_ID = "_X_AMZN_TRACE_ID";
         private const string LAMBDA_CFN_NAME = "AWS::Lambda::Function";
 
+        private readonly IConfiguration _configuration;
+        private readonly ILoggerFactory _loggerFactory;
         private ISink _sink = null;
 
-        // TODO: support probing asynchronously
+        public LambdaEnvironment(IConfiguration configuration, ILoggerFactory loggerFactory)
+        {
+            _configuration = configuration;
+            _loggerFactory = loggerFactory;
+        }
+
         public bool Probe()
         {
             string functionName = EnvUtils.GetEnv(LAMBDA_FUNCTION_NAME);
@@ -40,7 +49,6 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             AddProperty(context, "executionEnvironment", EnvUtils.GetEnv(AWS_EXECUTION_ENV));
             AddProperty(context, "functionVersion", EnvUtils.GetEnv(LAMBDA_FUNCTION_VERSION));
-            AddProperty(context, "logStreamId", EnvUtils.GetEnv(LAMBDA_LOG_STREAM));
 
             var traceId = GetSampledTrace();
             if (!string.IsNullOrEmpty(traceId))
@@ -53,7 +61,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             get
             {
-                return _sink ??= new ConsoleSink();
+                return _sink ??= new ConsoleSink(_loggerFactory);
             }
         }
 
@@ -61,7 +69,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             if (value != null)
             {
-                // context.putProperty(key, value);
+                context.PutProperty(key, value);
             }
         }
 

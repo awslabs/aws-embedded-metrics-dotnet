@@ -7,5 +7,7 @@ namespace Amazon.CloudWatch.EMF
         public const string UNKNOWN = "Unknown";
 
         public const int MAX_METRICS_PER_EVENT = 100;
+
+        public const string DEFAULT_NAMESPACE = "aws-embedded-metrics";
     }
 }

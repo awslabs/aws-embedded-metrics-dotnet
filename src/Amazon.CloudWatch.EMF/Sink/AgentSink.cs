@@ -11,7 +11,6 @@ namespace Amazon.CloudWatch.EMF.Sink
 {
     public class AgentSink : ISink
     {
-        // TODO: set max capacity through config
         private readonly BlockingCollection<string> _queue;
         private readonly ILogger _logger;
         private readonly string _logGroupName;
@@ -58,7 +57,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             {
                 foreach (var data in metricsContext.Serialize())
                 {
-                    _logger.LogInformation("Enqueuing data.");
+                    _logger.LogDebug("Enqueuing data.");
 
                     try
                     {
@@ -69,7 +68,7 @@ namespace Amazon.CloudWatch.EMF.Sink
                     }
                     catch (InvalidOperationException e)
                     {
-                        _logger.LogError("Attempted to publish data after the sink has been shutdown. {}", e.Message);
+                        _logger.LogError("Attempted to publish data after the sink has been shutdown. {}", e);
                     }
 
                     _logger.LogDebug("Data queued successfully.");
@@ -77,7 +76,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             }
             catch (Exception e)
             {
-                _logger.LogError("Failed to serialize the metrics with the exception: ", e);
+                _logger.LogError("Failed to serialize the metrics with the exception: {}", e);
             }
         }
 
@@ -95,10 +94,9 @@ namespace Amazon.CloudWatch.EMF.Sink
             return Task.Run(
                 async () =>
                 {
-                    var logger = loggerFactory.CreateLogger("SenderThread");
-                    logger.LogInformation("Starting sender thread.");
+                    var logger = loggerFactory.CreateLogger("Amazon.CloudWatch.EMF.Sink.AgentSink.RunSenderThread");
+                    logger.LogDebug("Starting sender thread.");
 
-                    // TODO: allow force cancellation after timeout
                     while (!_cancellationTokenSource.IsCancellationRequested || _queue.Count > 0)
                     {
                         if (_cancellationTokenSource.IsCancellationRequested)
@@ -125,7 +123,7 @@ namespace Amazon.CloudWatch.EMF.Sink
                             }
                         }
                     }
-                }); // TODO: pass in cancellation token
+                });
         }
     }
 }

@@ -63,7 +63,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             switch (_configuration.EnvironmentOverride)
             {
                 case Environments.Lambda:
-                    return new LambdaEnvironment();
+                    return new LambdaEnvironment(_configuration, _loggerFactory);
                 case Environments.Agent:
                     return new DefaultEnvironment(_configuration, _loggerFactory);
                 case Environments.EC2:
@@ -71,7 +71,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                 case Environments.ECS:
                     return new ECSEnvironment(_configuration, _resourceFetcher, _loggerFactory);
                 case Environments.Local:
-                    return new LocalEnvironment(_configuration);
+                    return new LocalEnvironment(_configuration, _loggerFactory);
                 default:
                     return null;
             }
@@ -83,7 +83,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         /// <returns></returns>
         private IEnvironment GetEnvironmentByProbe()
         {
-            IEnvironment environment = new LambdaEnvironment();
+            IEnvironment environment = new LambdaEnvironment(_configuration, _loggerFactory);
             if (environment.Probe()) return environment;
 
             environment = new ECSEnvironment(_configuration, _resourceFetcher, _loggerFactory);

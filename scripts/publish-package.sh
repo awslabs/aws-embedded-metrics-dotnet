@@ -19,8 +19,7 @@ function publish() {
     output_dir="$package_dir/bin/Release"
 
     pushd $package_dir
-        dotnet pack -c Release --version-suffix "alpha-$CODEBUILD_BUILD_NUMBER"
-
+        dotnet pack -c Release
         pushd $output_dir
             dotnet nuget push *.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
         popd

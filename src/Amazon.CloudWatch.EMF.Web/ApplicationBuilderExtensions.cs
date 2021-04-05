@@ -15,15 +15,21 @@ namespace Amazon.CloudWatch.EMF.Web
         {
             app.UseEmfMiddleware((context, logger) => {
                 var dimensions = new Model.DimensionSet();
+                var dimensionsWithStatusCode = new Model.DimensionSet();
+
                 var endpoint = context.GetEndpoint();
                 if (endpoint != null) {
                     var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
+
                     dimensions.AddDimension("Controller", actionDescriptor.ControllerName);
                     dimensions.AddDimension("Action", actionDescriptor.ActionName);
+
+                    dimensionsWithStatusCode.AddDimension("Controller", actionDescriptor.ControllerName);
+                    dimensionsWithStatusCode.AddDimension("Action", actionDescriptor.ActionName);
                 }
 
-                dimensions.AddDimension("StatusCode", context.Response.StatusCode.ToString());
-                logger.SetDimensions(dimensions);
+                dimensionsWithStatusCode.AddDimension("StatusCode", context.Response.StatusCode.ToString());
+                logger.SetDimensions(dimensions, dimensionsWithStatusCode);
 
                 // Include the X-Ray trace id if it is set
                 // https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-tracingheader
@@ -54,7 +60,13 @@ namespace Amazon.CloudWatch.EMF.Web
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 await next.Invoke();
+                var config = context.RequestServices.GetRequiredService<EMF.Config.IConfiguration>();
                 var logger = context.RequestServices.GetRequiredService<IMetricsLogger>();
+
+                if (!String.IsNullOrEmpty(config.ServiceName)) {
+                    logger.SetNamespace(config.ServiceName);
+                }
+
                 await action(context, logger);
                 stopWatch.Stop();
                 logger.PutMetric("Time", stopWatch.ElapsedMilliseconds, Model.Unit.MILLISECONDS);

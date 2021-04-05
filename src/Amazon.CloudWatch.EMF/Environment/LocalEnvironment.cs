@@ -1,17 +1,20 @@
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.CloudWatch.EMF.Sink;
+using Microsoft.Extensions.Logging;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
     public class LocalEnvironment : IEnvironment
     {
+        private readonly IConfiguration _config;
+        private readonly ILoggerFactory _loggerFactory;
         private ISink _sink = null;
-        private IConfiguration _config;
 
-        public LocalEnvironment(IConfiguration config)
+        public LocalEnvironment(IConfiguration config, ILoggerFactory loggerFactory)
         {
             _config = config;
+            _loggerFactory = loggerFactory;
         }
 
         public bool Probe()
@@ -33,7 +36,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         {
             get
             {
-                return _sink ??= new ConsoleSink();
+                return _sink ??= new ConsoleSink(_loggerFactory);
             }
         }
     }
