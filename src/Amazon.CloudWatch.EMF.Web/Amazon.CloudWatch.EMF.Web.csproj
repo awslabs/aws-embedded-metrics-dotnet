@@ -3,6 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Amazon Web Services</Authors>
+    <Description>Amazon CloudWatch Embedded Metric Format Client Library for ASP.Net Core Applications</Description>
+    <Language>en-US</Language>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <ProjectUrl>https://github.com/awslabs/aws-embedded-metrics-dotnet</ProjectUrl>
+    <RepositoryUrl>https://github.com/awslabs/aws-embedded-metrics-dotnet</RepositoryUrl>
+    <PackageTags>AWS Amazon cloud CloudWatch Metrics EMF</PackageTags>
+    <PackageIconUrl>http://media.amazonwebservices.com/aws_singlebox_01.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
