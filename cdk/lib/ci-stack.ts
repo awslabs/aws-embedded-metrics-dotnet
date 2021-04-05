@@ -67,7 +67,7 @@ export class CIStack extends cdk.Stack {
           actions: [
             new codepipeline_actions.GitHubSourceAction({
               actionName: 'Build',
-              branch: 'jared/cicd', // TODO: change this to main
+              branch: 'main',
               owner: 'awslabs',
               repo: 'aws-embedded-metrics-dotnet',
               output: sourceOutput,
