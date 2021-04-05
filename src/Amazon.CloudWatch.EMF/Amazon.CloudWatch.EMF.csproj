@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageId>Amazon.CloudWatch.EMF</PackageId>
+        <VersionPrefix>0.1.0</VersionPrefix>
+        <Authors>Amazon Web Services</Authors>
+        <Description>Amazon CloudWatch Embedded Metric Format Client Library</Description>
+        <Language>en-US</Language>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <ProjectUrl>https://github.com/awslabs/aws-embedded-metrics-dotnet</ProjectUrl>
+        <RepositoryUrl>https://github.com/awslabs/aws-embedded-metrics-dotnet</RepositoryUrl>
+        <PackageTags>AWS Amazon cloud CloudWatch Metrics EMF</PackageTags>
+        <PackageIconUrl>http://media.amazonwebservices.com/aws_singlebox_01.png</PackageIconUrl>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <CodeAnalysisRuleSet>Amazon.CloudWatch.EMF.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
+    </ItemGroup>
+
+</Project>
