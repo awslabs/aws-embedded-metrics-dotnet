@@ -40,7 +40,11 @@ using (var logger = new MetricsLogger()) {
 
 ### Graceful Shutdown
 
-In any environment, other than AWS Lambda, we recommend running an out-of-process agent (the CloudWatch Agent or FireLens / Fluent-Bit) to collect the EMF events. A full example can be found in the examples directory.
+In any environment, other than AWS Lambda, we recommend running an out-of-process agent (the CloudWatch Agent or FireLens / Fluent-Bit) to collect the EMF events. 
+When using an out-of-process agent, we will buffer the data asynchronously in process to handle any transient communication
+issues with the agent. This means that when the `MetricsLogger` gets flushed, data may not be safely persisted yet.
+To gracefully shutdown the environment, you can call shutdown on the environment's sink. 
+This is an async call that should be awaited. A full example can be found in the examples directory.
 
 ```c#
 var configuration = new Configuration
