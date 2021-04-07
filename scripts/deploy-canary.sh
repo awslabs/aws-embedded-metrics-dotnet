@@ -8,10 +8,11 @@ LIB_PATH=$rootdir/tests
 CANARY_PATH=$LIB_PATH/Amazon.CloudWatch.EMF.Canary
 ACCOUNT_ID=863722843142
 REGION=us-west-2
-IMAGE_NAME=emf-dotnet-canary
-ECS_CLUSTER_NAME=emf-canary
-ECS_TASK_FAMILY=emf-dotnet-canary
-ECS_SERVICE_NAME=emf-dotnet-canary
+EMF_LANGUAGE=dotnet
+IMAGE_NAME=emf-$EMF_LANGUAGE-canary
+ECS_CLUSTER_NAME=emf-canary-cluster
+ECS_TASK_FAMILY=emf-canary-$EMF_LANGUAGE-tasks
+ECS_SERVICE_NAME=emf-canary-$EMF_LANGUAGE-service
 ECR_ENDPOINT=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 ECR_REMOTE=$ECR_ENDPOINT/$IMAGE_NAME
 
@@ -36,15 +37,13 @@ aws ecs update-service \
   --service $ECS_SERVICE_NAME \
   --force-new-deployment \
   --task-definition $(aws ecs register-task-definition \
-                        --network-mode bridge \
-                        --requires-compatibilities EC2 \
-                        --task-role arn:aws:iam::$ACCOUNT_ID:role/ecsTaskExecutionRole \
-                        --execution-role-arn "arn:aws:iam::$ACCOUNT_ID:role/ecsTaskExecutionRole" \
+                        --network-mode awsvpc \
+                        --requires-compatibilities FARGATE \
+                        --task-role arn:aws:iam::$ACCOUNT_ID:role/ECSCanaryTaskExecutionRole \
+                        --execution-role-arn "arn:aws:iam::$ACCOUNT_ID:role/ECSCanaryTaskExecutionRole" \
                         --region $REGION \
-                        --memory 256 \
+                        --memory 512 \
                         --cpu '.25 vcpu' \
                         --family $ECS_TASK_FAMILY \
                         --container-definitions "$(cat container-definitions.json)" \
                     | jq --raw-output '.taskDefinition.taskDefinitionArn' | awk -F '/' '{ print $2 }')
-
-popd
