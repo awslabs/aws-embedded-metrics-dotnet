@@ -16,7 +16,6 @@
       ],
       "environment": [ ],
       "image": "863722843142.dkr.ecr.us-west-2.amazonaws.com/emf-dotnet-canary",
-      "links": ["cloudwatch-agent"],
       "name": "emf-dotnet-canary"
     },
     {
