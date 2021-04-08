@@ -1,6 +1,6 @@
 # aws-embedded-metrics-dotnet
 
-![](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoidTNxSUFLdkhBQmtqTTNzUEZCU1A0eTM2eG55elpJR2RKN2Jjbys2OUl1MDlORjBLM1VJQk1QWWE3WFJnVE44L2FXOGREaFh4S2dZQUVqUS9ZbmtzajUwPSIsIml2UGFyYW1ldGVyU3BlYyI6IkM3YzJkL0VJVXY0UnlveEMiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)
+![](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiaVZDUUZmc2FNS1c4L3Ntc0I3NzY5cWxzeXhEcTcvRE1CM1VzQmlydWZVTCtBeEszNHA5d0tQRXJ6WThLenpieHJ6SXpPOEJkZWRhTmdGK2dBem1TQTZJPSIsIml2UGFyYW1ldGVyU3BlYyI6InNBVm13VVZ5L1lKa1lRWHUiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)
 [![](https://img.shields.io/nuget/v/Amazon.CloudWatch.EMF)](https://www.nuget.org/packages/Amazon.CloudWatch.EMF/)
 
 Generate CloudWatch Metrics embedded within structured log events. The embedded metrics will be extracted so you can visualize and alarm on them for real-time incident detection. This allows you to monitor aggregated values while preserving the detailed event context that generated them.
