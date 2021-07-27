@@ -82,7 +82,7 @@ namespace Amazon.CloudWatch.EMF.Logger
                 throw new InvalidOperationException(message);
             }
 
-            _logger.LogDebug("Sending data to sink. {}", _environment.Sink.GetType().Name);
+            _logger.LogDebug("Sending data to sink: {SinkName}", _environment.Sink.GetType().Name);
 
             _environment.Sink.Accept(_context);
             _context = _context.CreateCopyWithContext();
