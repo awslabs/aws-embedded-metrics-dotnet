@@ -184,7 +184,10 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="dimensionSets">the dimensionSets to use instead of all existing dimensions and default dimensions.</param>
         public void SetDimensions(params DimensionSet[] dimensionSets)
         {
-            _metricDirective.SetDimensions(dimensionSets.ToList());
+            _metricDirective.SetDimensions(
+                dimensionSets
+                    .Where(dimensionSet => dimensionSet != null)
+                    .ToList());
         }
 
         /// <summary>
