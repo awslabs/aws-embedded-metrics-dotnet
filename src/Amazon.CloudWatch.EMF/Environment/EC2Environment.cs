@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Model;
 using Microsoft.Extensions.Logging;
@@ -9,11 +10,18 @@ namespace Amazon.CloudWatch.EMF.Environment
 {
     public class EC2Environment : AgentBasedEnvironment
     {
+        // Documentation for configuring instance metadata can be found here:
+        // https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html
         private const string INSTANCE_IDENTITY_URL = "http://169.254.169.254/latest/dynamic/instance-identity/document";
+        private const string TOKEN_URL = "http://169.254.169.254/latest/api/token";
+        private const string TOKEN_REQUEST_HEADER_KEY = "X-aws-ec2-metadata-token-ttl-seconds";
+        private const string TOKEN_REQUEST_HEADER_VALUE = "21600";
+        private const string METADATA_REQUEST_HEADER_KEY = "X-aws-ec2-metadata-token";
         private const string CFN_EC2_TYPE = "AWS::EC2::Instance";
 
         private readonly ILogger _logger;
         private readonly IResourceFetcher _resourceFetcher;
+        private string _token;
         private EC2Metadata _ec2Metadata;
 
         public EC2Environment(IConfiguration configuration, IResourceFetcher resourceFetcher)
@@ -32,10 +40,35 @@ namespace Amazon.CloudWatch.EMF.Environment
 
         public override bool Probe()
         {
-            Uri uri = null;
+            Uri tokenUri = null;
+            var tokenRequestHeader = new Dictionary<string, string>();
+            tokenRequestHeader.Add(TOKEN_REQUEST_HEADER_KEY, TOKEN_REQUEST_HEADER_VALUE);
             try
             {
-                uri = new Uri(INSTANCE_IDENTITY_URL);
+                tokenUri = new Uri(TOKEN_URL);
+            }
+            catch (Exception)
+            {
+                _logger.LogDebug("Failed to construct url: " + TOKEN_URL);
+                return false;
+            }
+
+            try
+            {
+                _token = _resourceFetcher.FetchString(tokenUri, "PUT", tokenRequestHeader);
+            }
+            catch (EMFClientException ex)
+            {
+                _logger.LogDebug("Failed to get response from: " + tokenUri, ex);
+                return false;
+            }
+
+            Uri metadataUri = null;
+            var metadataRequestHeader = new Dictionary<string, string>();
+            metadataRequestHeader.Add(METADATA_REQUEST_HEADER_KEY, _token);
+            try
+            {
+                metadataUri = new Uri(INSTANCE_IDENTITY_URL);
             }
             catch (Exception)
             {
@@ -45,12 +78,12 @@ namespace Amazon.CloudWatch.EMF.Environment
 
             try
             {
-                _ec2Metadata = _resourceFetcher.Fetch<EC2Metadata>(uri);
+                _ec2Metadata = _resourceFetcher.FetchJson<EC2Metadata>(metadataUri, "GET", metadataRequestHeader);
                 return true;
             }
             catch (EMFClientException ex)
             {
-                _logger.LogDebug("Failed to get response from: " + uri, ex);
+                _logger.LogDebug("Failed to get response from: " + metadataUri, ex);
             }
 
             return false;
