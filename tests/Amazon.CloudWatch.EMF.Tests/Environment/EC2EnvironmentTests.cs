@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using AutoFixture;
@@ -167,7 +168,9 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
             var resourceFetcher = _fixture.Create<IResourceFetcher>();
-            resourceFetcher.Fetch<EC2Metadata>(Arg.Any<Uri>()).Throws<EMFClientException>();
+            resourceFetcher.FetchString(
+                Arg.Any<Uri>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()
+                ).Throws<EMFClientException>();
             var environment = new EC2Environment(configuration, resourceFetcher);
 
             // Act
@@ -183,7 +186,12 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
             var resourceFetcher = _fixture.Create<IResourceFetcher>();
-            resourceFetcher.Fetch<EC2Metadata>(Arg.Any<Uri>()).Throws<EMFClientException>();
+            resourceFetcher.FetchString(
+                Arg.Any<Uri>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()
+                ).Returns("fake_token");
+            resourceFetcher.FetchJson<EC2Metadata>(
+                Arg.Any<Uri>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()
+                ).Throws<EMFClientException>();
             var environment = new EC2Environment(configuration, resourceFetcher);
             environment.Probe();
 
@@ -199,7 +207,12 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
             var resourceFetcher = _fixture.Create<IResourceFetcher>();
-            resourceFetcher.Fetch<EC2Metadata>(Arg.Any<Uri>()).Returns(new EC2Metadata());
+            resourceFetcher.FetchString(
+                Arg.Any<Uri>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()
+                ).Returns("fake_token");
+            resourceFetcher.FetchJson<EC2Metadata>(
+                Arg.Any<Uri>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()
+                ).Returns(new EC2Metadata());
             var environment = new EC2Environment(configuration, resourceFetcher);
             environment.Probe();
 

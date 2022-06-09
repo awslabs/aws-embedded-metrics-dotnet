@@ -52,7 +52,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             try
             {
                 var parsedUri = new Uri(uri);
-                _ecsMetadata = _resourceFetcher.Fetch<ECSMetadata>(parsedUri);
+                _ecsMetadata = _resourceFetcher.FetchJson<ECSMetadata>(parsedUri, "GET");
                 FormatImageName();
                 return true;
             }

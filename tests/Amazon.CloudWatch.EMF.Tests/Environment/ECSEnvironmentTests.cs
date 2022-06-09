@@ -152,7 +152,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             // Arrange
             var configuration = _fixture.Create<IConfiguration>();
             var resourceFetcher = _fixture.Create<IResourceFetcher>();
-            resourceFetcher.Fetch<ECSMetadata>(Arg.Any<Uri>()).Throws<EMFClientException>();
+            resourceFetcher.FetchJson<ECSMetadata>(Arg.Any<Uri>(), Arg.Any<string>()).Throws<EMFClientException>();
             var environment = new ECSEnvironment(configuration, resourceFetcher);
 
             // Act
