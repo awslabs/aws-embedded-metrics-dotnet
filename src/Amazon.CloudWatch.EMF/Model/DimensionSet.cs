@@ -31,6 +31,9 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="value">the dimension value</param>
         public void AddDimension(string key, string value)
         {
+            if (Dimensions.Count == Constants.MAX_DIMENSIONS)
+                throw new DimensionsExceededException();
+
             Dimensions[key] = value;
         }
 
@@ -41,6 +44,10 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <returns>this dimension set with the other appended</returns>
         public DimensionSet AddRange(DimensionSet other)
         {
+            var mergedDimensionSetSize = other.DimensionKeys.Count + Dimensions.Count;
+            if (mergedDimensionSetSize > Constants.MAX_DIMENSIONS)
+                throw new DimensionsExceededException();
+
             foreach (var dimension in other?.Dimensions)
             {
                 Dimensions[dimension.Key] = dimension.Value;
