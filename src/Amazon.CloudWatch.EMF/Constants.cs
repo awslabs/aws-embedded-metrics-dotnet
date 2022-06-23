@@ -6,7 +6,7 @@ namespace Amazon.CloudWatch.EMF
 
         public const string UNKNOWN = "Unknown";
 
-        public const int MAX_DIMENSIONS = 30;
+        public const int MAX_DIMENSION_SET_SIZE = 30;
 
         public const int MAX_METRICS_PER_EVENT = 100;
 
