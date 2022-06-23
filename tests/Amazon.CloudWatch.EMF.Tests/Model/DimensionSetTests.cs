@@ -5,12 +5,12 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
 {
     public class DimensionSetTests
     {
-        private DimensionSet Get_DimensionSet(int dimensionSetSize)
+        private static DimensionSet Get_DimensionSet(int dimensionSetSize, string key = "key")
         {
             var dimensionSet = new DimensionSet();
             for (var i = 0; i < dimensionSetSize; i++)
             {
-                dimensionSet.AddDimension("Dimension" + 1, "value" + 1);
+                dimensionSet.AddDimension(key + i, "value" + i);
             }
 
             return dimensionSet;
@@ -42,7 +42,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
                 const int dimensionSetSize = 28;
                 const int otherDimensionSetSize = 5;
                 var dimensionSet = Get_DimensionSet(dimensionSetSize);
-                var otherDimensionSet = Get_DimensionSet(otherDimensionSetSize);
+                var otherDimensionSet = Get_DimensionSet(otherDimensionSetSize, key: "otherKey");
 
                 dimensionSet.AddRange(otherDimensionSet);
             });
