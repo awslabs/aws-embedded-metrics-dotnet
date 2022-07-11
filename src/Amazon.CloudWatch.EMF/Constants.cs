@@ -8,6 +8,8 @@ namespace Amazon.CloudWatch.EMF
 
         public const int MAX_METRICS_PER_EVENT = 100;
 
+        public const int MAX_DATAPOINTS_PER_METRIC = 100;
+
         public const string DEFAULT_NAMESPACE = "aws-embedded-metrics";
     }
 }
