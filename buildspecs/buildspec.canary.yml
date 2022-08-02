@@ -17,4 +17,8 @@ phases:
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   build:
     commands:
+      # install the latest patch version of 3.1
+      - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -c 3.1
+      - dotnet --version
+      - dotnet nuget --version
       - ./scripts/deploy-canary.sh
