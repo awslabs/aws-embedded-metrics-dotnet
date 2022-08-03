@@ -18,7 +18,7 @@ phases:
   build:
     commands:
       - dotnet --version
-      - curl -s https://dot.net/v1/dotnet-install.sh | sh -s -c 3.1
+      - curl -s https://dot.net/v1/dotnet-install.sh | bash -s -- -c 3.1
       - dotnet --version
       - exit 0
 #      - pwd && ./scripts/start-agent.sh
