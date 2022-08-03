@@ -17,8 +17,7 @@ phases:
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   build:
     commands:
-      - dotnet --info
-      - nuget
+      - dotnet --version
       - pwd && ./scripts/start-agent.sh
       - dotnet restore
       - dotnet build
