@@ -14,6 +14,6 @@ phases:
       # install the latest patch version of 3.1
       - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -c 3.1
       - dotnet --version
-      - dotnet nuget help | head -1
+      - dotnet nuget help
       - dotnet restore
       - ./scripts/publish-package.sh
