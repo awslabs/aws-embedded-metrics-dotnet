@@ -17,11 +17,10 @@ phases:
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   build:
     commands:
-      - dotnet --version
+      # install the latest patch version of 3.1
       - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -c 3.1
       - dotnet --version
-      - exit 0
-#      - pwd && ./scripts/start-agent.sh
-#      - dotnet restore
-#      - dotnet build
-#      - dotnet test
+      - pwd && ./scripts/start-agent.sh
+      - dotnet restore
+      - dotnet build
+      - dotnet test
