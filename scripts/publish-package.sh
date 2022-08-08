@@ -8,7 +8,8 @@
 #   export AWS_REGION=us-west-2
 #   ./start-agent.sh
 
-source ./utils.sh
+scripts_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+source "$scripts_dir"/utils.sh
 
 # publish <package-name>
 function publish() {
@@ -29,5 +30,5 @@ function publish() {
 validate "$NUGET_API_KEY" "NUGET_API_KEY"
 validate "$CODEBUILD_BUILD_NUMBER" "CODEBUILD_BUILD_NUMBER"
 
-publish Amazon.CloudWatch.EMF
-publish Amazon.CloudWatch.EMF.Web
+#publish Amazon.CloudWatch.EMF
+#publish Amazon.CloudWatch.EMF.Web

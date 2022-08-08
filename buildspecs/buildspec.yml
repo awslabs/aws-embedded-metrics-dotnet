@@ -6,6 +6,8 @@ env:
   parameter-store:
     AWS_ACCESS_KEY_ID: AccessKey
     AWS_SECRET_ACCESS_KEY: SecretKey
+  secrets-manager:
+    NUGET_API_KEY: "NuGetCredentials:API_KEY"
 phases:
   install:
     runtime-versions:
@@ -20,5 +22,6 @@ phases:
       - ./scripts/install-dotnet.sh
 #      - pwd && ./scripts/start-agent.sh
       - dotnet restore
-      - dotnet build
-      - dotnet test
+      - ./scripts/publish-package.sh
+#      - dotnet build
+#      - dotnet test
