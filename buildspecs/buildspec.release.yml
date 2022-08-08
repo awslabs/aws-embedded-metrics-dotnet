@@ -5,6 +5,8 @@ env:
     AWS_REGION: us-west-2
   parameter-store:
     NUGET_API_KEY: NuGetAPIKey
+  secrets-manager:
+    NUGET_API_KEY: "NuGetCredentials:API_KEY"
 phases:
   install:
     runtime-versions:

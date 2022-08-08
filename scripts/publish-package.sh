@@ -30,5 +30,5 @@ function publish() {
 validate "$NUGET_API_KEY" "NUGET_API_KEY"
 validate "$CODEBUILD_BUILD_NUMBER" "CODEBUILD_BUILD_NUMBER"
 
-#publish Amazon.CloudWatch.EMF
-#publish Amazon.CloudWatch.EMF.Web
+publish Amazon.CloudWatch.EMF
+publish Amazon.CloudWatch.EMF.Web
