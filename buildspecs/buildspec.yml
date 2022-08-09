@@ -3,9 +3,11 @@ version: 0.2
 env:
   variables:
     AWS_REGION: us-west-2
+    ROLE_ARN: arn:aws:iam::582595803497:role/CloudWatch-Logs-EMF-build-role
   parameter-store:
     AWS_ACCESS_KEY_ID: AccessKey
     AWS_SECRET_ACCESS_KEY: SecretKey
+    SECRET_ARN: SecretArnNuget
 phases:
   install:
     runtime-versions:
@@ -18,7 +20,8 @@ phases:
   build:
     commands:
       - ./scripts/install-dotnet.sh
-      - pwd && ./scripts/start-agent.sh
+#      - pwd && ./scripts/start-agent.sh
       - dotnet restore
-      - dotnet build
-      - dotnet test
+      - ./scripts/publish-package.sh
+#      - dotnet build
+#      - dotnet test
