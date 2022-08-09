@@ -3,10 +3,9 @@ version: 0.2
 env:
   variables:
     AWS_REGION: us-west-2
+    ROLE_ARN: arn:aws:iam::582595803497:role/CloudWatch-Logs-EMF-build-role
   parameter-store:
-    NUGET_API_KEY: NuGetAPIKey
-  secrets-manager:
-    NUGET_API_KEY: "NuGetCredentials:API_KEY"
+    SECRET_ARN: SecretArnNuget
 phases:
   install:
     runtime-versions:
