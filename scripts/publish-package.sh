@@ -1,12 +1,4 @@
 #!/usr/bin/env bash
-#
-# Run integration tests against a CW Agent.
-# 
-# usage:
-#   export AWS_ACCESS_KEY_ID=
-#   export AWS_SECRET_ACCESS_KEY=
-#   export AWS_REGION=us-west-2
-#   ./start-agent.sh
 
 scripts_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 source "$scripts_dir"/utils.sh
@@ -30,7 +22,7 @@ function assume_role_and_get_key() {
   echo "Credentials stored in the profile named $OUTPUT_PROFILE"
 
   NUGET_API_KEY=$(aws secretsmanager \
-    --profile publishing-profile \
+    --profile "$OUTPUT_PROFILE" \
     get-secret-value \
     --secret-id "$SECRET_ARN" \
     | jq '.SecretString | fromjson.Key' | tr -d '"')

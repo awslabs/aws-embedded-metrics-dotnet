@@ -3,8 +3,8 @@ version: 0.2
 env:
   variables:
     AWS_REGION: us-west-2
-    ROLE_ARN: arn:aws:iam::582595803497:role/CloudWatch-Logs-EMF-build-role
   parameter-store:
+    ROLE_ARN: NugetCrossAccountArn
     SECRET_ARN: SecretArnNuget
 phases:
   install:
