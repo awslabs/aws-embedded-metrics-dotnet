@@ -1,14 +1,33 @@
 #!/usr/bin/env bash
-#
-# Run integration tests against a CW Agent.
-# 
-# usage:
-#   export AWS_ACCESS_KEY_ID=
-#   export AWS_SECRET_ACCESS_KEY=
-#   export AWS_REGION=us-west-2
-#   ./start-agent.sh
 
-source ./utils.sh
+scripts_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+source "$scripts_dir"/utils.sh
+
+NUGET_API_KEY=""
+
+function assume_role_and_get_key() {
+  ROLE_ARN=$1
+  OUTPUT_PROFILE="publishing-profile"
+  echo "Assuming role $ROLE_ARN"
+  sts=$(aws sts assume-role \
+    --role-arn "$ROLE_ARN" \
+    --role-session-name "$OUTPUT_PROFILE" \
+    --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+    --output text)
+  check_exit
+  sts=($sts)
+  aws configure set aws_access_key_id "${sts[0]}" --profile "$OUTPUT_PROFILE"
+  aws configure set aws_secret_access_key "${sts[1]}" --profile "$OUTPUT_PROFILE"
+  aws configure set aws_session_token "${sts[2]}" --profile "$OUTPUT_PROFILE"
+  echo "Credentials stored in the profile named $OUTPUT_PROFILE"
+
+  NUGET_API_KEY=$(aws secretsmanager \
+    --profile "$OUTPUT_PROFILE" \
+    get-secret-value \
+    --secret-id "$SECRET_ARN" \
+    | jq '.SecretString | fromjson.Key' | tr -d '"')
+  check_exit
+}
 
 # publish <package-name>
 function publish() {
@@ -25,6 +44,8 @@ function publish() {
         popd
     popd
 }
+
+assume_role_and_get_key "$ROLE_ARN"
 
 validate "$NUGET_API_KEY" "NUGET_API_KEY"
 validate "$CODEBUILD_BUILD_NUMBER" "CODEBUILD_BUILD_NUMBER"
