@@ -80,6 +80,25 @@ namespace Amazon.CloudWatch.EMF.Model
             }
         }
 
+        internal void PutDimension(DimensionSet dimensionSet)
+        {
+            // Duplicate dimensions sets are removed before being added to the end of the collection.
+            // This ensures the latest dimension key-value is used as a target member on the root EMF node.
+            // This operation is O(n^2), but acceptable given sets are capped at 10 dimensions
+            List<string> incomingDimensionSetKeys = dimensionSet.DimensionKeys;
+            CustomDimensionSets = CustomDimensionSets.Where(existingDimensionSet =>
+            {
+                if (existingDimensionSet.DimensionKeys.Count != incomingDimensionSetKeys.Count)
+                {
+                    return true;
+                }
+
+                return !existingDimensionSet.DimensionKeys.All(existingDimensionSetKey => incomingDimensionSetKeys.Contains(existingDimensionSetKey));
+            }).ToList();
+
+            CustomDimensionSets.Add(dimensionSet);
+        }
+
         /// <summary>
         /// Overrides all existing dimensions, including suppressing any default dimensions.
         /// </summary>

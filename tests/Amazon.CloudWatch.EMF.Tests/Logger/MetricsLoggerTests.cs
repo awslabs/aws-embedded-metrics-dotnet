@@ -94,6 +94,50 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         }
 
         [Fact]
+        public void TestPutDuplicateDimensions()
+        {
+            string dimensionName1 = "dim1";
+            string dimensionName2 = "dim2";
+            string dimensionValue1 = "dimValue1";
+            string dimensionValue2 = "dimValue2";
+            string dimensionValue3 = "dimValue3";
+            string dimensionValue4 = "dimValue4";
+
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName1, dimensionValue1));
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName2, dimensionValue2));
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName1, dimensionValue3));
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName2, dimensionValue4));
+            _metricsLogger.Flush();
+
+            Assert.Equal(4, _sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys.Count);
+            Assert.Equal(dimensionValue3, _sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(dimensionName1));
+            Assert.Equal(dimensionValue4, _sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(dimensionName2));
+        }
+
+        [Fact]
+        public void TestSetPutDuplicateDimensions()
+        {
+            string dimensionName1 = "dim1";
+            string dimensionName2 = "dim2";
+            string dimensionName3 = "dim3";
+            string dimensionValue1 = "dimValue1";
+            string dimensionValue2 = "dimValue2";
+            string dimensionValue3 = "dimValue3";
+            string dimensionValue4 = "dimValue4";
+
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName1, dimensionValue1));
+            _metricsLogger.SetDimensions(new DimensionSet(dimensionName2, dimensionValue1));
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName3, dimensionValue2));
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName2, dimensionValue3));
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName3, dimensionValue4));
+            _metricsLogger.Flush();
+
+            Assert.Equal(2, _sink.MetricsContext.GetAllDimensionSets().Count);
+            Assert.Equal(dimensionValue3, _sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(dimensionName2));
+            Assert.Equal(dimensionValue4, _sink.MetricsContext.GetAllDimensionSets()[1].GetDimensionValue(dimensionName3));
+        }
+
+        [Fact]
         public void TestSetNameSpace()
         {
             string namespaceValue = "TestNamespace";
