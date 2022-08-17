@@ -84,7 +84,7 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             // Duplicate dimensions sets are removed before being added to the end of the collection.
             // This ensures the latest dimension key-value is used as a target member on the root EMF node.
-            // This operation is O(n^2), but acceptable given sets are capped at 10 dimensions
+            // This operation is O(n^2), but acceptable given sets are capped at 30 dimensions
             List<string> incomingDimensionSetKeys = dimensionSet.DimensionKeys;
             CustomDimensionSets = CustomDimensionSets.Where(existingDimensionSet =>
             {
