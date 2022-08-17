@@ -151,7 +151,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="dimensionSet">the dimensions set to add.</param>
         public void PutDimension(DimensionSet dimensionSet)
         {
-            _metricDirective.CustomDimensionSets.Add(dimensionSet);
+            _metricDirective.PutDimension(dimensionSet);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             var dimensionSet = new DimensionSet();
             dimensionSet.AddDimension(dimension, value);
-            _metricDirective.CustomDimensionSets.Add(dimensionSet);
+            _metricDirective.PutDimension(dimensionSet);
         }
 
         /// <summary>
