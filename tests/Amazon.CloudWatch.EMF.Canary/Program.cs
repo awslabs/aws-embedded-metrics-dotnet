@@ -35,7 +35,7 @@ namespace Amazon.CloudWatch.EMF.Canary
 
             while (true)
             {
-                using (var logger = new MetricsLogger(loggerFactory)) 
+                using (var logger = new MetricsLogger(loggerFactory))
                 {
                     logger.SetNamespace("Canary");
 
@@ -54,7 +54,8 @@ namespace Amazon.CloudWatch.EMF.Canary
 
                     logger.PutMetric("Invoke", 1, Unit.NONE);
 
-                    if (init) {
+                    if (init)
+                    {
                         init = false;
                         logger.PutMetric("Init", 1, Unit.NONE);
                     }
@@ -65,9 +66,12 @@ namespace Amazon.CloudWatch.EMF.Canary
             }
         }
 
-        private static String GetPackageVersion() {
-            foreach (var a in Assembly.GetExecutingAssembly().GetReferencedAssemblies()) {
-                if (a.Name.Equals("Amazon.CloudWatch.EMF")) {
+        private static String GetPackageVersion()
+        {
+            foreach (var a in Assembly.GetExecutingAssembly().GetReferencedAssemblies())
+            {
+                if (a.Name.Equals("Amazon.CloudWatch.EMF"))
+                {
                     return a.Version?.ToString() ?? "Unknown";
                 }
             }

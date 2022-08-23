@@ -36,7 +36,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
         }
 
         [Fact]
-        public void AddRange_Limit_Exceeded_Error() {
+        public void AddRange_Limit_Exceeded_Error()
+        {
             Assert.Throws<DimensionSetExceededException>(() =>
             {
                 const int dimensionSetSize = 28;

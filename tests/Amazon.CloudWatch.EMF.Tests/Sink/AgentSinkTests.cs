@@ -10,15 +10,15 @@ using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Sink
 {
-    public class TestClient : ISocketClient 
+    public class TestClient : ISocketClient
     {
         private string _message;
         public void SendMessage(string message)
         {
             message = _message;
         }
-            
-        public string GetMessage() 
+
+        public string GetMessage()
         {
             return _message;
         }
@@ -38,7 +38,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
         private TestClient _client;
         private readonly IFixture _fixture;
         private readonly IConfiguration _config = Config.EnvironmentConfigurationProvider.Config;
-        
+
         public AgentSinkTests()
         {
             _fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
@@ -46,10 +46,11 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
             _client = new TestClient();
             _socketClientFactory.GetClient(Endpoint.DEFAULT_TCP_ENDPOINT).Returns(_client);
         }
-        
-        
+
+
         [Fact]
-        public void TestAccept() {
+        public void TestAccept()
+        {
             String prop = "TestProp";
             String propValue = "TestPropValue";
             String logGroupName = "TestLogGroup";

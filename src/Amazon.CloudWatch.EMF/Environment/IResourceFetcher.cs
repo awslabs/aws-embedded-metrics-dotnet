@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
