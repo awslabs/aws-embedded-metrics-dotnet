@@ -13,12 +13,14 @@ namespace Amazon.CloudWatch.EMF.Web
     {
         public static void UseEmfMiddleware(this IApplicationBuilder app)
         {
-            app.UseEmfMiddleware((context, logger) => {
+            app.UseEmfMiddleware((context, logger) =>
+            {
                 var dimensions = new Model.DimensionSet();
                 var dimensionsWithStatusCode = new Model.DimensionSet();
 
                 var endpoint = context.GetEndpoint();
-                if (endpoint != null) {
+                if (endpoint != null)
+                {
                     var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
 
                     dimensions.AddDimension("Controller", actionDescriptor.ControllerName);
@@ -34,7 +36,8 @@ namespace Amazon.CloudWatch.EMF.Web
                 // Include the X-Ray trace id if it is set
                 // https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-tracingheader
                 var xRayTraceId = context.Request.Headers["X-Amzn-Trace-Id"];
-                if (!String.IsNullOrEmpty(xRayTraceId) && xRayTraceId.Count > 0) {
+                if (!String.IsNullOrEmpty(xRayTraceId) && xRayTraceId.Count > 0)
+                {
                     logger.PutProperty("XRayTraceId", xRayTraceId[0]);
                 }
 
@@ -44,7 +47,8 @@ namespace Amazon.CloudWatch.EMF.Web
                 // https://www.w3.org/TR/trace-context/#traceparent-header
                 logger.PutProperty("TraceId", Activity.Current?.Id ?? context?.TraceIdentifier);
 
-                if (!String.IsNullOrEmpty(Activity.Current?.TraceStateString)) {
+                if (!String.IsNullOrEmpty(Activity.Current?.TraceStateString))
+                {
                     logger.PutProperty("TraceState", Activity.Current.TraceStateString);
                 }
 
@@ -63,7 +67,8 @@ namespace Amazon.CloudWatch.EMF.Web
                 var config = context.RequestServices.GetRequiredService<EMF.Config.IConfiguration>();
                 var logger = context.RequestServices.GetRequiredService<IMetricsLogger>();
 
-                if (!String.IsNullOrEmpty(config.ServiceName)) {
+                if (!String.IsNullOrEmpty(config.ServiceName))
+                {
                     logger.SetNamespace(config.ServiceName);
                 }
 

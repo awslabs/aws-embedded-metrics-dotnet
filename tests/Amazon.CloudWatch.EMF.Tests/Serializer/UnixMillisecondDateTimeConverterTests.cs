@@ -14,7 +14,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Serializer
         {
             _fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
         }
-        
+
         [Fact]
         public void WriteJson_Throws_When_ObjectIsNotDateTime()
         {
@@ -28,7 +28,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Serializer
             //Assert
             Assert.Throws<JsonSerializationException>(act);
         }
-        
+
         [Fact]
         public void WriteJson_Throws_When_DateTimeIsNotValid()
         {
@@ -42,7 +42,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Serializer
             //Assert
             Assert.Throws<JsonSerializationException>(act);
         }
-        
+
         [Fact]
         public void WriteJson_Succeeds()
         {

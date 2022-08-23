@@ -7,7 +7,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
     public class MockSink : ISink
     {
         private MetricsContext _context;
-        public void Accept(MetricsContext context) 
+        public void Accept(MetricsContext context)
         {
             _context = context;
         }
