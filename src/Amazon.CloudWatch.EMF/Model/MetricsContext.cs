@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.CloudWatch.EMF.Utils;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
@@ -102,6 +103,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="unit">the units of the metric</param>
         public void PutMetric(string key, double value, Unit unit)
         {
+            Validator.ValidateMetric(key, value, unit);
             _metricDirective.PutMetric(key, value, unit);
         }
 

@@ -31,6 +31,9 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             _sink = new MockSink();
             _environment.Sink.Returns(_sink);
+            _environment.LogGroupName.Returns("LogGroup");
+            _environment.Name.Returns("Environment");
+            _environment.Type.Returns("Type");
             _environmentProvider.ResolveEnvironment().Returns(_environment);
 
             _metricsLogger = new MetricsLogger(_environmentProvider, _logger);
@@ -146,6 +149,25 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             Assert.Equal(namespaceValue, _sink.MetricsContext.Namespace);
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("namespace ")]
+        [InlineData("ǹẚḿⱸṥṕấćē")]
+        [InlineData("name$pace")]
+        public void SetNamespace_WithInvalidNamespace_ThrowsInvalidNamespaceException(string namespaceValue)
+        {
+            Assert.Throws<InvalidNamespaceException>(() => _metricsLogger.SetNamespace(namespaceValue));
+        }
+
+        [Fact]
+        public void SetNamespace_WithNameTooLong_ThrowsInvalidNamespaceException()
+        {
+            string namespaceValue = new string('a', Constants.MAX_NAMESPACE_LENGTH + 1);
+            Assert.Throws<InvalidNamespaceException>(() => _metricsLogger.SetNamespace(namespaceValue));
+        }
+
         [Fact]
         public void TestFlushWithConfiguredServiceName()
         {
@@ -214,6 +236,25 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             Assert.Equal(expectedValue, metricDefinition.Values[0]);
             Assert.Equal(Unit.MILLISECONDS, metricDefinition.Unit);
+        }
+
+        [Theory]
+        [InlineData(null, 1, Unit.NONE)]
+        [InlineData("", 1, Unit.NONE)]
+        [InlineData(" ", 1, Unit.NONE)]
+        [InlineData("metric", Double.PositiveInfinity, Unit.NONE)]
+        [InlineData("metric", Double.NegativeInfinity, Unit.NONE)]
+        [InlineData("metric", Double.NaN, Unit.NONE)]
+        public void PutMetric_WithInvalidMetric_ThrowsInvalidMetricException(string name, double value, Unit unit)
+        {
+            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(name, value, unit));
+        }
+
+        [Fact]
+        public void PutMetric_WithNameTooLong_ThrowsInvalidMetricException()
+        {
+            string name = new string('a', Constants.MAX_METRIC_NAME_LENGTH + 1);
+            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(name, 1, Unit.NONE));
         }
 
         [Fact]

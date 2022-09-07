@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.CloudWatch.EMF.Utils;
 
 namespace Amazon.CloudWatch.EMF.Model
 {
@@ -19,6 +20,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="value">the value for the dimension</param>
         public DimensionSet(string key, string value)
         {
+            Validator.ValidateDimensionSet(key, value);
             Dimensions[key] = value;
         }
 
@@ -31,6 +33,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="value">the dimension value</param>
         public void AddDimension(string key, string value)
         {
+            Validator.ValidateDimensionSet(key, value);
             if (Dimensions.Count >= Constants.MAX_DIMENSION_SET_SIZE)
                 throw new DimensionSetExceededException();
 
