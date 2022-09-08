@@ -49,7 +49,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             Assert.Throws<InvalidDimensionException>(() =>
             {
                 var dimensionSet = new DimensionSet();
-                dimensionSet.AddDimension(new string('a', Constants.MAX_DIMENSION_NAME_LENGTH + 1), "value");
+                string dimensionName = new string('a', Constants.MAX_DIMENSION_NAME_LENGTH + 1);
+                dimensionSet.AddDimension(dimensionName, "value");
             });
         }
 
@@ -59,7 +60,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             Assert.Throws<InvalidDimensionException>(() =>
             {
                 var dimensionSet = new DimensionSet();
-                dimensionSet.AddDimension("name", new string('a', Constants.MAX_DIMENSION_VALUE_LENGTH + 1));
+                string dimensionValue = new string('a', Constants.MAX_DIMENSION_VALUE_LENGTH + 1);
+                dimensionSet.AddDimension("name", dimensionValue);
             });
         }
 

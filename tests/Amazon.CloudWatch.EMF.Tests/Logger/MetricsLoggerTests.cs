@@ -239,22 +239,22 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         }
 
         [Theory]
-        [InlineData(null, 1, Unit.NONE)]
-        [InlineData("", 1, Unit.NONE)]
-        [InlineData(" ", 1, Unit.NONE)]
-        [InlineData("metric", Double.PositiveInfinity, Unit.NONE)]
-        [InlineData("metric", Double.NegativeInfinity, Unit.NONE)]
-        [InlineData("metric", Double.NaN, Unit.NONE)]
-        public void PutMetric_WithInvalidMetric_ThrowsInvalidMetricException(string name, double value, Unit unit)
+        [InlineData(null, 1)]
+        [InlineData("", 1)]
+        [InlineData(" ", 1)]
+        [InlineData("metric", Double.PositiveInfinity)]
+        [InlineData("metric", Double.NegativeInfinity)]
+        [InlineData("metric", Double.NaN)]
+        public void PutMetric_WithInvalidMetric_ThrowsInvalidMetricException(string metricName, double metricValue)
         {
-            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(name, value, unit));
+            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, metricValue, Unit.NONE));
         }
 
         [Fact]
         public void PutMetric_WithNameTooLong_ThrowsInvalidMetricException()
         {
-            string name = new string('a', Constants.MAX_METRIC_NAME_LENGTH + 1);
-            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(name, 1, Unit.NONE));
+            string metricName = new string('a', Constants.MAX_METRIC_NAME_LENGTH + 1);
+            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, 1, Unit.NONE));
         }
 
         [Fact]

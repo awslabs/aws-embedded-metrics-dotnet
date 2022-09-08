@@ -144,7 +144,6 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// <returns>the current logger</returns>
         public MetricsLogger PutMetric(string key, double value, Unit unit)
         {
-            Validator.ValidateMetric(key, value, unit);
             _context.PutMetric(key, value, unit);
             return this;
         }

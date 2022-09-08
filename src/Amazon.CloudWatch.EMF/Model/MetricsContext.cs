@@ -103,7 +103,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="unit">the units of the metric</param>
         public void PutMetric(string key, double value, Unit unit)
         {
-            Validator.ValidateMetric(key, value, unit);
+            Validator.ValidateMetric(key, value);
             _metricDirective.PutMetric(key, value, unit);
         }
 

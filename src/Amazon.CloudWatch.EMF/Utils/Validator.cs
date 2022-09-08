@@ -1,12 +1,11 @@
 using System;
 using System.Text;
-using Amazon.CloudWatch.EMF.Model;
 
 namespace Amazon.CloudWatch.EMF.Utils
 {
     public class Validator
     {
-        internal static void ValidateDimensionSet(string dimensionName, string dimensionValue)
+        internal static void ValidateDimensionSet(in string dimensionName, in string dimensionValue)
         {
             if (dimensionName == null || dimensionName.Trim().Length == 0)
             {
@@ -28,12 +27,12 @@ namespace Amazon.CloudWatch.EMF.Utils
                 throw new InvalidDimensionException($"Dimension value cannot be longer than {Constants.MAX_DIMENSION_VALUE_LENGTH} characters: {dimensionValue}");
             }
 
-            if (Encoding.UTF8.GetByteCount(dimensionName) != dimensionName.Length)
+            if (!IsAscii(dimensionName))
             {
                 throw new InvalidDimensionException($"Dimension name contains invalid characters: {dimensionName}");
             }
 
-            if (Encoding.UTF8.GetByteCount(dimensionValue) != dimensionValue.Length)
+            if (!IsAscii(dimensionValue))
             {
                 throw new InvalidDimensionException($"Dimension value contains invalid characters: {dimensionValue}");
             }
@@ -44,7 +43,7 @@ namespace Amazon.CloudWatch.EMF.Utils
             }
         }
 
-        internal static void ValidateMetric(string name, double value, Unit unit)
+        internal static void ValidateMetric(in string name, in double value)
         {
             if (name == null || name.Trim().Length == 0)
             {
@@ -62,22 +61,27 @@ namespace Amazon.CloudWatch.EMF.Utils
             }
         }
 
-        internal static void ValidateNamespace(string namespaceName)
+        internal static void ValidateNamespace(in string @namespace)
         {
-            if (namespaceName == null || namespaceName.Trim().Length == 0)
+            if (@namespace == null || @namespace.Trim().Length == 0)
             {
-                throw new InvalidNamespaceException($"Namespace {namespaceName} must include at least one non-whitespace character");
+                throw new InvalidNamespaceException($"Namespace {@namespace} must include at least one non-whitespace character");
             }
 
-            if (namespaceName.Length > Constants.MAX_NAMESPACE_LENGTH)
+            if (@namespace.Length > Constants.MAX_NAMESPACE_LENGTH)
             {
-                throw new InvalidNamespaceException($"Namespace {namespaceName} cannot be longer than {Constants.MAX_NAMESPACE_LENGTH} characters");
+                throw new InvalidNamespaceException($"Namespace {@namespace} cannot be longer than {Constants.MAX_NAMESPACE_LENGTH} characters");
             }
 
-            if (!System.Text.RegularExpressions.Regex.IsMatch(namespaceName, Constants.VALID_NAMESPACE_REGEX))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(@namespace, Constants.VALID_NAMESPACE_REGEX))
             {
-                throw new InvalidNamespaceException($"Namespace {namespaceName} contains invalid characters");
+                throw new InvalidNamespaceException($"Namespace {@namespace} contains invalid characters");
             }
+        }
+
+        private static bool IsAscii(in string str)
+        {
+            return Encoding.UTF8.GetByteCount(str) == str.Length;
         }
     }
 }
