@@ -5,6 +5,12 @@ namespace Amazon.CloudWatch.EMF.Utils
 {
     public class Validator
     {
+        /// <summary>
+        /// Validates dimension set.
+        /// </summary>
+        /// <param name="dimensionName">Dimension name</param>
+        /// <param name="dimensionValue">Dimension value</param>
+        /// <exception cref="InvalidDimensionException">Thrown when dimension name or value is invalid</exception>
         internal static void ValidateDimensionSet(in string dimensionName, in string dimensionValue)
         {
             if (dimensionName == null || dimensionName.Trim().Length == 0)
@@ -43,6 +49,12 @@ namespace Amazon.CloudWatch.EMF.Utils
             }
         }
 
+        /// <summary>
+        /// Validates metric name.
+        /// </summary>
+        /// <param name="name">Metric name</param>
+        /// <param name="value">Metric value</param>
+        /// <exception cref="InvalidMetricException">Thrown when metric name or value is invalid</exception>
         internal static void ValidateMetric(in string name, in double value)
         {
             if (name == null || name.Trim().Length == 0)
@@ -61,6 +73,11 @@ namespace Amazon.CloudWatch.EMF.Utils
             }
         }
 
+        /// <summary>
+        /// Validates namespace.
+        /// </summary>
+        /// <param name="@namespace">Namespace</param>
+        /// <exception cref="InvalidNamespaceException">Thrown when namespace is invalid</exception>
         internal static void ValidateNamespace(in string @namespace)
         {
             if (@namespace == null || @namespace.Trim().Length == 0)
@@ -79,6 +96,11 @@ namespace Amazon.CloudWatch.EMF.Utils
             }
         }
 
+        /// <summary>
+        /// Checks if given string is only ASCII.
+        /// </summary>
+        /// <param name="str">String to check</param>
+        /// <returns>True if string is only ASCII, false otherwise</returns>
         private static bool IsAscii(in string str)
         {
             return Encoding.UTF8.GetByteCount(str) == str.Length;
