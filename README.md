@@ -162,7 +162,7 @@ The `MetricsLogger` is the interface you will use to publish embedded metrics.
 
 Adds a new metric to the current logger context. Multiple metrics using the same key will be appended to an array of values. The Embedded Metric Format supports a maxumum of 100 metrics per key.
 
-Units must meet CloudWatch Metrics unit requirements, otherwise it will throw a `InvalidMetricException`. See [MetricDatum](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html) for valid values.
+Metrics must meet CloudWatch Metrics requirements, otherwise it will throw a `InvalidMetricException`. See [MetricDatum](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html) for valid values.
 
 Example:
 
