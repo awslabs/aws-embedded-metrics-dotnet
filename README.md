@@ -162,7 +162,7 @@ The `MetricsLogger` is the interface you will use to publish embedded metrics.
 
 Adds a new metric to the current logger context. Multiple metrics using the same key will be appended to an array of values. The Embedded Metric Format supports a maxumum of 100 metrics per key.
 
-Metrics must meet CloudWatch Metrics requirements, otherwise it will throw a `InvalidMetricException`. See [MetricDatum](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html) for valid values.
+Metrics must meet CloudWatch Metrics requirements, otherwise a `InvalidMetricException` will be thrown. See [MetricDatum](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html) for valid values.
 
 Example:
 
@@ -196,7 +196,7 @@ Adds a new set of dimensions that will be associated with all metric values.
 If the cardinality of a particular value is expected to be high, you should consider
 using `setProperty` instead.
 
-Dimensions must meet CloudWatch Dimensions requirements, otherwise it will throw a `InvalidDimensionException`. See [Dimensions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html) for valid values.
+Dimensions must meet CloudWatch Dimensions requirements, otherwise a `InvalidDimensionException` will be thrown. See [Dimensions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html) for valid values.
 
 Example:
 
@@ -216,7 +216,7 @@ Explicitly override all dimensions. This will remove the default dimensions unle
 If the cardinality of a particular value is expected to be high, you should consider
 using `setProperty` instead.
 
-Dimensions must meet CloudWatch Dimensions requirements, otherwise it will throw a `InvalidDimensionException`. See [Dimensions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html) for valid values.
+Dimensions must meet CloudWatch Dimensions requirements, otherwise a `InvalidDimensionException` will be thrown. See [Dimensions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html) for valid values.
 
 Examples:
   
@@ -241,7 +241,7 @@ Explicitly clear all custom dimensions. Set `useDefault` to `true` to keep using
 - MetricsLogger **SetNamespace**(string logNamespace)
 
 Sets the CloudWatch [namespace](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Namespace) that extracted metrics should be published to. If not set, a default value of aws-embedded-metrics will be used.
-Namespaces must meet CloudWatch Namespace requirements, otherwise it will throw a `InvalidNamespaceException`. See [Namespace](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Namespace) for valid values.
+Namespaces must meet CloudWatch Namespace requirements, otherwise a `InvalidNamespaceException` will be thrown. See [Namespace](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Namespace) for valid values.
 
 Example:
 
