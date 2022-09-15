@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Config;
 using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Model;
+using Amazon.CloudWatch.EMF.Utils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -181,6 +182,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// <returns>the current logger.</returns>
         public MetricsLogger SetNamespace(string logNamespace)
         {
+            Validator.ValidateNamespace(logNamespace);
             _context.Namespace = logNamespace;
             return this;
         }

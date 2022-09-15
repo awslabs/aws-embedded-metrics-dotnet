@@ -1,4 +1,5 @@
 using Amazon.CloudWatch.EMF.Model;
+using Amazon.CloudWatch.EMF.Utils;
 using Xunit;
 
 namespace Amazon.CloudWatch.EMF.Tests.Model
@@ -23,6 +24,45 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             var dimensionSet = Get_DimensionSet(dimensionSetSize);
 
             Assert.Equal(dimensionSetSize, dimensionSet.DimensionKeys.Count);
+        }
+
+        [Theory]
+        [InlineData(null, "value")]
+        [InlineData(" ", "value")]
+        [InlineData("ďïɱ", "value")]
+        [InlineData("dim", null)]
+        [InlineData("dim", " ")]
+        [InlineData("dim", "ⱱẵĺ")]
+        [InlineData(":dim", "val")]
+        public void AddDimension_WithInvalidValues_ThrowsInvalidDimensionException(string key, string value)
+        {
+            Assert.Throws<InvalidDimensionException>(() =>
+            {
+                var dimensionSet = new DimensionSet();
+                dimensionSet.AddDimension(key, value);
+            });
+        }
+
+        [Fact]
+        public void AddDimension_WithNameTooLong_ThrowsInvalidDimensionException()
+        {
+            Assert.Throws<InvalidDimensionException>(() =>
+            {
+                var dimensionSet = new DimensionSet();
+                string dimensionName = new string('a', Constants.MAX_DIMENSION_NAME_LENGTH + 1);
+                dimensionSet.AddDimension(dimensionName, "value");
+            });
+        }
+
+        [Fact]
+        public void AddDimension_WithValueTooLong_ThrowsInvalidDimensionException()
+        {
+            Assert.Throws<InvalidDimensionException>(() =>
+            {
+                var dimensionSet = new DimensionSet();
+                string dimensionValue = new string('a', Constants.MAX_DIMENSION_VALUE_LENGTH + 1);
+                dimensionSet.AddDimension("name", dimensionValue);
+            });
         }
 
         [Fact]

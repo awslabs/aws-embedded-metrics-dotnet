@@ -9,15 +9,5 @@ namespace Amazon.CloudWatch.EMF
                    ". Account for default dimensions if not using SetDimensions.")
         {
         }
-
-        public DimensionSetExceededException(string message)
-            : base(message)
-        {
-        }
-
-        public DimensionSetExceededException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
     }
 }
