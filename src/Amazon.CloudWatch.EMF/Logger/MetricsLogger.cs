@@ -11,6 +11,7 @@ namespace Amazon.CloudWatch.EMF.Logger
 {
     public class MetricsLogger : IMetricsLogger, IDisposable
     {
+        public bool FlushPreserveDimensions = true;
         private readonly ILogger _logger;
         private readonly IEnvironment _environment;
         private readonly IEnvironmentProvider _environmentProvider;
@@ -86,7 +87,7 @@ namespace Amazon.CloudWatch.EMF.Logger
             _logger.LogDebug("Sending data to sink. {}", _environment.Sink.GetType().Name);
 
             _environment.Sink.Accept(_context);
-            _context = _context.CreateCopyWithContext();
+            _context = _context.CreateCopyWithContext(this.FlushPreserveDimensions);
         }
 
         /// <summary>
@@ -130,6 +131,30 @@ namespace Amazon.CloudWatch.EMF.Logger
         public MetricsLogger SetDimensions(params DimensionSet[] dimensionSets)
         {
             _context.SetDimensions(dimensionSets);
+            return this;
+        }
+
+        /// <summary>
+        /// Overwrites all dimensions on this MetricsLogger instance; also overriding default dimensions unless useDefault is set to true
+        /// </summary>
+        /// <param name="useDefault">whether to use the default dimensions</param>
+        /// <param name="dimensionSets">the dimensionSets to set</param>
+        /// <returns>the current logger</returns>
+        /// <seealso cref="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Dimension"/>
+        public MetricsLogger SetDimensions(bool useDefault, params DimensionSet[] dimensionSets)
+        {
+            _context.SetDimensions(useDefault, dimensionSets);
+            return this;
+        }
+
+        /// <summary>
+        /// Resets all dimensions on this MetricsLogger instance; also resetting default dimensions unless useDefault is set to true
+        /// </summary>
+        /// <param name="useDefault">whether to use the default dimensions</param>
+        /// <returns>the current logger</returns>
+        public MetricsLogger ResetDimensions(bool useDefault)
+        {
+            _context.ResetDimensions(useDefault);
             return this;
         }
 

@@ -97,6 +97,50 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         }
 
         [Fact]
+        public void SetDimensions_WithUseDefault_PreservesDefaultDimensions()
+        {
+            string dimensionName = "dim";
+            string dimensionValue = "dimValue";
+            string defaultDimName = "defaultDim";
+            string defaultDimValue = "defaultDimValue";
+
+            MetricsContext metricsContext = new MetricsContext();
+            metricsContext.DefaultDimensions.AddDimension(defaultDimName, defaultDimValue);
+            _metricsLogger = new MetricsLogger(_environment, metricsContext, _logger);
+
+            _metricsLogger.PutDimensions(new DimensionSet("foo", "bar"));
+            _metricsLogger.SetDimensions(true, new DimensionSet(dimensionName, dimensionValue));
+            _metricsLogger.Flush();
+
+            Assert.Single(_sink.MetricsContext.GetAllDimensionSets());
+            Assert.Equal(2, _sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys.Count);
+            ExpectDimension(dimensionName, dimensionValue);
+            ExpectDimension(defaultDimName, defaultDimValue);
+        }
+
+        [Fact]
+        public void SetDimensions_WithoutUseDefault_DoesNotPreserveDefaultDimensions()
+        {
+            string dimensionName = "dim";
+            string dimensionValue = "dimValue";
+            string defaultDimName = "defaultDim";
+            string defaultDimValue = "defaultDimValue";
+
+            MetricsContext metricsContext = new MetricsContext();
+            metricsContext.DefaultDimensions.AddDimension(defaultDimName, defaultDimValue);
+            _metricsLogger = new MetricsLogger(_environment, metricsContext, _logger);
+
+            _metricsLogger.PutDimensions(new DimensionSet("foo", "bar"));
+            _metricsLogger.SetDimensions(false, new DimensionSet(dimensionName, dimensionValue));
+            _metricsLogger.Flush();
+
+            Assert.Single(_sink.MetricsContext.GetAllDimensionSets());
+            Assert.Single(_sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys);
+            ExpectDimension(dimensionName, dimensionValue);
+            ExpectDimension(defaultDimName, null);
+        }
+
+        [Fact]
         public void TestPutDuplicateDimensions()
         {
             string dimensionName1 = "dim1";
@@ -138,6 +182,32 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             Assert.Equal(2, _sink.MetricsContext.GetAllDimensionSets().Count);
             Assert.Equal(dimensionValue3, _sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(dimensionName2));
             Assert.Equal(dimensionValue4, _sink.MetricsContext.GetAllDimensionSets()[1].GetDimensionValue(dimensionName3));
+        }
+
+        [Theory]
+        [InlineData(true, 2)]
+        [InlineData(false, 1)]
+        public void ResetDimensions_ClearsDimensions(bool useDefault, int expectedDimensionSets)
+        {
+            string dimensionName1 = "dim";
+            string dimensionValue1 = "dimValue";
+            string dimensionName2 = "dim2";
+            string dimensionValue2 = "dimValue2";
+
+            MetricsContext metricsContext = new MetricsContext();
+            metricsContext.DefaultDimensions.AddDimension("foo", "bar");
+            _metricsLogger = new MetricsLogger(_environment, metricsContext, _logger);
+
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName1, dimensionValue1));
+            _metricsLogger.ResetDimensions(useDefault);
+            _metricsLogger.PutDimensions(new DimensionSet(dimensionName2, dimensionValue2));
+            _metricsLogger.Flush();
+
+            Assert.Single(_sink.MetricsContext.GetAllDimensionSets());
+            Assert.Equal(expectedDimensionSets, _sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys.Count);
+            Assert.Null(_sink.MetricsContext.GetAllDimensionSets()[0].GetDimensionValue(dimensionName1));
+            ExpectDimension(dimensionName2, dimensionValue2);
+            ExpectDimension(dimensionName1, null);
         }
 
         [Fact]
@@ -200,6 +270,33 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             ExpectDimension("foo", "bar");
             ExpectDimension("LogGroup", null);
+        }
+
+        [Fact]
+        public void SetFlushPreserveDimensions_ToFalse_DoesNotPreserveDimensions()
+        {
+            string dimensionName = "dim";
+            string dimensionValue = "val";
+            string defaultDim = "defaultDim";
+            string defaultDimValue = "defaultDimValue";
+
+            MetricsContext metricsContext = new MetricsContext();
+            metricsContext.DefaultDimensions.AddDimension(defaultDim, defaultDimValue);
+            MetricsLogger _metricsLogger1 = new MetricsLogger(_environment, metricsContext, _logger);
+
+            _metricsLogger1.PutDimensions(new DimensionSet(dimensionName, dimensionValue));
+            _metricsLogger1.FlushPreserveDimensions = false;
+            _metricsLogger1.Flush();
+
+            Assert.Equal(2, _sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys.Count);
+            ExpectDimension(dimensionName, dimensionValue);
+            ExpectDimension(defaultDim, defaultDimValue);
+
+            _metricsLogger1.Flush();
+
+            Assert.Single(_sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys);
+            ExpectDimension(dimensionName, null);
+            ExpectDimension(defaultDim, defaultDimValue);
         }
 
         [Fact]

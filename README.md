@@ -150,3 +150,122 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
   "Time": 189
 }
 ```
+
+## API
+
+### MetricsLogger
+
+The `MetricsLogger` is the interface you will use to publish embedded metrics.
+
+- MetricsLogger **PutMetric**(string key, double value, Unit unit)
+- MetricsLogger **PutMetric**(string key, double value)
+
+Adds a new metric to the current logger context. Multiple metrics using the same key will be appended to an array of values. The Embedded Metric Format supports a maxumum of 100 metrics per key.
+
+Metrics must meet CloudWatch Metrics requirements, otherwise a `InvalidMetricException` will be thrown. See [MetricDatum](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html) for valid values.
+
+Example:
+
+```c#
+metrics.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);
+```
+
+- MetricsLogger **PutProperty**(string key, object value)
+
+Adds or updates the value for a given property on this context. This value is not submitted to CloudWatch Metrics but is searchable by CloudWatch Logs Insights. This is useful for contextual and potentially high-cardinality data that is not appropriate for CloudWatch Metrics dimensions.
+
+Example:
+```c#
+metrics.PutProperty("AccountId", "123456789");
+metrics.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
+
+Dictionary<string, object> payLoad = new Dictionary<string, object>
+{
+  { "sampleTime", 123456789 },
+  { "temperature", 273.0 },
+  { "pressure", 101.3 }
+};
+metrics.PutProperty("Payload", payLoad);
+```
+
+- MetricsLogger **PutDimensions**(DimensionSet dimensions)
+
+Adds a new set of dimensions that will be associated with all metric values.
+
+**WARNING**: Each dimension set will result in a new CloudWatch metric (even dimension sets with the same values).
+If the cardinality of a particular value is expected to be high, you should consider
+using `setProperty` instead.
+
+Dimensions must meet CloudWatch Dimensions requirements, otherwise a `InvalidDimensionException` will be thrown. See [Dimensions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html) for valid values.
+
+Example:
+
+```c#
+DimensionSet dimensionSet = new DimensionSet();
+dimensionSet.AddDimension("Service", "Aggregator");
+dimensionSet.AddDimension("Region", "us-west-2");
+metrics.PutDimensions(dimensionSet);
+```
+
+- MetricsLogger **SetDimensions**(params DimensionSet[] dimensionSets)
+- MetricsLogger **SetDimensions**(bool useDefault, params DimensionSet[] dimensionSets)
+
+Explicitly override all dimensions. This will remove the default dimensions unless `useDefault` is set to true.
+
+**WARNING**:Each dimension set will result in a new CloudWatch metric (even dimension sets with the same values).
+If the cardinality of a particular value is expected to be high, you should consider
+using `setProperty` instead.
+
+Dimensions must meet CloudWatch Dimensions requirements, otherwise a `InvalidDimensionException` will be thrown. See [Dimensions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Dimension.html) for valid values.
+
+Examples:
+  
+```c#
+DimensionSet dimensionSet = new DimensionSet();
+dimensionSet.AddDimension("Service", "Aggregator");
+dimensionSet.AddDimension("Region", "us-west-2");
+metrics.SetDimensions(true, dimensionSet); // Will preserve default dimensions
+```
+
+```c#
+DimensionSet dimensionSet = new DimensionSet();
+dimensionSet.AddDimension("Service", "Aggregator");
+dimensionSet.AddDimension("Region", "us-west-2");
+metrics.SetDimensions(dimensionSet); // Will remove default dimensions
+```
+
+- MetricsLogger **ResetDimensions**(bool useDefault)
+
+Explicitly clear all custom dimensions. Set `useDefault` to `true` to keep using the default dimensions.
+
+- MetricsLogger **SetNamespace**(string logNamespace)
+
+Sets the CloudWatch [namespace](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Namespace) that extracted metrics should be published to. If not set, a default value of aws-embedded-metrics will be used.
+Namespaces must meet CloudWatch Namespace requirements, otherwise a `InvalidNamespaceException` will be thrown. See [Namespace](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Namespace) for valid values.
+
+Example:
+
+```c#
+SetNamespace("MyApplication")
+```
+
+- **Flush**()
+
+Flushes the current MetricsContext to the configured sink and resets all properties and metric values. The namespace and default dimensions will be preserved across flushes. Custom dimensions are preserved by default, but this behavior can be changed by setting `flushPreserveDimensions = false` on the metrics logger.
+
+Examples:
+
+```c#
+flush();  // default dimensions and custom dimensions will be preserved after each flush()
+```
+
+```c#
+logger.setFlushPreserveDimensions = false;
+flush();  // only default dimensions will be preserved after each flush()
+```
+
+```c#
+setFlushPreserveDimensions(false);
+resetDimensions(false);  // default dimensions are disabled; no dimensions will be preserved after each flush()
+flush();
+```

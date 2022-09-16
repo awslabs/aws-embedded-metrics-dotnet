@@ -52,14 +52,15 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <summary>
         /// Creates a new MetricsContext with the same namespace, properties,
         /// and dimensions as this one but empty metrics-directive collection.
+        /// Custom dimensions are preserved by default unless preservedDimension is set to false
         /// </summary>
         /// <returns></returns>
-        public MetricsContext CreateCopyWithContext()
+        public MetricsContext CreateCopyWithContext(bool preserveDimensions = true)
         {
             return new MetricsContext(
                     _metricDirective.Namespace,
                     _rootNode.GetProperties(),
-                    _metricDirective.CustomDimensionSets,
+                    preserveDimensions ? _metricDirective.CustomDimensionSets : new List<DimensionSet>(),
                     _metricDirective.DefaultDimensionSet);
         }
 
@@ -187,6 +188,25 @@ namespace Amazon.CloudWatch.EMF.Model
         public void SetDimensions(params DimensionSet[] dimensionSets)
         {
             _metricDirective.SetDimensions(dimensionSets.ToList());
+        }
+
+        /// <summary>
+        /// Update the dimensions to the specified list; optionally overriding default dimensions
+        /// </summary>
+        /// <param name="useDefault">whether to use default dimensions or not.</param>
+        /// <param name="dimensionSets">the dimensionSets to use instead of all existing dimensions and default dimensions.</param>
+        public void SetDimensions(bool useDefault, params DimensionSet[] dimensionSets)
+        {
+            _metricDirective.SetDimensions(useDefault, dimensionSets.ToList());
+        }
+
+        /// <summary>
+        /// Reset all dimensions
+        /// </summary>
+        /// <param name="useDefault">whether to keep default dimensions or not.</param>
+        public void ResetDimensions(bool useDefault)
+        {
+            _metricDirective.ResetDimensions(useDefault);
         }
 
         /// <summary>

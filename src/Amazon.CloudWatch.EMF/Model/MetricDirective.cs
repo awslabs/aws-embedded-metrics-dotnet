@@ -109,6 +109,27 @@ namespace Amazon.CloudWatch.EMF.Model
             CustomDimensionSets = dimensionSets;
         }
 
+        /// <summary>
+        /// Overrides all existing dimensions, optionally suppressing any default dimensions.
+        /// </summary>
+        /// <param name="useDefault">whether to use the default dimensions</param>
+        /// <param name="dimensionSets">the dimension sets to use in lieu of all existing custom and default dimensions</param>
+        internal void SetDimensions(bool useDefault, List<DimensionSet> dimensionSets)
+        {
+            _shouldUseDefaultDimensionSet = useDefault;
+            CustomDimensionSets = dimensionSets;
+        }
+
+        /// <summary>
+        /// Resets all dimensions to the default dimensions.
+        /// </summary>
+        /// <param name="useDefault">whether to keep the default dimensions</param>
+        internal void ResetDimensions(bool useDefault)
+        {
+            _shouldUseDefaultDimensionSet = useDefault;
+            CustomDimensionSets = new List<DimensionSet>();
+        }
+
         internal List<DimensionSet> GetAllDimensionSets()
         {
             if (!_shouldUseDefaultDimensionSet)
@@ -116,10 +137,12 @@ namespace Amazon.CloudWatch.EMF.Model
                 return CustomDimensionSets;
             }
 
-            CustomDimensionSets.ForEach(ds => DefaultDimensionSet.AddRange(ds));
+            var dimensions = new DimensionSet();
 
-            var dimensions = new List<DimensionSet>() { DefaultDimensionSet };
-            return dimensions;
+            dimensions.AddRange(this.DefaultDimensionSet);
+            CustomDimensionSets.ForEach(ds => dimensions.AddRange(ds));
+
+            return new List<DimensionSet>() { dimensions };
         }
 
         internal MetricDirective DeepCloneWithNewMetrics(List<MetricDefinition> metrics)
