@@ -14,6 +14,8 @@ namespace Amazon.CloudWatch.EMF.Canary
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Canary starting...");
+
             var init = true;
 
             var configuration = new Configuration
