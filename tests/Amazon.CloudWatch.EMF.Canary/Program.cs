@@ -35,9 +35,9 @@ namespace Amazon.CloudWatch.EMF.Canary
             // get the assembly version (this does not reflect NuGet pre-releases)
             var packageVersion = GetPackageVersion();
 
+            var logger = new MetricsLogger(loggerFactory);
             while (true)
-            {
-                var logger = new MetricsLogger(loggerFactory);
+            {      
                 using (logger)
                 {
                     logger.SetNamespace("Canary");
@@ -65,9 +65,10 @@ namespace Amazon.CloudWatch.EMF.Canary
 
                     logger.PutMetric("Memory.HeapUsed", GC.GetTotalMemory(false), Unit.BYTES);
                 }
-                logger.ShutdownAsync();
+                
                 Thread.Sleep(1_000);
             }
+            logger.ShutdownAsync();
         }
 
         private static String GetPackageVersion()
