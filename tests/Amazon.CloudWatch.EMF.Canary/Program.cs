@@ -37,7 +37,8 @@ namespace Amazon.CloudWatch.EMF.Canary
 
             while (true)
             {
-                using (var logger = new MetricsLogger(loggerFactory))
+                var logger = new MetricsLogger(loggerFactory);
+                using (logger)
                 {
                     logger.SetNamespace("Canary");
 
@@ -64,6 +65,7 @@ namespace Amazon.CloudWatch.EMF.Canary
 
                     logger.PutMetric("Memory.HeapUsed", GC.GetTotalMemory(false), Unit.BYTES);
                 }
+                logger.ShutdownAsync();
                 Thread.Sleep(1_000);
             }
         }
