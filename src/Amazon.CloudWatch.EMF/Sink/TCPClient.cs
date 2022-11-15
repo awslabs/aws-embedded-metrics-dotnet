@@ -6,7 +6,7 @@ namespace Amazon.CloudWatch.EMF.Sink
     public class TCPClient : ISocketClient
     {
         private readonly Endpoint _endpoint;
-        private TcpClient _tcpClient;
+        private static TcpClient _tcpClient;
 
         internal TCPClient(Endpoint endpoint)
         {
