@@ -26,7 +26,7 @@ dotnet add package Amazon.CloudWatch.EMF
 
 ## Usage
 
-To get a metric logger, you can instantiate it using the code snippet here.
+To get a metric logger, you can instantiate it using the code snippet below.
 `MetricsLogger` implements `IDisposable`. 
 When the logger is disposed, it will write the metrics to the configured sink. Also see [Graceful Shutdown](#graceful-shutdown). You will have to call [ShutdownAsync()](https://learn.microsoft.com/en-us/dotnet/api/system.net.security.sslstream.shutdownasync?view=net-7.0) on logger so that the program has enough time to write before shutting down. A full example can be found in the examples directory.
 
