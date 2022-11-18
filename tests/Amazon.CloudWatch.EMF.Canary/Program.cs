@@ -25,6 +25,7 @@ namespace Amazon.CloudWatch.EMF.Canary
                 AgentEndPoint = "tcp://127.0.0.1:25888"
             };
 
+            
             var loggerFactory = LoggerFactory.Create(builder =>
                         builder
                             .SetMinimumLevel(LogLevel.Information)
@@ -32,12 +33,14 @@ namespace Amazon.CloudWatch.EMF.Canary
 
             EnvironmentConfigurationProvider.Config = configuration;
 
+            IEnvironmentProvider provider = new EnvironmentProvider(configuration, new ResourceFetcher(loggerFactory), loggerFactory);
+
             // get the assembly version (this does not reflect NuGet pre-releases)
             var packageVersion = GetPackageVersion();
 
             while (true)
             {      
-                using (var logger = new MetricsLogger(loggerFactory))
+                using (var logger = new MetricsLogger(provider,loggerFactory))
                 {
                     logger.SetNamespace("Canary");
 
