@@ -40,7 +40,7 @@ namespace Amazon.CloudWatch.EMF.Canary
 
             while (true)
             {      
-                using (var logger = new MetricsLogger(provider,loggerFactory))
+                using (var logger = new MetricsLogger(loggerFactory))
                 {
                     logger.SetNamespace("Canary");
 

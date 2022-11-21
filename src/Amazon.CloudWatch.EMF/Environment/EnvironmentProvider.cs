@@ -14,7 +14,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         private readonly IResourceFetcher _resourceFetcher;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<ECSEnvironment> _logger;
-        private IEnvironment _cachedEnvironment;
+        private static IEnvironment _cachedEnvironment;
 
         public EnvironmentProvider(IConfiguration configuration, IResourceFetcher resourceFetcher)
             : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
