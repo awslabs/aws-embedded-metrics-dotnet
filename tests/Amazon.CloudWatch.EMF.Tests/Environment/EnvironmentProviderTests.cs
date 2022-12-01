@@ -18,6 +18,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             configuration.EnvironmentOverride.Returns(Environments.Local);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
             var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            environmentProvider.CleanResolvedEnvironment();
 
             //Act
             var environment = environmentProvider.ResolveEnvironment();
@@ -36,6 +37,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             configuration.EnvironmentOverride.Returns(Environments.Lambda);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
             var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            environmentProvider.CleanResolvedEnvironment();
 
             //Act
             var environment = environmentProvider.ResolveEnvironment();
@@ -53,6 +55,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             configuration.EnvironmentOverride.Returns(Environments.Local);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
             var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            environmentProvider.CleanResolvedEnvironment();
 
             //Act
             var environment = environmentProvider.ResolveEnvironment();
@@ -70,6 +73,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             configuration.EnvironmentOverride.Returns(Environments.EC2);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
             var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            environmentProvider.CleanResolvedEnvironment();
 
             //Act
             var environment = environmentProvider.ResolveEnvironment();
@@ -87,6 +91,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             configuration.EnvironmentOverride.Returns(Environments.ECS);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
             var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            environmentProvider.CleanResolvedEnvironment();
 
             //Act
             var environment = environmentProvider.ResolveEnvironment();

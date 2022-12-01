@@ -58,6 +58,14 @@ namespace Amazon.CloudWatch.EMF.Environment
             return new DefaultEnvironment(_configuration, _loggerFactory);
         }
 
+        /// <summary>
+        /// A helper method to clean the cached environment in tests.
+        /// </summary>
+        internal void CleanResolvedEnvironment()
+        {
+            _cachedEnvironment = null;
+        }
+
         private IEnvironment GetEnvironmentFromConfig()
         {
             switch (_configuration.EnvironmentOverride)
