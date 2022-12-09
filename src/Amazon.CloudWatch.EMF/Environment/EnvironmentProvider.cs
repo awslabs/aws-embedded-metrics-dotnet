@@ -14,7 +14,7 @@ namespace Amazon.CloudWatch.EMF.Environment
         private readonly IResourceFetcher _resourceFetcher;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<ECSEnvironment> _logger;
-        private IEnvironment _cachedEnvironment;
+        private static IEnvironment _cachedEnvironment;
 
         public EnvironmentProvider(IConfiguration configuration, IResourceFetcher resourceFetcher)
             : this(configuration, resourceFetcher, NullLoggerFactory.Instance)
@@ -56,6 +56,14 @@ namespace Amazon.CloudWatch.EMF.Environment
 
             _logger.LogDebug("Failed to detect environment, using default.");
             return new DefaultEnvironment(_configuration, _loggerFactory);
+        }
+
+        /// <summary>
+        /// A helper method to clean the cached environment in tests.
+        /// </summary>
+        internal void CleanResolvedEnvironment()
+        {
+            _cachedEnvironment = null;
         }
 
         private IEnvironment GetEnvironmentFromConfig()
