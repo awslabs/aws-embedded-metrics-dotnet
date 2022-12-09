@@ -4,11 +4,19 @@ using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using NSubstitute;
 using Xunit;
+using System;
 
 namespace Amazon.CloudWatch.EMF.Tests.Environment
 {
-    public class EnvironmentProviderTests
+    public class EnvironmentProviderTests: IDisposable
     {
+        
+        private EnvironmentProvider environmentProvider;
+
+        public void Dispose(){
+            environmentProvider.CleanResolvedEnvironment();
+        }
+
         [Fact]
         public void ResolveEnvironment_ReturnCachedEnv()
         {
@@ -17,9 +25,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var configuration = fixture.Create<IConfiguration>();
             configuration.EnvironmentOverride.Returns(Environments.Local);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
-            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
-            environmentProvider.CleanResolvedEnvironment();
-
+            environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            
             //Act
             var environment = environmentProvider.ResolveEnvironment();
             var environmentCache = environmentProvider.ResolveEnvironment();
@@ -36,9 +43,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var configuration = fixture.Create<IConfiguration>();
             configuration.EnvironmentOverride.Returns(Environments.Lambda);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
-            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
-            environmentProvider.CleanResolvedEnvironment();
-
+            environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            
             //Act
             var environment = environmentProvider.ResolveEnvironment();
 
@@ -54,9 +60,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var configuration = fixture.Create<IConfiguration>();
             configuration.EnvironmentOverride.Returns(Environments.Local);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
-            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
-            environmentProvider.CleanResolvedEnvironment();
-
+            environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            
             //Act
             var environment = environmentProvider.ResolveEnvironment();
 
@@ -72,9 +77,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var configuration = fixture.Create<IConfiguration>();
             configuration.EnvironmentOverride.Returns(Environments.EC2);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
-            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
-            environmentProvider.CleanResolvedEnvironment();
-
+            environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            
             //Act
             var environment = environmentProvider.ResolveEnvironment();
 
@@ -90,9 +94,8 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             var configuration = fixture.Create<IConfiguration>();
             configuration.EnvironmentOverride.Returns(Environments.ECS);
             var resourceFetcher = fixture.Create<IResourceFetcher>();
-            var environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
-            environmentProvider.CleanResolvedEnvironment();
-
+            environmentProvider = new EnvironmentProvider(configuration, resourceFetcher);
+            
             //Act
             var environment = environmentProvider.ResolveEnvironment();
 
