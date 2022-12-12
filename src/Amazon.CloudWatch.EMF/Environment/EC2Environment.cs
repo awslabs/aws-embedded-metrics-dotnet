@@ -57,7 +57,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             {
                 _token = _resourceFetcher.FetchString(tokenUri, "PUT", tokenRequestHeader);
             }
-            catch (EMFClientException ex)
+            catch (Exception ex)
             {
                 _logger.LogDebug("Failed to get response from: " + tokenUri, ex);
                 return false;
@@ -81,7 +81,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                 _ec2Metadata = _resourceFetcher.FetchJson<EC2Metadata>(metadataUri, "GET", metadataRequestHeader);
                 return true;
             }
-            catch (EMFClientException ex)
+            catch (Exception ex)
             {
                 _logger.LogDebug("Failed to get response from: " + metadataUri, ex);
             }
