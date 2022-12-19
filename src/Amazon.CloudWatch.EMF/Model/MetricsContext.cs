@@ -228,20 +228,48 @@ namespace Amazon.CloudWatch.EMF.Model
         public List<string> Serialize()
         {
             var nodes = new List<RootNode>();
-            if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MAX_METRICS_PER_EVENT)
+
+            if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MAX_METRICS_PER_EVENT && NoMetricWithTooManyDataPoints(_rootNode))
             {
                 nodes.Add(_rootNode);
             }
             else
             {
-                // split the root nodes into multiple and serialize each
-                var count = 0;
-                while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
+                Dictionary<String, MetricDefinition> metrics = new Dictionary<string, MetricDefinition>();
+                Queue<MetricDefinition> metricDefinitions =
+                    new Queue<MetricDefinition>(_rootNode.AWS.MetricDirective.Metrics);
+                while (metricDefinitions.Count > 0)
                 {
-                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT).ToList();
-                    var node = _rootNode.DeepCloneWithNewMetrics(metrics);
+                    MetricDefinition metric = metricDefinitions.Dequeue();
+
+                    if (metrics.Count == Constants.MAX_METRICS_PER_EVENT || metrics.ContainsKey(metric.Name))
+                    {
+                        var node = _rootNode.DeepCloneWithNewMetrics(metrics.Values.ToList());
+                        nodes.Add(node);
+                        metrics = new Dictionary<string, MetricDefinition>();
+                    }
+
+                    if (metric.Values.Count <= Constants.MAX_DATAPOINTS_PER_METRIC)
+                    {
+                        metrics.Add(metric.Name, metric);
+                    }
+                    else
+                    {
+                        metrics.Add(
+                            metric.Name,
+                            new MetricDefinition(metric.Name, metric.Unit, metric.Values.Take(Constants.MAX_DATAPOINTS_PER_METRIC).ToList()));
+                        metricDefinitions.Enqueue(
+                            new MetricDefinition(
+                                metric.Name,
+                                metric.Unit,
+                                metric.Values.Skip(Constants.MAX_DATAPOINTS_PER_METRIC).Take(metric.Values.Count).ToList()));
+                    }
+                }
+
+                if (metrics.Count > 0)
+                {
+                    var node = _rootNode.DeepCloneWithNewMetrics(metrics.Values.ToList());
                     nodes.Add(node);
-                    count += Constants.MAX_METRICS_PER_EVENT;
                 }
             }
 
@@ -252,6 +280,11 @@ namespace Amazon.CloudWatch.EMF.Model
             }
 
             return results;
+        }
+
+        private bool NoMetricWithTooManyDataPoints(RootNode node)
+        {
+            return node.AWS.MetricDirective.Metrics.All(metric => metric.Values.Count <= Constants.MAX_DATAPOINTS_PER_METRIC);
         }
     }
 }

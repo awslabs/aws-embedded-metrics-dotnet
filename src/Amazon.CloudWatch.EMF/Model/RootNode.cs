@@ -95,6 +95,11 @@ namespace Amazon.CloudWatch.EMF.Model
         {
             var clone = new RootNode();
             clone.AWS = AWS.DeepCloneWithNewMetrics(metrics);
+            foreach (var property in GetProperties())
+            {
+                clone.PutProperty(property.Key, property.Value);
+            }
+
             return clone;
         }
 
