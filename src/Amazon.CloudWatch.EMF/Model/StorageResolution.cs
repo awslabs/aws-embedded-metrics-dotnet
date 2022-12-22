@@ -11,9 +11,6 @@ namespace Amazon.CloudWatch.EMF.Model
         STANDARD,
 
         [EnumMember(Value = "1")]
-        HIGH,
-
-        [EnumMember(Value = "-1")]
-        UNKNOWN_TO_SDK_VERSION
+        HIGH
     }
 }

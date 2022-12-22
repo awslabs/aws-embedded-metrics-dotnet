@@ -381,6 +381,13 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         // }
 
         [Fact]
+        public void PutMetric_WithSameMetricHavingDifferentResolution_ThrowsInvalidMetricException()
+        {
+              _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT,StorageResolution.STANDARD);
+              Assert.Throws<InvalidMetricException>(() =>  _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT,StorageResolution.HIGH));
+        }
+
+        [Fact]
         public void TestPutMetaData()
         {
             string expectedKey = "testKey";

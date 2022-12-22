@@ -6,21 +6,21 @@ namespace Amazon.CloudWatch.EMF.Model
     public class MetricDefinition
     {
         public MetricDefinition(string name, StorageResolution resolution = StorageResolution.STANDARD)
-            : this(name, Unit.NONE, new List<double>(), resolution)
+            : this(name, new List<double>(), Unit.NONE, resolution)
         {
         }
 
         public MetricDefinition(string name, double value, StorageResolution resolution = StorageResolution.STANDARD)
-            : this(name, Unit.NONE, new List<double> { value }, resolution)
+            : this(name, new List<double> { value }, Unit.NONE, resolution)
         {
         }
 
-        public MetricDefinition(string name, Unit unit, double value, StorageResolution resolution = StorageResolution.STANDARD)
-            : this(name, unit, new List<double> { value }, resolution)
+        public MetricDefinition(string name, double value, Unit unit, StorageResolution resolution = StorageResolution.STANDARD)
+            : this(name, new List<double> { value }, unit, resolution)
         {
         }
 
-        public MetricDefinition(string name, Unit unit, List<double> values, StorageResolution storageResolution)
+        public MetricDefinition(string name, List<double> values, Unit unit, StorageResolution storageResolution)
         {
             Name = name;
             Unit = unit;

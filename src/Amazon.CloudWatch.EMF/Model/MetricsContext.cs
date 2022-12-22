@@ -110,14 +110,13 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
         /// <param name="unit">the units of the metric</param>
-        /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution with 60</param>
+        /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution</param>
         public void PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
-            if (!_storageResolutionMetrics.ContainsKey(key))
-                _storageResolutionMetrics.TryAdd(key, storageResolution);
-
             Validator.ValidateMetric(key, value, storageResolution, _storageResolutionMetrics);
             _metricDirective.PutMetric(key, value, unit, storageResolution);
+            if (!_storageResolutionMetrics.ContainsKey(key))
+                _storageResolutionMetrics.TryAdd(key, storageResolution);
         }
 
         /// <summary>
@@ -131,7 +130,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
-         /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution with 60</param>
+         /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution</param>
         public void PutMetric(string key, double value, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
             PutMetric(key, value, Unit.NONE, storageResolution);

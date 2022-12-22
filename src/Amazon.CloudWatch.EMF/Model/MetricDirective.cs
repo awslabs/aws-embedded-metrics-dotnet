@@ -58,7 +58,7 @@ namespace Amazon.CloudWatch.EMF.Model
             }
             else
             {
-                _metrics.Add(new MetricDefinition(key, unit, value, storageResolution));
+                _metrics.Add(new MetricDefinition(key, value, unit, storageResolution));
             }
         }
 

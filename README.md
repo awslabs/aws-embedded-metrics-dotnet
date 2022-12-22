@@ -36,8 +36,12 @@ using (var logger = new MetricsLogger()) {
     var dimensionSet = new DimensionSet();
     dimensionSet.AddDimension("Service", "aggregator");
     logger.SetDimensions(dimensionSet);
+    // Defaults to StorageResolution.Standard
     logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
+    // Can override to StorageResolution.High
+    logger.PutMetric("Memory.HeapUsed", "1600424.0", Unit.BYTES, StorageResolution.HIGH);
     logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
+    
 }
 ```
 
@@ -65,7 +69,10 @@ using (var logger = new MetricsLogger()) {
     var dimensionSet = new DimensionSet();
     dimensionSet.AddDimension("Service", "aggregator");
     logger.SetDimensions(dimensionSet);
+    // Defaults to StorageResolution.Standard
     logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
+    // Can override to StorageResolution.High
+    logger.PutMetric("Memory.HeapUsed", "1600424.0", Unit.BYTES, StorageResolution.HIGH); 
     logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
 }
 
@@ -155,19 +162,23 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
 ### MetricsLogger
 
-The `MetricsLogger` is the interface you will use to publish embedded metrics.
+The `MetricsLogger` is the interface you will use to publish embedded metrics. By Default StorageResolution is StandardResolution.
 
-- MetricsLogger **PutMetric**(string key, double value, Unit unit)
-- MetricsLogger **PutMetric**(string key, double value)
+- MetricsLogger **PutMetric**(string key, double value, Unit unit, StorageResolution storageResolution)
+- MetricsLogger **PutMetric**(string key, double value, StorageResolution storageResolution)
 
-Adds a new metric to the current logger context. Multiple metrics using the same key will be appended to an array of values. The Embedded Metric Format supports a maxumum of 100 metrics per key.
+Adds a new metric to the current logger context. Multiple metrics using the same key will be appended to an array of values. Multiple metrics cannot have same key but different storage resolution. Same metric cannot have different storage resolutions otherwise a `InvalidMetricException` will be thrown. The Embedded Metric Format supports a maxumum of 100 metrics per key.
 
 Metrics must meet CloudWatch Metrics requirements, otherwise a `InvalidMetricException` will be thrown. See [MetricDatum](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html) for valid values.
 
 Example:
 
 ```c#
+// Standard Resolution Example
 metrics.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);
+
+// High Resolution Example
+logger.PutMetric("Memory.HeapUsed", "1600424.0", Unit.BYTES, StorageResolution.HIGH);
 ```
 
 - MetricsLogger **PutProperty**(string key, object value)
