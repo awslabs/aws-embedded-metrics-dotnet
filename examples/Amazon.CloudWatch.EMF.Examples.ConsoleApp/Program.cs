@@ -50,9 +50,14 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
             dimensionSet.AddDimension("Region", "us-west-2");
             metrics.SetDimensions(dimensionSet);
 
+            // Standard Resolutions
             metrics.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);
             metrics.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
             metrics.PutMetric("ProcessingLatency", 99, Unit.MILLISECONDS);
+
+            // High Resolution
+            metrics.PutMetric("Memory.HeapUsed", GC.GetTotalMemory(false), Unit.BYTES,StorageResolution.HIGH);
+
             metrics.PutMetric("Count", 3, Unit.COUNT);
             metrics.PutProperty("AccountId", "123456789");
             metrics.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");

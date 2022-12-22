@@ -23,7 +23,7 @@ namespace Amazon.CloudWatch.EMF.Web.Controllers
         private readonly IMetricsLogger _metrics;
 
         public WeatherForecastController(
-            ILogger<WeatherForecastController> logger, 
+            ILogger<WeatherForecastController> logger,
             IMetricsLogger metrics)
         {
             _logger = logger;
@@ -36,8 +36,10 @@ namespace Amazon.CloudWatch.EMF.Web.Controllers
             Thread.Sleep(100);
             var rng = new Random();
             var temperature = rng.Next(-20, 55);
+            var WindSpeed = rng.Next(10, 100);
 
             _metrics.PutMetric("Temperature", temperature, Unit.NONE);
+            _metrics.PutMetric("WindSpeed", WindSpeed, Unit.NONE, StorageResolution.HIGH);
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

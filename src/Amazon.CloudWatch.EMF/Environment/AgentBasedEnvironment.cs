@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Amazon.CloudWatch.EMF.Environment
 {
-    public abstract class AgentBasedEnvironment : IEnvironment
+public abstract class AgentBasedEnvironment : IEnvironment
     {
         protected readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;

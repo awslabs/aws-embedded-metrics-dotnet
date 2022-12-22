@@ -32,6 +32,7 @@ namespace Amazon.CloudWatch.EMF.Lambda
             logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
             logger.PutMetric("ProcessingLatency", 99, Unit.MILLISECONDS);
             logger.PutMetric("Count", 3, Unit.COUNT);
+            logger.PutMetric("InputPayloadSize", System.Text.ASCIIEncoding.ASCII.GetByteCount(input), Unit.BYTES, StorageResolution.HIGH);
             logger.PutProperty("AccountId", "123456789");
             logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
             logger.PutProperty("DeviceId", "61270781-c6ac-46f1-baf7-22c808af8162");

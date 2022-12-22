@@ -315,6 +315,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             Assert.Equal(expectedValue, metricDefinition.Values[0]);
             Assert.Equal(Unit.NONE, metricDefinition.Unit);
+            Assert.Equal(StorageResolution.STANDARD, metricDefinition.StorageResolution);
         }
 
         [Fact]
@@ -333,6 +334,23 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             Assert.Equal(expectedValue, metricDefinition.Values[0]);
             Assert.Equal(Unit.MILLISECONDS, metricDefinition.Unit);
+            Assert.Equal(StorageResolution.STANDARD, metricDefinition.StorageResolution);
+        }
+
+        [Fact]
+        public void TestPutMetricWithHighResolutionCheck()
+        {
+            string expectedKey = "test";
+            double expectedValue = 2.0;
+            _metricsLogger.PutMetric(expectedKey, expectedValue, Unit.MILLISECONDS,StorageResolution.HIGH);
+            _metricsLogger.Flush();
+
+            var metricDirective = typeof(MetricsContext)
+              .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+              .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == expectedKey);
+            Assert.Equal(StorageResolution.HIGH, metricDefinition.StorageResolution);
         }
 
         [Theory]
@@ -353,6 +371,14 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             string metricName = new string('a', Constants.MAX_METRIC_NAME_LENGTH + 1);
             Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, 1, Unit.NONE));
         }
+
+        // [Fact]
+        // public void PutMetric_WithSameMetricWithDifferentResolution_ThrowsInvalidMetricException()
+        // {
+        //       _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT,StorageResolution.Strap  );
+        //     _metricsLogger.Flush();
+        //     Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, 1, Unit.NONE));
+        // }
 
         [Fact]
         public void TestPutMetaData()

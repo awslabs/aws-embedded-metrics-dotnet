@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.CloudWatch.EMF.Utils;
@@ -13,6 +14,11 @@ namespace Amazon.CloudWatch.EMF.Model
         /// holds a reference to _rootNode.MetaData.CloudWatchDirective;
         /// </summary>
         private readonly MetricDirective _metricDirective;
+
+        /// <summary>
+        /// Holds the metric key and its resolution type for validation checks
+        /// </summary>
+        private readonly ConcurrentDictionary<string, StorageResolution> _storageResolutionMetrics = new ConcurrentDictionary<string, StorageResolution>();
 
         public MetricsContext() : this(new RootNode())
         {
@@ -97,15 +103,21 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Multiple calls using the same key will be stored as an array of scalar values.
         /// </summary>
         /// <example>
-        /// metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
+        /// Defaults to StorageResolution : metricContext.PutMetric("Latency", 100)
+        /// Standard Resolution metric : metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
+        /// High Resolution metric : metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS,StorageResolution.HIGH)
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
         /// <param name="unit">the units of the metric</param>
-        public void PutMetric(string key, double value, Unit unit)
+        /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution with 60</param>
+        public void PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
-            Validator.ValidateMetric(key, value);
-            _metricDirective.PutMetric(key, value, unit);
+            if (!_storageResolutionMetrics.ContainsKey(key))
+                _storageResolutionMetrics.TryAdd(key, storageResolution);
+
+            Validator.ValidateMetric(key, value, storageResolution, _storageResolutionMetrics);
+            _metricDirective.PutMetric(key, value, unit, storageResolution);
         }
 
         /// <summary>
@@ -113,13 +125,16 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Multiple calls using the same key will be stored as an array of scalar values.
         /// </summary>
         /// <example>
-        /// metricContext.PutMetric("Count", 10)
+        /// Defaults to StorageResolution : metricContext.PutMetric("Count", 10)
+        /// StandardResolution metric : metricContext.PutMetric("Count", 10, Unit.MILLISECONDS)
+        /// HighResolution metric : metricContext.PutMetric("Count", 100, Unit.MILLISECONDS,StorageResolution.HIGH)
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
-        public void PutMetric(string key, double value)
+         /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution with 60</param>
+        public void PutMetric(string key, double value, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
-            PutMetric(key, value, Unit.NONE);
+            PutMetric(key, value, Unit.NONE, storageResolution);
         }
 
         /// <summary>

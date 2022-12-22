@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Text;
+using Amazon.CloudWatch.EMF.Model;
 
 namespace Amazon.CloudWatch.EMF.Utils
 {
@@ -55,7 +57,7 @@ namespace Amazon.CloudWatch.EMF.Utils
         /// <param name="name">Metric name</param>
         /// <param name="value">Metric value</param>
         /// <exception cref="InvalidMetricException">Thrown when metric name or value is invalid</exception>
-        internal static void ValidateMetric(in string name, in double value)
+        internal static void ValidateMetric(in string name, in double value, in StorageResolution storageResolution, in ConcurrentDictionary<string, StorageResolution> storageResolutionMetrics)
         {
             if (name == null || name.Trim().Length == 0)
             {
@@ -70,6 +72,11 @@ namespace Amazon.CloudWatch.EMF.Utils
             if (!Double.IsFinite(value))
             {
                 throw new InvalidMetricException($"Metric value {value} must be a finite number");
+            }
+
+            if (storageResolutionMetrics.ContainsKey(name) && storageResolutionMetrics[name] != storageResolution)
+            {
+                throw new InvalidMetricException($"Resolution for metrics {name} is already set, A single log event cannot have a metric with two different resolutions");
             }
         }
 
