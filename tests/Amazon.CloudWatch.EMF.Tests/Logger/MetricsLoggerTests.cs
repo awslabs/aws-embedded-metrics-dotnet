@@ -342,7 +342,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         {
             string expectedKey = "test";
             double expectedValue = 2.0;
-            _metricsLogger.PutMetric(expectedKey, expectedValue, Unit.MILLISECONDS,StorageResolution.HIGH);
+            _metricsLogger.PutMetric(expectedKey, expectedValue, Unit.MILLISECONDS, StorageResolution.HIGH);
             _metricsLogger.Flush();
 
             var metricDirective = typeof(MetricsContext)
@@ -351,6 +351,22 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == expectedKey);
             Assert.Equal(StorageResolution.HIGH, metricDefinition.StorageResolution);
+        }
+
+        [Fact]
+        public void TestPutMetricWithStandardResolutionCheck()
+        {
+            string expectedKey = "test";
+            double expectedValue = 2.0;
+            _metricsLogger.PutMetric(expectedKey, expectedValue, Unit.MILLISECONDS, StorageResolution.STANDARD);
+            _metricsLogger.Flush();
+
+            var metricDirective = typeof(MetricsContext)
+              .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+              .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == expectedKey);
+            Assert.Equal(StorageResolution.STANDARD, metricDefinition.StorageResolution);
         }
 
         [Theory]
@@ -372,20 +388,24 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, 1, Unit.NONE));
         }
 
-        // [Fact]
-        // public void PutMetric_WithSameMetricWithDifferentResolution_ThrowsInvalidMetricException()
-        // {
-        //       _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT,StorageResolution.Strap  );
-        //     _metricsLogger.Flush();
-        //     Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, 1, Unit.NONE));
-        // }
-
         [Fact]
         public void PutMetric_WithSameMetricHavingDifferentResolution_ThrowsInvalidMetricException()
         {
-              _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT,StorageResolution.STANDARD);
-              Assert.Throws<InvalidMetricException>(() =>  _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT,StorageResolution.HIGH));
+            _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.STANDARD);
+            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.HIGH));
         }
+
+
+        [Fact]
+        public void PutMetric_WithSameMetricHavingDifferentResolutionInDifferentFlush_TheAllow()
+        {
+            _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.STANDARD);
+            _metricsLogger.Flush();
+
+            _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.HIGH);
+            _metricsLogger.Flush();
+        }
+
 
         [Fact]
         public void TestPutMetaData()

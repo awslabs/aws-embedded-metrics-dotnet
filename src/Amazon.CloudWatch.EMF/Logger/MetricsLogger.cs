@@ -166,7 +166,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
         /// <param name="unit">the unit of the metric value</param>
-        /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution</param>
+        /// <param name="storageResolution">the storage resolution of the metric. Default Set to Standard Storage Resolution</param>
         /// <returns>the current logger</returns>
         public MetricsLogger PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
@@ -181,7 +181,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         /// </summary>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
-        /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution</param>
+        /// <param name="storageResolution">the storage resolution of the metric. Default Set to Standard Storage Resolution</param>
         /// <returns>the current logger</returns>
         public MetricsLogger PutMetric(string key, double value, StorageResolution storageResolution = StorageResolution.STANDARD)
         {

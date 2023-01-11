@@ -100,7 +100,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
 
             string jsonString = JsonConvert.SerializeObject(metricDirective);
 
-            Assert.Equal("{\"Namespace\":\"aws-embedded-metrics\",\"Metrics\":[{\"Name\":\"Time\",\"Unit\":\"None\",\"StorageResolution\":\"1\"}],\"Dimensions\":[[]]}", jsonString);
+            Assert.Equal("{\"Namespace\":\"aws-embedded-metrics\",\"Metrics\":[{\"Name\":\"Time\",\"Unit\":\"None\",\"StorageResolution\":1}],\"Dimensions\":[[]]}", jsonString);
 
         }
     }

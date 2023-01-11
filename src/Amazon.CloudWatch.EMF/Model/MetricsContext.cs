@@ -18,7 +18,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <summary>
         /// Holds the metric key and its resolution type for validation checks
         /// </summary>
-        private readonly ConcurrentDictionary<string, StorageResolution> _storageResolutionMetrics = new ConcurrentDictionary<string, StorageResolution>();
+        private readonly ConcurrentDictionary<string, StorageResolution> _metricNameAndResolutionMap = new ConcurrentDictionary<string, StorageResolution>();
 
         public MetricsContext() : this(new RootNode())
         {
@@ -113,10 +113,10 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution</param>
         public void PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
-            Validator.ValidateMetric(key, value, storageResolution, _storageResolutionMetrics);
+            Validator.ValidateMetric(key, value, storageResolution, _metricNameAndResolutionMap);
             _metricDirective.PutMetric(key, value, unit, storageResolution);
-            if (!_storageResolutionMetrics.ContainsKey(key))
-                _storageResolutionMetrics.TryAdd(key, storageResolution);
+            if (!_metricNameAndResolutionMap.ContainsKey(key))
+                _metricNameAndResolutionMap.TryAdd(key, storageResolution);
         }
 
         /// <summary>

@@ -115,14 +115,11 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
             return res;
         }
 
-        private void LogMetric(String metricName, bool isHighResolution = false)
+        private void LogMetric(String metricName)
         {
             MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher()), NullLoggerFactory.Instance);
             logger.PutDimensions(_dimensions);
-            if (isHighResolution)
-                logger.PutMetric(metricName, 100, Unit.MILLISECONDS, StorageResolution.HIGH);
-            else
-                logger.PutMetric(metricName, 100, Unit.MILLISECONDS, StorageResolution.STANDARD);
+            logger.PutMetric(metricName, 100, Unit.MILLISECONDS, StorageResolution.STANDARD);
             logger.Flush();
         }
 
