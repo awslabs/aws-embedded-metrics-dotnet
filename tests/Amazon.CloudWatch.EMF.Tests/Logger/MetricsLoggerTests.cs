@@ -404,6 +404,15 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.HIGH);
             _metricsLogger.Flush();
+
+            var metricDirective = typeof(MetricsContext)
+              .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+              .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            Assert.True(metricDirective.Metrics.Count() == 1);
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == "TestMetric");
+            Assert.Equal(StorageResolution.HIGH, metricDefinition.StorageResolution);
         }
 
 
