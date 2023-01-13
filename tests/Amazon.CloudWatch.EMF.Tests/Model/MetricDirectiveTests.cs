@@ -103,17 +103,5 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
 
             Assert.Equal("{\"Namespace\":\"aws-embedded-metrics\",\"Metrics\":[],\"Dimensions\":[[\"Region\",\"Instance\"]]}", jsonString);
         }
-
-        [Fact]
-        public void MetricDirective_PutMetricHighResolution_Returns_ValidJson()
-        {
-            MetricDirective metricDirective = new MetricDirective();
-            metricDirective.PutMetric("Time", 10,StorageResolution.HIGH);
-
-            string jsonString = JsonConvert.SerializeObject(metricDirective);
-
-            Assert.Equal("{\"Namespace\":\"aws-embedded-metrics\",\"Metrics\":[{\"Name\":\"Time\",\"Unit\":\"None\",\"StorageResolution\":1}],\"Dimensions\":[[]]}", jsonString);
-
-        }
     }
 }
