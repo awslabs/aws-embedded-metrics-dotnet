@@ -76,7 +76,7 @@ namespace Amazon.CloudWatch.EMF.Utils
 
             if (storageResolutionMetrics.ContainsKey(name) && storageResolutionMetrics[name] != storageResolution)
             {
-                throw new InvalidMetricException($"Resolution for metrics {name} is already set, A single log event cannot have a metric with two different resolutions");
+                throw new InvalidMetricException($"Resolution for metric {name} is already set, A single log event cannot have a metric with two different resolutions");
             }
         }
 

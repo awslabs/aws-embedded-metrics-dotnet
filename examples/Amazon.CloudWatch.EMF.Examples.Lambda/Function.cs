@@ -4,6 +4,7 @@ using Amazon.CloudWatch.EMF.Environment;
 using Amazon.CloudWatch.EMF.Logger;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.Lambda.Core;
+using System.Text;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -32,7 +33,7 @@ namespace Amazon.CloudWatch.EMF.Lambda
             logger.PutMetric("ProcessingLatency", 100, Unit.MILLISECONDS);
             logger.PutMetric("ProcessingLatency", 99, Unit.MILLISECONDS);
             logger.PutMetric("Count", 3, Unit.COUNT);
-            logger.PutMetric("InputPayloadSize", System.Text.ASCIIEncoding.ASCII.GetByteCount(input), Unit.BYTES, StorageResolution.HIGH);
+            logger.PutMetric("InputPayloadSize", ASCIIEncoding.ASCII.GetByteCount(input), Unit.BYTES, StorageResolution.HIGH);
             logger.PutProperty("AccountId", "123456789");
             logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
             logger.PutProperty("DeviceId", "61270781-c6ac-46f1-baf7-22c808af8162");

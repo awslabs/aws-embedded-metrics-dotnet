@@ -38,7 +38,6 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
             }
 
             logger.LogInformation("Shutting down");
-            
             environment.Sink.Shutdown().Wait(TimeSpan.FromSeconds(120));
         }
 
@@ -56,7 +55,7 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
             metrics.PutMetric("ProcessingLatency", 99, Unit.MILLISECONDS);
 
             // High Resolution
-            metrics.PutMetric("Memory.HeapUsed", GC.GetTotalMemory(false), Unit.BYTES,StorageResolution.HIGH);
+            metrics.PutMetric("Memory.HeapUsed", GC.GetTotalMemory(false), Unit.BYTES, StorageResolution.HIGH);
 
             metrics.PutMetric("Count", 3, Unit.COUNT);
             metrics.PutProperty("AccountId", "123456789");

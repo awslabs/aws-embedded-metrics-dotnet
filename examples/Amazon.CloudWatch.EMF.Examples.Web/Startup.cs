@@ -9,7 +9,7 @@ namespace Amazon.CloudWatch.EMF.Web
     public class Startup
     {
         public Startup(
-            IConfiguration configuration, 
+            IConfiguration configuration,
             IHostEnvironment hostEnv)
         {
             Configuration = configuration;

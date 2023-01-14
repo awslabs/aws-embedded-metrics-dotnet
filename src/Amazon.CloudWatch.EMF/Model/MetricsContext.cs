@@ -103,20 +103,19 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Multiple calls using the same key will be stored as an array of scalar values.
         /// </summary>
         /// <example>
-        /// Defaults to StorageResolution : metricContext.PutMetric("Latency", 100)
+        /// Defaults to Standard Resolution : metricContext.PutMetric("Latency", 100)
         /// Standard Resolution metric : metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
         /// High Resolution metric : metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS,StorageResolution.HIGH)
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
         /// <param name="unit">the units of the metric</param>
-        /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution</param>
+        /// <param name="storageResolution">the storage resolution of the metric. Defaults to StandardResolution</param>
         public void PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
             Validator.ValidateMetric(key, value, storageResolution, _metricNameAndResolutionMap);
             _metricDirective.PutMetric(key, value, unit, storageResolution);
-            if (!_metricNameAndResolutionMap.ContainsKey(key))
-                _metricNameAndResolutionMap.TryAdd(key, storageResolution);
+            _metricNameAndResolutionMap.TryAdd(key, storageResolution);
         }
 
         /// <summary>
@@ -124,13 +123,13 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Multiple calls using the same key will be stored as an array of scalar values.
         /// </summary>
         /// <example>
-        /// Defaults to StorageResolution : metricContext.PutMetric("Count", 10)
+        /// Defaults to Standard Resolution : metricContext.PutMetric("Count", 10)
         /// StandardResolution metric : metricContext.PutMetric("Count", 10, Unit.MILLISECONDS)
         /// HighResolution metric : metricContext.PutMetric("Count", 100, Unit.MILLISECONDS,StorageResolution.HIGH)
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
-         /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution</param>
+        /// <param name="storageResolution">the storage resolution of the metric. Defaults to StandardResolution</param>
         public void PutMetric(string key, double value, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
             PutMetric(key, value, Unit.NONE, storageResolution);
