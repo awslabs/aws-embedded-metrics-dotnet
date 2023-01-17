@@ -15,7 +15,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public MetricDirective()
         {
-            Namespace = Constants.DEFAULT_NAMESPACE;
+            Namespace = Constants.DefaultNamespace;
             _metrics = new List<MetricDefinition>();
             CustomDimensionSets = new List<DimensionSet>();
             DefaultDimensionSet = new DimensionSet();

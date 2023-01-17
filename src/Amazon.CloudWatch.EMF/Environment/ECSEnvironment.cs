@@ -78,7 +78,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                     return _ecsMetadata.FormattedImageName;
                 }
 
-                return Constants.UNKNOWN;
+                return Constants.Unknown;
             }
         }
 
@@ -148,7 +148,7 @@ namespace Amazon.CloudWatch.EMF.Environment
 
             if (fluentHost == null || !string.IsNullOrEmpty(_configuration.AgentEndPoint)) return;
 
-            _fluentBitEndpoint = string.Format("tcp://%s:%d", fluentHost, Constants.DEFAULT_AGENT_PORT);
+            _fluentBitEndpoint = string.Format("tcp://%s:%d", fluentHost, Constants.DefaultAgentPort);
             _configuration.AgentEndPoint = _fluentBitEndpoint;
 
             _logger.LogInformation("Using FluentBit configuration. Endpoint: {}", _fluentBitEndpoint);

@@ -234,7 +234,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         [Fact]
         public void SetNamespace_WithNameTooLong_ThrowsInvalidNamespaceException()
         {
-            string namespaceValue = new string('a', Constants.MAX_NAMESPACE_LENGTH + 1);
+            string namespaceValue = new string('a', Constants.MaxNamespaceLength + 1);
             Assert.Throws<InvalidNamespaceException>(() => _metricsLogger.SetNamespace(namespaceValue));
         }
 
@@ -384,7 +384,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         [Fact]
         public void PutMetric_WithNameTooLong_ThrowsInvalidMetricException()
         {
-            string metricName = new string('a', Constants.MAX_METRIC_NAME_LENGTH + 1);
+            string metricName = new string('a', Constants.MaxMetricNameLength + 1);
             Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, 1, Unit.NONE));
         }
 

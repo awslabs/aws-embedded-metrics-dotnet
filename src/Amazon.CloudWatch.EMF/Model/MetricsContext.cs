@@ -241,7 +241,7 @@ namespace Amazon.CloudWatch.EMF.Model
         public List<string> Serialize()
         {
             var nodes = new List<RootNode>();
-            if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MAX_METRICS_PER_EVENT)
+            if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MaxMetricsPerEvent)
             {
                 nodes.Add(_rootNode);
             }
@@ -251,10 +251,10 @@ namespace Amazon.CloudWatch.EMF.Model
                 var count = 0;
                 while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
                 {
-                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT).ToList();
+                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MaxMetricsPerEvent).ToList();
                     var node = _rootNode.DeepCloneWithNewMetrics(metrics);
                     nodes.Add(node);
-                    count += Constants.MAX_METRICS_PER_EVENT;
+                    count += Constants.MaxMetricsPerEvent;
                 }
             }
 

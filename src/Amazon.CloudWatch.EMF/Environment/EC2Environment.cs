@@ -103,7 +103,7 @@ namespace Amazon.CloudWatch.EMF.Environment
                     return CFN_EC2_TYPE;
                 }
 
-                return Constants.UNKNOWN;
+                return Constants.Unknown;
             }
         }
 

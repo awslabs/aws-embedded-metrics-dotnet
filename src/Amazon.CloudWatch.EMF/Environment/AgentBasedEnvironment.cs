@@ -18,9 +18,9 @@ namespace Amazon.CloudWatch.EMF.Environment
             _loggerFactory = loggerFactory;
         }
 
-        public virtual string Name => !string.IsNullOrEmpty(_configuration.ServiceName) ? _configuration.ServiceName : Constants.UNKNOWN;
+        public virtual string Name => !string.IsNullOrEmpty(_configuration.ServiceName) ? _configuration.ServiceName : Constants.Unknown;
 
-        public virtual string Type => !string.IsNullOrEmpty(_configuration.ServiceType) ? _configuration.ServiceType : Constants.UNKNOWN;
+        public virtual string Type => !string.IsNullOrEmpty(_configuration.ServiceType) ? _configuration.ServiceType : Constants.Unknown;
 
         public virtual string LogGroupName => !string.IsNullOrEmpty(_configuration.LogGroupName) ? _configuration.LogGroupName : Name + "_metrics";
 

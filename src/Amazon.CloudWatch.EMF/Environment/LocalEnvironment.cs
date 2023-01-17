@@ -22,9 +22,9 @@ namespace Amazon.CloudWatch.EMF.Environment
             return false;
         }
 
-        public string Name => !string.IsNullOrEmpty(_config.ServiceName) ? _config.ServiceName : Constants.UNKNOWN;
+        public string Name => !string.IsNullOrEmpty(_config.ServiceName) ? _config.ServiceName : Constants.Unknown;
 
-        public string Type => !string.IsNullOrEmpty(_config.ServiceType) ? _config.ServiceType : Constants.UNKNOWN;
+        public string Type => !string.IsNullOrEmpty(_config.ServiceType) ? _config.ServiceType : Constants.Unknown;
 
         public string LogGroupName => !string.IsNullOrEmpty(_config.LogGroupName) ? _config.LogGroupName : Name + "_metrics";
 

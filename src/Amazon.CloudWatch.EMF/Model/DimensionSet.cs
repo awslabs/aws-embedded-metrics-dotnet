@@ -34,7 +34,7 @@ namespace Amazon.CloudWatch.EMF.Model
         public void AddDimension(string key, string value)
         {
             Validator.ValidateDimensionSet(key, value);
-            if (Dimensions.Count >= Constants.MAX_DIMENSION_SET_SIZE)
+            if (Dimensions.Count >= Constants.MaxDimensionSetSize)
                 throw new DimensionSetExceededException();
 
             Dimensions[key] = value;
@@ -48,7 +48,7 @@ namespace Amazon.CloudWatch.EMF.Model
         public DimensionSet AddRange(DimensionSet other)
         {
             var mergedDimensionSetSize = other.DimensionKeys.Count + Dimensions.Count;
-            if (mergedDimensionSetSize > Constants.MAX_DIMENSION_SET_SIZE)
+            if (mergedDimensionSetSize > Constants.MaxDimensionSetSize)
                 throw new DimensionSetExceededException();
 
             foreach (var dimension in other?.Dimensions)
