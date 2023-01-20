@@ -48,7 +48,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
         /// <param name="unit">the units of the metric</param>
-        /// <param name="storageResolution">the storage resolution of the metric. Default Set to StandardResolution with 60</param>
+        /// <param name="storageResolution">the storage resolution of the metric. Defaults to Standard Resolution</param>
         internal void PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
             var metric = _metrics.FirstOrDefault(m => m.Name == key);
