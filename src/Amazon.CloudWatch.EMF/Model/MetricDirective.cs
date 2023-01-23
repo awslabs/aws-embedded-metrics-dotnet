@@ -15,7 +15,7 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public MetricDirective()
         {
-            Namespace = Constants.DEFAULT_NAMESPACE;
+            Namespace = Constants.DefaultNamespace;
             _metrics = new List<MetricDefinition>();
             CustomDimensionSets = new List<DimensionSet>();
             DefaultDimensionSet = new DimensionSet();
@@ -35,9 +35,9 @@ namespace Amazon.CloudWatch.EMF.Model
 
         internal DimensionSet DefaultDimensionSet { get; set; }
 
-        internal void PutMetric(string key, double value)
+        internal void PutMetric(string key, double value, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
-            PutMetric(key, value, Unit.NONE);
+            PutMetric(key, value, Unit.NONE, storageResolution);
         }
 
         /// <summary>
@@ -45,10 +45,11 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Adds the value an existing metric if one already exists with the specified key or
         /// adds a new metric if one with the specified key does not already exist.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="unit"></param>
-        internal void PutMetric(string key, double value, Unit unit)
+        /// <param name="key">the name of the metric</param>
+        /// <param name="value">the value of the metric</param>
+        /// <param name="unit">the units of the metric</param>
+        /// <param name="storageResolution">the storage resolution of the metric. Defaults to Standard Resolution</param>
+        internal void PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
             var metric = _metrics.FirstOrDefault(m => m.Name == key);
             if (metric != null)
@@ -57,7 +58,7 @@ namespace Amazon.CloudWatch.EMF.Model
             }
             else
             {
-                _metrics.Add(new MetricDefinition(key, unit, value));
+                _metrics.Add(new MetricDefinition(key, value, unit, storageResolution));
             }
         }
 

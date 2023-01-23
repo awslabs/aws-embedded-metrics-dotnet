@@ -234,7 +234,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         [Fact]
         public void SetNamespace_WithNameTooLong_ThrowsInvalidNamespaceException()
         {
-            string namespaceValue = new string('a', Constants.MAX_NAMESPACE_LENGTH + 1);
+            string namespaceValue = new string('a', Constants.MaxNamespaceLength + 1);
             Assert.Throws<InvalidNamespaceException>(() => _metricsLogger.SetNamespace(namespaceValue));
         }
 
@@ -315,6 +315,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             Assert.Equal(expectedValue, metricDefinition.Values[0]);
             Assert.Equal(Unit.NONE, metricDefinition.Unit);
+            Assert.Equal(StorageResolution.STANDARD, metricDefinition.StorageResolution);
         }
 
         [Fact]
@@ -333,6 +334,39 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
             Assert.Equal(expectedValue, metricDefinition.Values[0]);
             Assert.Equal(Unit.MILLISECONDS, metricDefinition.Unit);
+            Assert.Equal(StorageResolution.STANDARD, metricDefinition.StorageResolution);
+        }
+
+        [Fact]
+        public void TestPutMetricWithHighResolutionCheck()
+        {
+            string expectedKey = "test";
+            double expectedValue = 2.0;
+            _metricsLogger.PutMetric(expectedKey, expectedValue, Unit.MILLISECONDS, StorageResolution.HIGH);
+            _metricsLogger.Flush();
+
+            var metricDirective = typeof(MetricsContext)
+              .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+              .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == expectedKey);
+            Assert.Equal(StorageResolution.HIGH, metricDefinition.StorageResolution);
+        }
+
+        [Fact]
+        public void TestPutMetricWithStandardResolutionCheck()
+        {
+            string expectedKey = "test";
+            double expectedValue = 2.0;
+            _metricsLogger.PutMetric(expectedKey, expectedValue, Unit.MILLISECONDS, StorageResolution.STANDARD);
+            _metricsLogger.Flush();
+
+            var metricDirective = typeof(MetricsContext)
+              .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+              .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == expectedKey);
+            Assert.Equal(StorageResolution.STANDARD, metricDefinition.StorageResolution);
         }
 
         [Theory]
@@ -350,9 +384,37 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         [Fact]
         public void PutMetric_WithNameTooLong_ThrowsInvalidMetricException()
         {
-            string metricName = new string('a', Constants.MAX_METRIC_NAME_LENGTH + 1);
+            string metricName = new string('a', Constants.MaxMetricNameLength + 1);
             Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric(metricName, 1, Unit.NONE));
         }
+
+        [Fact]
+        public void PutMetric_WithSameMetricHavingDifferentResolution_ThrowsInvalidMetricException()
+        {
+            _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.STANDARD);
+            Assert.Throws<InvalidMetricException>(() => _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.HIGH));
+        }
+
+
+        [Fact]
+        public void PutMetric_WithSameMetricHavingDifferentResolutionInDifferentFlush_TheAllow()
+        {
+            _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.STANDARD);
+            _metricsLogger.Flush();
+
+            _metricsLogger.PutMetric("TestMetric", 1, Unit.COUNT, StorageResolution.HIGH);
+            _metricsLogger.Flush();
+
+            var metricDirective = typeof(MetricsContext)
+              .GetField("_metricDirective", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+              .GetValue(_sink.MetricsContext) as MetricDirective;
+
+            Assert.True(metricDirective.Metrics.Count() == 1);
+
+            var metricDefinition = metricDirective.Metrics.FirstOrDefault(m => m.Name == "TestMetric");
+            Assert.Equal(StorageResolution.HIGH, metricDefinition.StorageResolution);
+        }
+
 
         [Fact]
         public void TestPutMetaData()

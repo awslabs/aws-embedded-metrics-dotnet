@@ -52,6 +52,7 @@ namespace Amazon.CloudWatch.EMF.Canary
                     {
                         // https://github.com/dotnet/corefx/blob/3633ea2c6bf9d52029681efeedd84fd7a06eb6ba/src/System.Diagnostics.Process/src/System/Diagnostics/ProcessManager.Linux.cs#L137
                         logger.PutMetric("Memory.RSS", currentProcess.WorkingSet64, Unit.BYTES);
+                        logger.PutMetric("Memory.VirtualMemorySize64", currentProcess.VirtualMemorySize64, Unit.BYTES, StorageResolution.HIGH);
                     }
 
                     logger.PutMetric("Invoke", 1, Unit.NONE);

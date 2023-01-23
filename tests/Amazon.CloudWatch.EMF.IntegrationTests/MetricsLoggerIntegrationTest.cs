@@ -119,7 +119,7 @@ namespace Amazon.CloudWatch.EMF.IntegrationTests
         {
             MetricsLogger logger = new MetricsLogger(new EnvironmentProvider(EnvironmentConfigurationProvider.Config, new ResourceFetcher()), NullLoggerFactory.Instance);
             logger.PutDimensions(_dimensions);
-            logger.PutMetric(metricName, 100, Unit.MILLISECONDS);
+            logger.PutMetric(metricName, 100, Unit.MILLISECONDS, StorageResolution.STANDARD);
             logger.Flush();
         }
 

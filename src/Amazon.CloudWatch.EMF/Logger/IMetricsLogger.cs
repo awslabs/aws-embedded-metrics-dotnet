@@ -15,9 +15,9 @@ namespace Amazon.CloudWatch.EMF.Logger
 
         public MetricsLogger SetDimensions(params DimensionSet[] dimensionSets);
 
-        public MetricsLogger PutMetric(string key, double value, Unit unit);
+        public MetricsLogger PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD);
 
-        public MetricsLogger PutMetric(string key, double value);
+        public MetricsLogger PutMetric(string key, double value, StorageResolution storageResolution = StorageResolution.STANDARD);
 
         public MetricsLogger PutMetadata(string key, object value);
 

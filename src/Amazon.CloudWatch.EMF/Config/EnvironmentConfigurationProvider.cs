@@ -16,16 +16,16 @@ namespace Amazon.CloudWatch.EMF.Config
             get
             {
                 var bufferSize = Int32.TryParse(
-                        GetEnvVar(ConfigurationKeys.AGENT_BUFFER_SIZE), out var parsedBufferSize)
+                        GetEnvVar(ConfigurationKeys.AgentBufferSize), out var parsedBufferSize)
                             ? parsedBufferSize
                             : Configuration.DEFAULT_AGENT_BUFFER_SIZE;
 
                 return _config ??= new Configuration(
-                    GetEnvVar(ConfigurationKeys.SERVICE_NAME),
-                    GetEnvVar(ConfigurationKeys.SERVICE_TYPE),
-                    GetEnvVar(ConfigurationKeys.LOG_GROUP_NAME),
-                    GetEnvVar(ConfigurationKeys.LOG_STREAM_NAME),
-                    GetEnvVar(ConfigurationKeys.AGENT_ENDPOINT),
+                    GetEnvVar(ConfigurationKeys.ServiceName),
+                    GetEnvVar(ConfigurationKeys.ServiceType),
+                    GetEnvVar(ConfigurationKeys.LogGroupName),
+                    GetEnvVar(ConfigurationKeys.LogStreamName),
+                    GetEnvVar(ConfigurationKeys.AgentEndpoint),
                     bufferSize,
                     GetEnvironmentOverride());
             }
@@ -34,7 +34,7 @@ namespace Amazon.CloudWatch.EMF.Config
 
         private static Environments GetEnvironmentOverride()
         {
-            var environmentName = GetEnvVar(ConfigurationKeys.ENVIRONMENT_OVERRIDE);
+            var environmentName = GetEnvVar(ConfigurationKeys.EnvironmentOverride);
             if (string.IsNullOrEmpty(environmentName))
             {
                 return Environments.Unknown;
@@ -52,7 +52,7 @@ namespace Amazon.CloudWatch.EMF.Config
 
         private static string GetEnvVar(string key)
         {
-            var name = string.Join(string.Empty, ConfigurationKeys.ENV_VAR_PREFIX, "_", key);
+            var name = string.Join(string.Empty, ConfigurationKeys.EnvVarPrefix, "_", key);
             return EnvUtils.GetEnv(name);
         }
     }

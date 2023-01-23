@@ -198,7 +198,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Environment
             // Act
             var result = environment.Type;
             // Assert
-            Assert.Equal(Constants.UNKNOWN, result);
+            Assert.Equal(Constants.Unknown, result);
         }
 
         [Fact]

@@ -5,7 +5,7 @@ namespace Amazon.CloudWatch.EMF
     public class DimensionSetExceededException : Exception
     {
         public DimensionSetExceededException()
-            : base("Maximum number of dimensions per dimension set allowed are " + Constants.MAX_DIMENSION_SET_SIZE +
+            : base("Maximum number of dimensions per dimension set allowed are " + Constants.MaxDimensionSetSize +
                    ". Account for default dimensions if not using SetDimensions.")
         {
         }

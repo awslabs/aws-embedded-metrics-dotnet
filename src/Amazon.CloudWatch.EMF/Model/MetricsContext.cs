@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.CloudWatch.EMF.Utils;
@@ -13,6 +14,11 @@ namespace Amazon.CloudWatch.EMF.Model
         /// holds a reference to _rootNode.MetaData.CloudWatchDirective;
         /// </summary>
         private readonly MetricDirective _metricDirective;
+
+        /// <summary>
+        /// Holds the metric key and its resolution type for validation checks
+        /// </summary>
+        private readonly ConcurrentDictionary<string, StorageResolution> _metricNameAndResolutionMap = new ConcurrentDictionary<string, StorageResolution>();
 
         public MetricsContext() : this(new RootNode())
         {
@@ -97,15 +103,19 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Multiple calls using the same key will be stored as an array of scalar values.
         /// </summary>
         /// <example>
-        /// metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
+        /// Defaults to Standard Resolution : metricContext.PutMetric("Latency", 100)
+        /// Standard Resolution metric : metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS)
+        /// High Resolution metric : metricContext.PutMetric("Latency", 100, Unit.MILLISECONDS,StorageResolution.HIGH)
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
         /// <param name="unit">the units of the metric</param>
-        public void PutMetric(string key, double value, Unit unit)
+        /// <param name="storageResolution">the storage resolution of the metric. Defaults to StandardResolution</param>
+        public void PutMetric(string key, double value, Unit unit, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
-            Validator.ValidateMetric(key, value);
-            _metricDirective.PutMetric(key, value, unit);
+            Validator.ValidateMetric(key, value, storageResolution, _metricNameAndResolutionMap);
+            _metricDirective.PutMetric(key, value, unit, storageResolution);
+            _metricNameAndResolutionMap.TryAdd(key, storageResolution);
         }
 
         /// <summary>
@@ -113,13 +123,16 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Multiple calls using the same key will be stored as an array of scalar values.
         /// </summary>
         /// <example>
-        /// metricContext.PutMetric("Count", 10)
+        /// Defaults to Standard Resolution : metricContext.PutMetric("Count", 10)
+        /// StandardResolution metric : metricContext.PutMetric("Count", 10, Unit.MILLISECONDS)
+        /// HighResolution metric : metricContext.PutMetric("Count", 100, Unit.MILLISECONDS,StorageResolution.HIGH)
         /// </example>
         /// <param name="key">the name of the metric</param>
         /// <param name="value">the value of the metric</param>
-        public void PutMetric(string key, double value)
+        /// <param name="storageResolution">the storage resolution of the metric. Defaults to StandardResolution</param>
+        public void PutMetric(string key, double value, StorageResolution storageResolution = StorageResolution.STANDARD)
         {
-            PutMetric(key, value, Unit.NONE);
+            PutMetric(key, value, Unit.NONE, storageResolution);
         }
 
         /// <summary>
@@ -228,7 +241,7 @@ namespace Amazon.CloudWatch.EMF.Model
         public List<string> Serialize()
         {
             var nodes = new List<RootNode>();
-            if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MAX_METRICS_PER_EVENT)
+            if (_rootNode.AWS.MetricDirective.Metrics.Count <= Constants.MaxMetricsPerEvent)
             {
                 nodes.Add(_rootNode);
             }
@@ -238,10 +251,10 @@ namespace Amazon.CloudWatch.EMF.Model
                 var count = 0;
                 while (count < _rootNode.AWS.MetricDirective.Metrics.Count)
                 {
-                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MAX_METRICS_PER_EVENT).ToList();
+                    var metrics = _rootNode.AWS.MetricDirective.Metrics.Skip(count).Take(Constants.MaxMetricsPerEvent).ToList();
                     var node = _rootNode.DeepCloneWithNewMetrics(metrics);
                     nodes.Add(node);
-                    count += Constants.MAX_METRICS_PER_EVENT;
+                    count += Constants.MaxMetricsPerEvent;
                 }
             }
 

@@ -15,7 +15,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Sink
         private string _message;
         public void SendMessage(string message)
         {
-            message = _message;
+            _message = message;
         }
 
         public string GetMessage()

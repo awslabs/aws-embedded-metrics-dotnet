@@ -32,7 +32,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
         [Fact]
         public void MetricDefinition_WithUnitAndValue_Returns_ValidJson()
         {
-            MetricDefinition metricDefinition = new MetricDefinition("Time", Unit.MILLISECONDS, 10);
+            MetricDefinition metricDefinition = new MetricDefinition("Time", 10, Unit.MILLISECONDS);
 
             string metricString = JsonConvert.SerializeObject(metricDefinition);
 
@@ -41,9 +41,52 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
         }
 
         [Fact]
+        public void MetricDefinition_WithHighResolution_Returns_ValidJson()
+        {
+            MetricDefinition metricDefinition = new MetricDefinition("Time", 10, Unit.MILLISECONDS, StorageResolution.HIGH);
+
+            string metricString = JsonConvert.SerializeObject(metricDefinition);
+
+            Assert.Equal("{\"Name\":\"Time\",\"Unit\":\"Milliseconds\",\"StorageResolution\":1}", metricString);
+        }
+
+        [Fact]
+        public void MetricDefinition_WithStandardResolution_Returns_ValidJson()
+        {
+            MetricDefinition metricDefinition = new MetricDefinition("Time", 10, Unit.MILLISECONDS, StorageResolution.STANDARD);
+
+            string metricString = JsonConvert.SerializeObject(metricDefinition);
+
+            Assert.Equal("{\"Name\":\"Time\",\"Unit\":\"Milliseconds\"}", metricString);
+        }
+
+        [Fact]
+        public void MetricDefinition_WithStandardResolutionAndWithoutUnit_Returns_ValidJson()
+        {
+            MetricDefinition metricDefinition = new MetricDefinition("Time", StorageResolution.STANDARD);
+
+            string metricString = JsonConvert.SerializeObject(metricDefinition);
+
+            Assert.Equal("{\"Name\":\"Time\",\"Unit\":\"None\"}", metricString);
+            Assert.Empty(metricDefinition.Values);
+        }
+
+        [Fact]
+        public void MetricDefinition_WithHighResolutionAndWithoutUnit_Returns_ValidJson()
+        {
+            MetricDefinition metricDefinition = new MetricDefinition("Time", StorageResolution.HIGH);
+
+            string metricString = JsonConvert.SerializeObject(metricDefinition);
+
+            Assert.Equal("{\"Name\":\"Time\",\"Unit\":\"None\",\"StorageResolution\":1}", metricString);
+            Assert.Empty(metricDefinition.Values);
+        }
+
+
+        [Fact]
         public void MetricDefinition_AddValue_Returns_ValidValues()
         {
-            MetricDefinition metricDefinition = new MetricDefinition("Time", Unit.MILLISECONDS, 10);
+            MetricDefinition metricDefinition = new MetricDefinition("Time", 10, Unit.MILLISECONDS);
 
             Assert.Equal(new List<double>() { 10 }, metricDefinition.Values);
 
