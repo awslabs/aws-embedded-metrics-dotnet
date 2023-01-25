@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageId>Amazon.CloudWatch.EMF</PackageId>
-        <VersionPrefix>2.0.0</VersionPrefix>
+        <VersionPrefix>2.1.0</VersionPrefix>
         <Authors>Amazon Web Services</Authors>
         <Description>Amazon CloudWatch Embedded Metric Format Client Library</Description>
         <Language>en-US</Language>
