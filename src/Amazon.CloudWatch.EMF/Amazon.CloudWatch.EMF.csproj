@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
         <CodeAnalysisRuleSet>Amazon.CloudWatch.EMF.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
