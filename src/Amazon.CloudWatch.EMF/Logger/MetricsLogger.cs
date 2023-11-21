@@ -223,6 +223,18 @@ namespace Amazon.CloudWatch.EMF.Logger
         }
 
         /// <summary>
+        /// Sets the timestamp of the metrics. If not set, current time of the client will be used.
+        /// </summary>
+        /// <param name="dateTime">Date and Time</param>
+        /// <returns>the current logger.</returns>
+        public MetricsLogger SetTimestamp(DateTime dateTime)
+        {
+            Validator.ValidateTimestamp(dateTime);
+            _context.SetTimestamp(dateTime);
+            return this;
+        }
+
+        /// <summary>
         /// Shutdown the associated environment's sink.
         /// </summary>
         public async Task ShutdownAsync()

@@ -37,7 +37,7 @@ namespace Amazon.CloudWatch.EMF.Web.Controllers
             var rng = new Random();
             var temperature = rng.Next(-20, 55);
             var WindSpeed = rng.Next(10, 100);
-
+            _metrics.SetTimestamp(DateTime.Now);
             _metrics.PutMetric("Temperature", temperature, Unit.NONE);
             _metrics.PutMetric("WindSpeed", WindSpeed, Unit.NONE, StorageResolution.HIGH);
 

@@ -433,6 +433,27 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             Assert.Equal(expectedValue, actualValue);
         }
 
+
+        [Theory]
+        [MemberData(nameof(setTimestampValidInputs))]
+        public void SetTimestamp_WhenValidTimeStamp_SetTimestamp(DateTime timestamp)
+        {
+            MetricsContext metricsContext = new MetricsContext();
+            _metricsLogger = new MetricsLogger(_environment, metricsContext, _logger);
+            _metricsLogger.SetTimestamp(timestamp);
+            Assert.True(DateTime.Compare(metricsContext.GetTimestamp(), timestamp) == 0);
+        }
+
+        
+        [Theory]
+        [MemberData(nameof(setTimestampInValidInputs))]
+        public void SetTimestamp_WhenInValidTimestamp_ThrowException(DateTime timestamp, string message)
+        {
+            Exception ex = Assert.Throws<InvalidTimestampException>(() => _metricsLogger.SetTimestamp(timestamp));
+            Assert.Equal(message, ex.Message);
+        }
+
+
         private void ExpectDimension(string dimension, string value)
         {
             List<DimensionSet> dimensions = _sink.MetricsContext.GetAllDimensionSets();
@@ -445,6 +466,41 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             }
             else
                 Assert.Null(dimensions[0].GetDimensionValue(dimension));
+        }
+
+
+        public static IEnumerable<object[]> setTimestampValidInputs()
+        {
+            yield return new object[] { DateTime.Now };
+
+            yield return new object[] { DateTime.UtcNow };
+
+            TimeSpan currentTimespan = TimeSpan.FromTicks(DateTime.Now.Ticks);
+            TimeSpan futureTimespan = currentTimespan.Add(TimeSpan.FromHours(Constants.MaxTimestampFutureAgeHours - 1));
+            yield return new object[] { new DateTime(futureTimespan.Ticks) };
+
+
+            TimeSpan pastTimespan = currentTimespan.Subtract(TimeSpan.FromHours((Constants.MaxTimestampPastAgeDays * 24) - 1));
+            yield return new object[] { new DateTime(pastTimespan.Ticks) };
+        }
+
+        public static IEnumerable<Object[]> setTimestampInValidInputs()
+        {
+            TimeSpan currentTimespan = TimeSpan.FromTicks(DateTime.Now.Ticks);
+            TimeSpan pastTimespan = currentTimespan.Subtract(TimeSpan.FromDays(Constants.MaxTimestampPastAgeDays) + TimeSpan.FromMinutes(1));
+            TimeSpan futureTimespan = currentTimespan.Add(TimeSpan.FromHours(Constants.MaxTimestampFutureAgeHours) + TimeSpan.FromMinutes(1));
+
+            yield return new object[] { DateTime.MinValue, "Timestamp must not be older than  "
+                            + Constants.MaxTimestampPastAgeDays
+                            + " days" };
+
+            yield return new object[] { new DateTime(pastTimespan.Ticks), "Timestamp must not be older than  "
+                            + Constants.MaxTimestampPastAgeDays
+                            + " days" };
+
+            yield return new object[] { new DateTime(futureTimespan.Ticks), "Timestamp must not be newer than "
+                            + Constants.MaxTimestampFutureAgeHours
+                            + " hours" };
         }
     }
 }

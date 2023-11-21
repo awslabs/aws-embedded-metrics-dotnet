@@ -57,5 +57,15 @@ namespace Amazon.CloudWatch.EMF.Model
             clone.Timestamp = Timestamp;
             return clone;
         }
+
+        internal void SetTimestamp(DateTime dateTime)
+        {
+            Timestamp = dateTime;
+        }
+
+        internal DateTime GetTimeStamp()
+        {
+            return Timestamp;
+        }
     }
 }
