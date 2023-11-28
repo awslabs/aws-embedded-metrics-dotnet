@@ -287,6 +287,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
             _metricsLogger1.PutDimensions(new DimensionSet(dimensionName, dimensionValue));
             _metricsLogger1.FlushPreserveDimensions = false;
             _metricsLogger1.Flush();
+         
 
             Assert.Equal(2, _sink.MetricsContext.GetAllDimensionSets()[0].DimensionKeys.Count);
             ExpectDimension(dimensionName, dimensionValue);
@@ -436,7 +437,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
 
         [Theory]
         [MemberData(nameof(setTimestampValidInputs))]
-        public void SetTimestamp_WhenValidTimeStamp_SetTimestamp(DateTime timestamp)
+        public void SetTimestamp_WhenValidTimeStamp_SetsTimestamp(DateTime timestamp)
         {
             MetricsContext metricsContext = new MetricsContext();
             _metricsLogger = new MetricsLogger(_environment, metricsContext, _logger);
@@ -447,7 +448,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
         
         [Theory]
         [MemberData(nameof(setTimestampInValidInputs))]
-        public void SetTimestamp_WhenInValidTimestamp_ThrowException(DateTime timestamp, string message)
+        public void SetTimestamp_WhenInValidTimestamp_ThrowsException(DateTime timestamp, string message)
         {
             Exception ex = Assert.Throws<InvalidTimestampException>(() => _metricsLogger.SetTimestamp(timestamp));
             Assert.Equal(message, ex.Message);
@@ -494,7 +495,7 @@ namespace Amazon.CloudWatch.EMF.Tests.Logger
                             + Constants.MaxTimestampPastAgeDays
                             + " days" };
 
-            yield return new object[] { new DateTime(pastTimespan.Ticks), "Timestamp must not be older than  "
+            yield return new object[] { new DateTime(pastTimespan.Ticks, DateTimeKind.Local), "Timestamp must not be older than  "
                             + Constants.MaxTimestampPastAgeDays
                             + " days" };
 

@@ -125,7 +125,7 @@ namespace Amazon.CloudWatch.EMF.Utils
                 currentTimeSpan = DateTime.Now;
             }
 
-            if (DateTime.Compare(timestamp, currentTimeSpan.Add(TimeSpan.FromHours(Constants.MaxTimestampFutureAgeHours))) > 0)
+            if (timestamp > currentTimeSpan.AddHours(Constants.MaxTimestampFutureAgeHours))
             {
                 throw new InvalidTimestampException(
                     "Timestamp must not be newer than "
@@ -133,7 +133,7 @@ namespace Amazon.CloudWatch.EMF.Utils
                             + " hours");
             }
 
-            if (DateTime.Compare(timestamp, currentTimeSpan.Subtract(TimeSpan.FromDays(Constants.MaxTimestampPastAgeDays))) < 0)
+            if (timestamp < currentTimeSpan.AddDays(-Constants.MaxTimestampPastAgeDays))
             {
                 throw new InvalidTimestampException(
                     "Timestamp must not be older than  "

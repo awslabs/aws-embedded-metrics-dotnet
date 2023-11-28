@@ -223,7 +223,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         }
 
         /// <summary>
-        /// Sets the timestamp of the metrics. If not set, current time of the client will be used.
+        /// Sets the timestamp of the metrics. If not set, the current time of the client will be used.
         /// </summary>
         /// <param name="dateTime">Date and Time</param>
         /// <returns>the current logger.</returns>
