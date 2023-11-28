@@ -5,7 +5,7 @@ using Amazon.CloudWatch.EMF.Logger;
 using Amazon.CloudWatch.EMF.Model;
 using Amazon.Lambda.Core;
 using System.Text;
-
+using System;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -27,6 +27,7 @@ namespace Amazon.CloudWatch.EMF.Lambda
             var dimensionSet = new DimensionSet();
             dimensionSet.AddDimension("Service", "Aggregator");
             dimensionSet.AddDimension("Region", "us-west-2");
+            logger.SetTimestamp(DateTime.Now);
             logger.PutDimensions(dimensionSet);
             logger.SetNamespace("EMFLambda");
             logger.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);

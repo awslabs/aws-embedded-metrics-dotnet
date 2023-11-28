@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Amazon.CloudWatch.EMF.Model;
 
 namespace Amazon.CloudWatch.EMF.Logger
@@ -22,5 +23,7 @@ namespace Amazon.CloudWatch.EMF.Logger
         public MetricsLogger PutMetadata(string key, object value);
 
         public MetricsLogger SetNamespace(string logNamespace);
+
+        public MetricsLogger SetTimestamp(DateTime dateTime);
     }
 }

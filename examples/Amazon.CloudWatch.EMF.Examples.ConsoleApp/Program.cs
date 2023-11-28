@@ -45,6 +45,7 @@ namespace Amazon.CloudWatch.EMF.ConsoleApp
         {
 
             var dimensionSet = new DimensionSet();
+            metrics.SetTimestamp(DateTime.Now);
             dimensionSet.AddDimension("Service", "Aggregator");
             dimensionSet.AddDimension("Region", "us-west-2");
             metrics.SetDimensions(dimensionSet);

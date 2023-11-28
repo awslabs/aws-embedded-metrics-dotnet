@@ -40,6 +40,7 @@ namespace Amazon.CloudWatch.EMF.Canary
                 using (var logger = new MetricsLogger(loggerFactory))
                 {
                     logger.SetNamespace("Canary");
+                    logger.SetTimestamp(DateTime.Now);
 
                     var dimensionSet = new DimensionSet();
                     dimensionSet.AddDimension("Runtime", "Dotnet");

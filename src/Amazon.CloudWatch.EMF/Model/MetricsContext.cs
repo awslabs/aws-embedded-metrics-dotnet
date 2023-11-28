@@ -233,6 +233,24 @@ namespace Amazon.CloudWatch.EMF.Model
         }
 
         /// <summary>
+        /// Sets the timestamp of the metrics. If not set, the current time of the client will be used.
+        /// </summary>
+        /// <param name="dateTime">Date and Time</param>
+        public void SetTimestamp(DateTime dateTime)
+        {
+            _rootNode.AWS.SetTimestamp(dateTime);
+        }
+
+        /// <summary>
+        /// Get metrics timestamp
+        /// </summary>
+        /// <returns>DateTime object</returns>
+        public DateTime GetTimestamp()
+        {
+            return _rootNode.AWS.GetTimeStamp();
+        }
+
+        /// <summary>
         /// Serializes the metrics in this context to strings.
         /// The EMF backend requires no more than 100 metrics in one log event.
         /// If there are more than 100 metrics, we split the metrics into multiple log events (strings).

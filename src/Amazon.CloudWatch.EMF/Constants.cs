@@ -16,5 +16,9 @@ namespace Amazon.CloudWatch.EMF
         public const int MaxMetricsPerEvent = 100;
 
         public const string DefaultNamespace = "aws-embedded-metrics";
+
+        public const long MaxTimestampPastAgeDays = 14;
+
+        public const long MaxTimestampFutureAgeHours = 2;
     }
 }

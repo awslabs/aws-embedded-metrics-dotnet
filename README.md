@@ -177,7 +177,7 @@ Example:
 
 ```c#
 // Standard Resolution Example
-metrics.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);
+logger.PutMetric("ProcessingLatency", 101, Unit.MILLISECONDS);
 
 // High Resolution Example
 logger.PutMetric("Memory.HeapUsed", "1600424.0", Unit.BYTES, StorageResolution.HIGH);
@@ -189,8 +189,8 @@ Adds or updates the value for a given property on this context. This value is no
 
 Example:
 ```c#
-metrics.PutProperty("AccountId", "123456789");
-metrics.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
+logger.PutProperty("AccountId", "123456789");
+logger.PutProperty("RequestId", "422b1569-16f6-4a03-b8f0-fe3fd9b100f8");
 
 Dictionary<string, object> payLoad = new Dictionary<string, object>
 {
@@ -198,7 +198,7 @@ Dictionary<string, object> payLoad = new Dictionary<string, object>
   { "temperature", 273.0 },
   { "pressure", 101.3 }
 };
-metrics.PutProperty("Payload", payLoad);
+logger.PutProperty("Payload", payLoad);
 ```
 
 - MetricsLogger **PutDimensions**(DimensionSet dimensions)
@@ -217,7 +217,7 @@ Example:
 DimensionSet dimensionSet = new DimensionSet();
 dimensionSet.AddDimension("Service", "Aggregator");
 dimensionSet.AddDimension("Region", "us-west-2");
-metrics.PutDimensions(dimensionSet);
+logger.PutDimensions(dimensionSet);
 ```
 
 - MetricsLogger **SetDimensions**(params DimensionSet[] dimensionSets)
@@ -237,14 +237,14 @@ Examples:
 DimensionSet dimensionSet = new DimensionSet();
 dimensionSet.AddDimension("Service", "Aggregator");
 dimensionSet.AddDimension("Region", "us-west-2");
-metrics.SetDimensions(true, dimensionSet); // Will preserve default dimensions
+logger.SetDimensions(true, dimensionSet); // Will preserve default dimensions
 ```
 
 ```c#
 DimensionSet dimensionSet = new DimensionSet();
 dimensionSet.AddDimension("Service", "Aggregator");
 dimensionSet.AddDimension("Region", "us-west-2");
-metrics.SetDimensions(dimensionSet); // Will remove default dimensions
+logger.SetDimensions(dimensionSet); // Will remove default dimensions
 ```
 
 - MetricsLogger **ResetDimensions**(bool useDefault)
@@ -259,12 +259,23 @@ Namespaces must meet CloudWatch Namespace requirements, otherwise a `InvalidName
 Example:
 
 ```c#
-SetNamespace("MyApplication")
+logger.SetNamespace("MyApplication")
 ```
+
+- MetricsLogger **SetTimestamp**(DateTime dateTime)
+
+Sets the timestamp of the metrics. If not set, the current time of the client will be used.
+Timestamp must meet CloudWatch requirements, otherwise a `InvalidTimestampException` will be thrown. See [Timestamps](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#about_timestamp) for valid values.
+
+Example:
+```c#
+ logger.SetTimestamp(DateTime.Now);
+```
+
 
 - **Flush**()
 
-Flushes the current MetricsContext to the configured sink and resets all properties and metric values. The namespace and default dimensions will be preserved across flushes. Custom dimensions are preserved by default, but this behavior can be changed by setting `flushPreserveDimensions = false` on the metrics logger.
+Flushes the current MetricsContext to the configured sink and resets all properties and metric values. The namespace and default dimensions will be preserved across flushes. Custom dimensions are preserved by default, but this behavior can be changed by setting `FlushPreserveDimensions = false` on the metrics logger.
 
 Examples:
 
@@ -273,12 +284,12 @@ flush();  // default dimensions and custom dimensions will be preserved after ea
 ```
 
 ```c#
-logger.setFlushPreserveDimensions = false;
+logger.FlushPreserveDimensions = false;
 flush();  // only default dimensions will be preserved after each flush()
 ```
 
 ```c#
-setFlushPreserveDimensions(false);
-resetDimensions(false);  // default dimensions are disabled; no dimensions will be preserved after each flush()
-flush();
+logger.FlushPreserveDimensions = false;
+logger.ResetDimensions(false);  // default dimensions are disabled; no dimensions will be preserved after each flush()
+logger.Flush();
 ```

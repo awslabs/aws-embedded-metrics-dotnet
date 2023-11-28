@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Amazon.CloudWatch.EMF.Model;
+using static System.Net.WebRequestMethods;
 
 namespace Amazon.CloudWatch.EMF.Utils
 {
@@ -100,6 +102,43 @@ namespace Amazon.CloudWatch.EMF.Utils
             if (!System.Text.RegularExpressions.Regex.IsMatch(@namespace, Constants.ValidNamespaceRegex))
             {
                 throw new InvalidNamespaceException($"Namespace {@namespace} contains invalid characters");
+            }
+        }
+
+        /// <summary>
+        /// Validates a given timestamp based on CloudWatch Timestamp guidelines.
+        /// Timestamp must meet CloudWatch requirements, otherwise a InvalidTimestampException will be thrown.
+        /// See [Timestamps] (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#about_timestamp) for valid values.
+        /// </summary>
+        /// <param name="timestamp">Datetime object representing the timestamp to validate.</param>
+        /// <exception cref="InvalidTimestampException">If the timestamp is either too old, or too far in the future.</exception>
+        internal static void ValidateTimestamp(DateTime timestamp)
+        {
+            DateTime currentTimeSpan;
+
+            if (timestamp.Kind == DateTimeKind.Utc)
+            {
+                currentTimeSpan = DateTime.UtcNow;
+            }
+            else
+            {
+                currentTimeSpan = DateTime.Now;
+            }
+
+            if (timestamp > currentTimeSpan.AddHours(Constants.MaxTimestampFutureAgeHours))
+            {
+                throw new InvalidTimestampException(
+                    "Timestamp must not be newer than "
+                            + Constants.MaxTimestampFutureAgeHours
+                            + " hours");
+            }
+
+            if (timestamp < currentTimeSpan.AddDays(-Constants.MaxTimestampPastAgeDays))
+            {
+                throw new InvalidTimestampException(
+                    "Timestamp must not be older than  "
+                            + Constants.MaxTimestampPastAgeDays
+                            + " days");
             }
         }
 
