@@ -68,7 +68,7 @@ namespace Amazon.CloudWatch.EMF.Sink
                     }
                     catch (InvalidOperationException e)
                     {
-                        _logger.LogError("Attempted to publish data after the sink has been shutdown. {}", e);
+                        _logger.LogError(e, "Attempted to publish data after the sink has been shutdown.");
                     }
 
                     _logger.LogDebug("Data queued successfully.");
@@ -76,7 +76,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             }
             catch (Exception e)
             {
-                _logger.LogError("Failed to serialize the metrics with the exception: {}", e);
+                _logger.LogError(e, "Failed to serialize the metrics.");
             }
         }
 
@@ -118,7 +118,7 @@ namespace Amazon.CloudWatch.EMF.Sink
                             }
                             catch (Exception e)
                             {
-                                logger.LogWarning("Failed to write message to socket. Backing off and trying again. {}", e.Message);
+                                logger.LogWarning(e, "Failed to write message to socket. Backing off and trying again.");
                                 Thread.Sleep(1000); // TODO: backoff
                             }
                         }
