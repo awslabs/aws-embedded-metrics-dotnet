@@ -31,7 +31,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             }
             catch (UriFormatException)
             {
-                logger.LogWarning("Failed to parse the endpoint: {} ", url);
+                logger.LogWarning("Failed to parse the endpoint: {Url} ", url);
                 SetDefault();
             }
 
@@ -51,7 +51,7 @@ namespace Amazon.CloudWatch.EMF.Sink
             catch (Exception)
             {
                 logger.LogWarning(
-                    "Unsupported protocol: {}. Would use default endpoint: {}",
+                    "Unsupported protocol: {Url}. Would use default endpoint: {Endpoint}",
                     url,
                     DEFAULT_TCP_ENDPOINT);
 
