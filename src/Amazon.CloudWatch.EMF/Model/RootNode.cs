@@ -5,26 +5,8 @@ using Newtonsoft.Json;
 namespace Amazon.CloudWatch.EMF.Model
 {
     /*
-    EXAMPLE OF DESIRED SERIALIZATION OUTPUT:
-
-    {
-        "_aws": {
-            "Timestamp": 1559748430481
-            "CloudWatchMetrics": [
-                {
-                    "Namespace": "lambda-function-metrics",
-                    "Dimensions": [ [ "functionVersion" ] ],
-                    "Metrics": [
-                        {
-                            "Name": "Time",
-                            "Unit": "Milliseconds"
-                        }
-                    ]
-                }
-            ]
-        },
-        "time": 100,
-     }
+    EXAMPLE OF DESIRED SERIALIZATION OUTPUT (required to be a 1-line JSON for ingestion into Cloudwatch):
+    {"_aws":{"Timestamp":1559748430481,"CloudWatchMetrics":[{"Namespace":"lambda-function-metrics","Dimensions":[["functionVersion"]],"Metrics":[{"Name":"Time","Unit":"Milliseconds"}]}]},"time":100 }
      */
     public class RootNode
     {
@@ -88,7 +70,8 @@ namespace Amazon.CloudWatch.EMF.Model
 
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(this);
+            // Ignore Configured JsonConvert.DefaultSettings Formatting and ensure 1-line serialization with Formatting.None
+            return JsonConvert.SerializeObject(this, Formatting.None);
         }
 
         internal RootNode DeepCloneWithNewMetrics(List<MetricDefinition> metrics)
