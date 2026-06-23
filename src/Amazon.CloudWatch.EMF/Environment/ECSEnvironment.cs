@@ -151,7 +151,7 @@ namespace Amazon.CloudWatch.EMF.Environment
             _fluentBitEndpoint = string.Format("tcp://%s:%d", fluentHost, Constants.DefaultAgentPort);
             _configuration.AgentEndPoint = _fluentBitEndpoint;
 
-            _logger.LogInformation("Using FluentBit configuration. Endpoint: {}", _fluentBitEndpoint);
+            _logger.LogInformation("Using FluentBit configuration. Endpoint: {Endpoint}", _fluentBitEndpoint);
         }
 
         private void FormatImageName()
