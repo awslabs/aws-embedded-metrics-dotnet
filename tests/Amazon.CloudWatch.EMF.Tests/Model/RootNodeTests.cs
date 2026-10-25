@@ -69,5 +69,30 @@ namespace Amazon.CloudWatch.EMF.Tests.Model
             // assert
             Assert.Contains("_aws", json);
         }
+
+        [Fact]
+        public void Serialize_ProducesOneLine_WhenDefaultSettingsFormattingIsIndented()
+        {
+            // arrange
+            var previousSettings = JsonConvert.DefaultSettings;
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings { Formatting = Formatting.Indented };
+            try
+            {
+                RootNode rootNode = new RootNode();
+                var metricDirective = new MetricDirective();
+                metricDirective.PutMetric("Metric", 1);
+                rootNode.AWS.CloudWatchMetrics.Add(metricDirective);
+
+                // act
+                var json = rootNode.Serialize();
+
+                // assert
+                Assert.DoesNotContain("\n", json);
+            }
+            finally
+            {
+                JsonConvert.DefaultSettings = previousSettings;
+            }
+        }
     }
 }
