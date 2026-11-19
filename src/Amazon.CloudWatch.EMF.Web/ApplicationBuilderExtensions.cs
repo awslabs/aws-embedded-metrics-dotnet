@@ -61,8 +61,8 @@ namespace Amazon.CloudWatch.EMF.Web
         {
             app.Use(async (context, next) =>
             {
-                Stopwatch stopWatch = new Stopwatch();
-                stopWatch.Start();
+                var valueStopwatch = ValueStopwatch.StartNew();
+                
                 await next.Invoke();
                 var config = context.RequestServices.GetRequiredService<EMF.Config.IConfiguration>();
                 var logger = context.RequestServices.GetRequiredService<IMetricsLogger>();
@@ -73,8 +73,9 @@ namespace Amazon.CloudWatch.EMF.Web
                 }
 
                 await action(context, logger);
-                stopWatch.Stop();
-                logger.PutMetric("Time", stopWatch.ElapsedMilliseconds, Model.Unit.MILLISECONDS);
+                
+                var elapsedTime = valueStopwatch.GetElapsedTime();
+                logger.PutMetric("Time", elapsedTime.TotalMilliseconds, Model.Unit.MILLISECONDS);
             });
         }
     }
