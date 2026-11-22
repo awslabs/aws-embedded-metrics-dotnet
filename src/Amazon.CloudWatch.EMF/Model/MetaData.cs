@@ -24,7 +24,7 @@ namespace Amazon.CloudWatch.EMF.Model
             return !MetricDirective.HasNoMetrics();
         }*/
 
-        [JsonProperty]
+        [JsonProperty("Timestamp")]
         [JsonConverter(typeof(UnixMillisecondDateTimeConverter))]
         internal DateTime Timestamp { get; set; }
 
@@ -32,7 +32,7 @@ namespace Amazon.CloudWatch.EMF.Model
         /// Represents the MetricDirective.
         /// NOTE: serialization emits an Array, but only a single MetricDirective is supported by this library.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("CloudWatchMetrics")]
         internal List<MetricDirective> CloudWatchMetrics { get; set; }
 
         [JsonExtensionData]
